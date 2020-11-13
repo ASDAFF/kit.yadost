@@ -64,47 +64,47 @@ Class yandex_delivery extends CModule
 
     function InstallEvents()
     {
-        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepPersonType", $this->MODULE_ID, "CDeliveryYandex", "setLocationFromCookie");
-        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepOrderProps", $this->MODULE_ID, "CDeliveryYandex", "loadComponent");
-        RegisterModuleDependences("main", "OnEndBufferContent", $this->MODULE_ID, "CDeliveryYandex", "onBufferContent");
-        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepComplete", $this->MODULE_ID, "CDeliveryYandex", "orderCreate");
-        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepDelivery", $this->MODULE_ID, "CDeliveryYandex", "pickupLoader");
-        RegisterModuleDependences("main", "OnEpilog", $this->MODULE_ID, "CDeliveryYandex", "onEpilog");
-        RegisterModuleDependences("sale", "OnBeforeOrderUpdate", $this->MODULE_ID, "CDeliveryYandexHelper", "OnBeforeOrderUpdateHandler");
-        RegisterModuleDependences("sale", "OnOrderUpdate", $this->MODULE_ID, "CDeliveryYandexHelper", "OnOrderUpdateHandler");
-        RegisterModuleDependences("sale", "OnOrderAdd", $this->MODULE_ID, "CDeliveryYandexHelper", "OnOrderAddHandler");
-        RegisterModuleDependences("sale", "OnBeforeBasketUpdate", $this->MODULE_ID, "CDeliveryYandexHelper", "OnBeforeBasketUpdateHandler");
-        RegisterModuleDependences("sale", "OnBasketUpdate", $this->MODULE_ID, "CDeliveryYandexHelper", "OnBasketUpdateHandler");
-        RegisterModuleDependences("sale", "OnBasketAdd", $this->MODULE_ID, "CDeliveryYandexHelper", "OnBasketAddHandler");
-        RegisterModuleDependences("sale", "OnBeforeBasketDelete", $this->MODULE_ID, "CDeliveryYandexHelper", "OnBeforeBasketDeleteHandler");
-        RegisterModuleDependences("sale", "OnSalePropertyValueSetField", $this->MODULE_ID, "CDeliveryYandexHelper", "OnSalePropertyValueSetFieldHandler");
-        RegisterModuleDependences("sale", "OnSaleShipmentSetField", $this->MODULE_ID, "CDeliveryYandexHelper", "OnSaleShipmentSetFieldHandler");
-        RegisterModuleDependences("sale", "OnSaleBasketItemSetField", $this->MODULE_ID, "CDeliveryYandexHelper", "OnSaleBasketItemSetFieldHandler");
-        RegisterModuleDependences("sale", "OnSaleOrderCanceled", $this->MODULE_ID, "CDeliveryYandexHelper", "OnSaleOrderCanceledHandler");
-        RegisterModuleDependences("main", "OnModuleUpdate", $this->MODULE_ID, "CDeliveryYandexHelper", "OnModuleUpdateHandler");
+        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepPersonType", $this->MODULE_ID, "CDeliveryYa", "setLocationFromCookie");
+        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepOrderProps", $this->MODULE_ID, "CDeliveryYa", "loadComponent");
+        RegisterModuleDependences("main", "OnEndBufferContent", $this->MODULE_ID, "CDeliveryYa", "onBufferContent");
+        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepComplete", $this->MODULE_ID, "CDeliveryYa", "orderCreate");
+        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepDelivery", $this->MODULE_ID, "CDeliveryYa", "pickupLoader");
+        RegisterModuleDependences("main", "OnEpilog", $this->MODULE_ID, "CDeliveryYa", "onEpilog");
+        RegisterModuleDependences("sale", "OnBeforeOrderUpdate", $this->MODULE_ID, "CDeliveryYaHelper", "OnBeforeOrderUpdateHandler");
+        RegisterModuleDependences("sale", "OnOrderUpdate", $this->MODULE_ID, "CDeliveryYaHelper", "OnOrderUpdateHandler");
+        RegisterModuleDependences("sale", "OnOrderAdd", $this->MODULE_ID, "CDeliveryYaHelper", "OnOrderAddHandler");
+        RegisterModuleDependences("sale", "OnBeforeBasketUpdate", $this->MODULE_ID, "CDeliveryYaHelper", "OnBeforeBasketUpdateHandler");
+        RegisterModuleDependences("sale", "OnBasketUpdate", $this->MODULE_ID, "CDeliveryYaHelper", "OnBasketUpdateHandler");
+        RegisterModuleDependences("sale", "OnBasketAdd", $this->MODULE_ID, "CDeliveryYaHelper", "OnBasketAddHandler");
+        RegisterModuleDependences("sale", "OnBeforeBasketDelete", $this->MODULE_ID, "CDeliveryYaHelper", "OnBeforeBasketDeleteHandler");
+        RegisterModuleDependences("sale", "OnSalePropertyValueSetField", $this->MODULE_ID, "CDeliveryYaHelper", "OnSalePropertyValueSetFieldHandler");
+        RegisterModuleDependences("sale", "OnSaleShipmentSetField", $this->MODULE_ID, "CDeliveryYaHelper", "OnSaleShipmentSetFieldHandler");
+        RegisterModuleDependences("sale", "OnSaleBasketItemSetField", $this->MODULE_ID, "CDeliveryYaHelper", "OnSaleBasketItemSetFieldHandler");
+        RegisterModuleDependences("sale", "OnSaleOrderCanceled", $this->MODULE_ID, "CDeliveryYaHelper", "OnSaleOrderCanceledHandler");
+        RegisterModuleDependences("main", "OnModuleUpdate", $this->MODULE_ID, "CDeliveryYaHelper", "OnModuleUpdateHandler");
         return true;
     }
 
     function UnInstallEvents()
     {
-        UnRegisterModuleDependences("sale", "OnSaleComponentOrderOneStepPersonType", $this->MODULE_ID, "CDeliveryYandex", "setLocationFromCookie");
-        UnRegisterModuleDependences("sale", "OnSaleComponentOrderOneStepOrderProps", $this->MODULE_ID, "CDeliveryYandex", "loadComponent");
-        UnRegisterModuleDependences("main", "OnEndBufferContent", $this->MODULE_ID, "CDeliveryYandex", "onBufferContent");
-        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepComplete", $this->MODULE_ID, "CDeliveryYandex", "orderCreate");
-        UnRegisterModuleDependences("sale", "OnSaleComponentOrderOneStepDelivery", $this->MODULE_ID, "CDeliveryYandex", "pickupLoader");
-        UnRegisterModuleDependences("main", "OnEpilog", $this->MODULE_ID, "CDeliveryYandex", "onEpilog");
-        UnRegisterModuleDependences("sale", "OnBeforeOrderUpdate", $this->MODULE_ID, "CDeliveryYandexHelper", "OnBeforeOrderUpdateHandler");
-        UnRegisterModuleDependences("sale", "OnOrderUpdate", $this->MODULE_ID, "CDeliveryYandexHelper", "OnOrderUpdateHandler");
-        UnRegisterModuleDependences("sale", "OnOrderAdd", $this->MODULE_ID, "CDeliveryYandexHelper", "OnOrderAddHandler");
-        UnRegisterModuleDependences("sale", "OnBeforeBasketUpdate", $this->MODULE_ID, "CDeliveryYandexHelper", "OnBeforeBasketUpdateHandler");
-        UnRegisterModuleDependences("sale", "OnBasketUpdate", $this->MODULE_ID, "CDeliveryYandexHelper", "OnBasketUpdateHandler");
-        UnRegisterModuleDependences("sale", "OnBasketAdd", $this->MODULE_ID, "CDeliveryYandexHelper", "OnBasketAddHandler");
-        UnRegisterModuleDependences("sale", "OnBeforeBasketDelete", $this->MODULE_ID, "CDeliveryYandexHelper", "OnBeforeBasketDeleteHandler");
-        UnRegisterModuleDependences("sale", "OnSalePropertyValueSetField", $this->MODULE_ID, "CDeliveryYandexHelper", "OnSalePropertyValueSetFieldHandler");
-        UnRegisterModuleDependences("sale", "OnSaleShipmentSetField", $this->MODULE_ID, "CDeliveryYandexHelper", "OnSaleShipmentSetFieldHandler");
-        UnRegisterModuleDependences("sale", "OnSaleBasketItemSetField", $this->MODULE_ID, "CDeliveryYandexHelper", "OnSaleBasketItemSetFieldHandler");
-        UnRegisterModuleDependences("sale", "OnSaleOrderCanceled", $this->MODULE_ID, "CDeliveryYandexHelper", "OnSaleOrderCanceledHandler");
-        UnRegisterModuleDependences("main", "OnModuleUpdate", $this->MODULE_ID, "CDeliveryYandexHelper", "OnModuleUpdateHandler");
+        UnRegisterModuleDependences("sale", "OnSaleComponentOrderOneStepPersonType", $this->MODULE_ID, "CDeliveryYa", "setLocationFromCookie");
+        UnRegisterModuleDependences("sale", "OnSaleComponentOrderOneStepOrderProps", $this->MODULE_ID, "CDeliveryYa", "loadComponent");
+        UnRegisterModuleDependences("main", "OnEndBufferContent", $this->MODULE_ID, "CDeliveryYa", "onBufferContent");
+        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepComplete", $this->MODULE_ID, "CDeliveryYa", "orderCreate");
+        UnRegisterModuleDependences("sale", "OnSaleComponentOrderOneStepDelivery", $this->MODULE_ID, "CDeliveryYa", "pickupLoader");
+        UnRegisterModuleDependences("main", "OnEpilog", $this->MODULE_ID, "CDeliveryYa", "onEpilog");
+        UnRegisterModuleDependences("sale", "OnBeforeOrderUpdate", $this->MODULE_ID, "CDeliveryYaHelper", "OnBeforeOrderUpdateHandler");
+        UnRegisterModuleDependences("sale", "OnOrderUpdate", $this->MODULE_ID, "CDeliveryYaHelper", "OnOrderUpdateHandler");
+        UnRegisterModuleDependences("sale", "OnOrderAdd", $this->MODULE_ID, "CDeliveryYaHelper", "OnOrderAddHandler");
+        UnRegisterModuleDependences("sale", "OnBeforeBasketUpdate", $this->MODULE_ID, "CDeliveryYaHelper", "OnBeforeBasketUpdateHandler");
+        UnRegisterModuleDependences("sale", "OnBasketUpdate", $this->MODULE_ID, "CDeliveryYaHelper", "OnBasketUpdateHandler");
+        UnRegisterModuleDependences("sale", "OnBasketAdd", $this->MODULE_ID, "CDeliveryYaHelper", "OnBasketAddHandler");
+        UnRegisterModuleDependences("sale", "OnBeforeBasketDelete", $this->MODULE_ID, "CDeliveryYaHelper", "OnBeforeBasketDeleteHandler");
+        UnRegisterModuleDependences("sale", "OnSalePropertyValueSetField", $this->MODULE_ID, "CDeliveryYaHelper", "OnSalePropertyValueSetFieldHandler");
+        UnRegisterModuleDependences("sale", "OnSaleShipmentSetField", $this->MODULE_ID, "CDeliveryYaHelper", "OnSaleShipmentSetFieldHandler");
+        UnRegisterModuleDependences("sale", "OnSaleBasketItemSetField", $this->MODULE_ID, "CDeliveryYaHelper", "OnSaleBasketItemSetFieldHandler");
+        UnRegisterModuleDependences("sale", "OnSaleOrderCanceled", $this->MODULE_ID, "CDeliveryYaHelper", "OnSaleOrderCanceledHandler");
+        UnRegisterModuleDependences("main", "OnModuleUpdate", $this->MODULE_ID, "CDeliveryYaHelper", "OnModuleUpdateHandler");
         CAgent::RemoveModuleAgents($this->MODULE_ID);
         return true;
     }

@@ -1,11 +1,11 @@
 <?
 /**
- * Copyright (c) 27/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
 IncludeModuleLangFile(__FILE__);
 
-class CDeliveryYandexDriver
+class CDeliveryYaDriver
 {
 	const CACHE_TIME = 86400;// сутки храним кеш
 	private static $agentCall = false;
@@ -84,7 +84,7 @@ class CDeliveryYandexDriver
 	
 	static public function agentOrderStates()
 	{
-		$returnVal = 'CDeliveryYandexDriver::agentOrderStates();';
+		$returnVal = 'CDeliveryYaDriver::agentOrderStates();';
 		
 		if (!CModule::IncludeModule("sale"))
 			return $returnVal;
@@ -93,7 +93,7 @@ class CDeliveryYandexDriver
 		$arEndStatus = self::getEndStatus();
 		
 		// забираем выгруженные заказы не в финальном статусе за последние 2 месяца
-		$dbOrders = CDeliveryYandexSqlOrders::getList(array(
+		$dbOrders = CDeliveryYaSqlOrders::getList(array(
 			"filter" => array(
 				"!STATUS" => $arEndStatus,
 				"!delivery_ID" => false
@@ -195,7 +195,7 @@ class CDeliveryYandexDriver
 				$updateSqlStatus = true;
 			
 			if ($updateSqlStatus)
-				CDeliveryYandexSqlOrders::updateCustom(
+				CDeliveryYaSqlOrders::updateCustom(
 					array("ORDER_ID" => $orderID),
 					array("STATUS" => $ydStatus)
 				);
@@ -210,7 +210,7 @@ class CDeliveryYandexDriver
 					"orderID" => $orderID
 				);
 				
-				CDeliveryYandexHelper::updateNoticeFileData($change);
+				CDeliveryYaHelper::updateNoticeFileData($change);
 			}
 			
 			
@@ -292,29 +292,29 @@ class CDeliveryYandexDriver
 	
 	static public function saveFormData(&$params)
 	{
-		if (!CDeliveryYandexHelper::isAdmin())
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin())
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		$orderID = $params["ORDER_ID"];
 		
 		if (empty($orderID))
-			CDeliveryYandexHelper::throwException("Order ID empty", $params);
+			CDeliveryYaHelper::throwException("Order ID empty", $params);
 		
 		// сохраняем данные формы, виджета
 		if (!empty($params["data"]["widgetDataJSON"]) && !empty($params["data"]["formDataJSON"]))
 		{
-			$dbRes = CDeliveryYandexSqlOrders::updateCustom(
+			$dbRes = CDeliveryYaSqlOrders::updateCustom(
 				array(
 					"ORDER_ID" => $orderID
 				),
 				array(
-					"PARAMS" => CDeliveryYandexHelper::convertFromUTF($params["data"]["widgetDataJSON"]),
-					"MESSAGE" => CDeliveryYandexHelper::convertFromUTF($params["data"]["formDataJSON"])
+					"PARAMS" => CDeliveryYaHelper::convertFromUTF($params["data"]["widgetDataJSON"]),
+					"MESSAGE" => CDeliveryYaHelper::convertFromUTF($params["data"]["formDataJSON"])
 				)
 			);
 			
 			if (!$dbRes)
-				CDeliveryYandexHelper::throwException("Cant update DB", array(CDeliveryYandexSqlOrders::getErrorMessagesCustom(), $params));
+				CDeliveryYaHelper::throwException("Cant update DB", array(CDeliveryYaSqlOrders::getErrorMessagesCustom(), $params));
 		}
 		
 		// если отмечена опция обновления стоимости доставки в заказе
@@ -332,7 +332,7 @@ class CDeliveryYandexDriver
 				$tmpOrderData = self::$tmpOrder;
 				$tmpOrderProps = self::$tmpOrderProps;
 				
-				if (CDeliveryYandexHelper::isConverted())
+				if (CDeliveryYaHelper::isConverted())
 					$arFields = array(
 						"PRICE_DELIVERY" => self::$tmpOrder["PRICE_DELIVERY"]
 					);
@@ -352,7 +352,7 @@ class CDeliveryYandexDriver
 		// если самовывоз, пересохраняем в свойство полный адрес доставки
 		if ("PICKUP" == $params["data"]["formData"]["profile_name"])
 		{
-			CDeliveryYandexHelper::updateAddressProp($orderID, CDeliveryYandexHelper::convertFromUTF($params["data"]["formData"]["address"]));
+			CDeliveryYaHelper::updateAddressProp($orderID, CDeliveryYaHelper::convertFromUTF($params["data"]["formData"]["address"]));
 		}
 		
 		return array("saveFormData" => true);
@@ -362,20 +362,20 @@ class CDeliveryYandexDriver
 	
 	static public function sendOrder($params)
 	{
-		if (!CDeliveryYandexHelper::isAdmin())
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin())
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		$orderID = $params["ORDER_ID"];
 		
 		if (empty($orderID))
-			CDeliveryYandexHelper::throwException("Order ID empty", $params);
+			CDeliveryYaHelper::throwException("Order ID empty", $params);
 		
 		$arDeliveryTypes = array("import", "withdraw");
 		if (!in_array($params["data"]["formData"]["delivery_type"], $arDeliveryTypes))
-			CDeliveryYandexHelper::throwException("Invalid delivery_type", $params);
+			CDeliveryYaHelper::throwException("Invalid delivery_type", $params);
 		
-		self::$formData = CDeliveryYandexHelper::convertFromUTF($params["data"]["formData"]);
-		self::$tmpOrderConfirm = CDeliveryYandexHelper::convertFromUTF($params["data"]);
+		self::$formData = CDeliveryYaHelper::convertFromUTF($params["data"]["formData"]);
+		self::$tmpOrderConfirm = CDeliveryYaHelper::convertFromUTF($params["data"]);
 		
 		self::saveFormData($params);
 		
@@ -391,7 +391,7 @@ class CDeliveryYandexDriver
 		if (isset($params["data"]["formData"]["assessedCostPercent"]))
 			self::$assessedCostPercent = FloatVal($params["data"]["formData"]["assessedCostPercent"]);
 		if (self::$assessedCostPercent === null)
-			self::$assessedCostPercent = FloatVal(COption::GetOptionString(CDeliveryYandexDriver::$MODULE_ID, 'assessedCostPercent', '100'));
+			self::$assessedCostPercent = FloatVal(COption::GetOptionString(CDeliveryYaDriver::$MODULE_ID, 'assessedCostPercent', '100'));
 		
 		$arResult["sendDraft"] = self::sendOrderDraft($orderID);
 		
@@ -430,15 +430,15 @@ class CDeliveryYandexDriver
 	
 	static public function getOrderDocuments($params)
 	{
-		if (!CDeliveryYandexHelper::isAdmin("R"))
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin("R"))
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		self::delOrderDocuments(); //удаляем старые файлы
 		
 		$orderID = $params["ORDER_ID"];
 		
 		if (empty($orderID))
-			CDeliveryYandexHelper::throwException("Order ID empty", $params);
+			CDeliveryYaHelper::throwException("Order ID empty", $params);
 		
 		$filePath = $_SERVER['DOCUMENT_ROOT'] . "/upload/" . self::$MODULE_ID;
 		
@@ -470,7 +470,7 @@ class CDeliveryYandexDriver
 				$arDocs["labels"] = base64_decode($labelRes["data"]);
 			
 			if (empty($arDocs))
-				CDeliveryYandexHelper::throwException("error", $errors);
+				CDeliveryYaHelper::throwException("error", $errors);
 			
 			
 			if (!file_exists($filePath))
@@ -479,7 +479,7 @@ class CDeliveryYandexDriver
 			$arReturn = array();
 			foreach ($arDocs as $docType => $docVal)
 				if (false === file_put_contents($fileNames[$docType], $arDocs[$docType]))
-					CDeliveryYandexHelper::throwException("Can't write file", array("filePath" => $fileNames[$docType]));
+					CDeliveryYaHelper::throwException("Can't write file", array("filePath" => $fileNames[$docType]));
 				else
 					$arReturn[$docType] = "/upload/" . self::$MODULE_ID . "/" . self::getOrderDocsNumber($docType, $orderID) . ".pdf";
 			
@@ -509,16 +509,16 @@ class CDeliveryYandexDriver
 	
 	static public function getOrderDocs($orderID)
 	{
-		if (!CDeliveryYandexHelper::isAdmin("R"))
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin("R"))
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		if (empty($orderID))
-			CDeliveryYandexHelper::throwException("Empty order ID");
+			CDeliveryYaHelper::throwException("Empty order ID");
 		
 		self::getOrderConfirm($orderID);
 		
 		if (empty(self::$tmpOrderConfirm["savedParams"]["parcel_ID"]))
-			CDeliveryYandexHelper::throwException("Order not confirm in yandex");
+			CDeliveryYaHelper::throwException("Order not confirm in yandex");
 		
 		$arSend = array(
 			"parcel_id" => self::$tmpOrderConfirm["savedParams"]["parcel_ID"],
@@ -533,16 +533,16 @@ class CDeliveryYandexDriver
 	// отмена заказа
 	static public function getOrderLabels($orderID)
 	{
-		if (!CDeliveryYandexHelper::isAdmin("R"))
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin("R"))
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		if (empty($orderID))
-			CDeliveryYandexHelper::throwException("Empty order ID");
+			CDeliveryYaHelper::throwException("Empty order ID");
 		
 		self::getOrderConfirm($orderID);
 		
 		if (empty(self::$tmpOrderConfirm["savedParams"]["delivery_ID"]))
-			CDeliveryYandexHelper::throwException("Order not found in yandex");
+			CDeliveryYaHelper::throwException("Order not found in yandex");
 		
 		$arSend = array(
 			"order_id" => self::$tmpOrderConfirm["savedParams"]["delivery_ID"],
@@ -562,7 +562,7 @@ class CDeliveryYandexDriver
 		$error = array("error" => true);
 		
 		if (!self::$agentCall)
-			if (!CDeliveryYandexHelper::isAdmin("R"))
+			if (!CDeliveryYaHelper::isAdmin("R"))
 			{
 				$error["msg"] = "Access denied";
 				
@@ -607,11 +607,11 @@ class CDeliveryYandexDriver
 	
 	static public function sendOrderDraft($orderID)
 	{
-		if (!CDeliveryYandexHelper::isAdmin())
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin())
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		if (empty($orderID))
-			CDeliveryYandexHelper::throwException("Empty order ID");
+			CDeliveryYaHelper::throwException("Empty order ID");
 		
 		// получаем данные о заказе
 		self::fillOrderData($orderID);
@@ -704,10 +704,10 @@ class CDeliveryYandexDriver
 		
 		foreach ($arGabs as $gab)
 		{
-			$tmpGab = self::$tmpOrderDimension[CDeliveryYandexHelper::toUpper($gab)];
+			$tmpGab = self::$tmpOrderDimension[CDeliveryYaHelper::toUpper($gab)];
 			
-			if (self::$formData[CDeliveryYandexHelper::toUpper($gab)])
-				$tmpGab = self::$formData[CDeliveryYandexHelper::toUpper($gab)];
+			if (self::$formData[CDeliveryYaHelper::toUpper($gab)])
+				$tmpGab = self::$formData[CDeliveryYaHelper::toUpper($gab)];
 			
 			$arSend["order_" . $gab] = $tmpGab;
 		}
@@ -735,31 +735,31 @@ class CDeliveryYandexDriver
 		// надо запомнить номер заказа в яндекс
 		if ($res["status"] == "ok" && $res["data"]["order"]["id"])
 		{
-			$dbRes = CDeliveryYandexSqlOrders::updateCustom(
+			$dbRes = CDeliveryYaSqlOrders::updateCustom(
 				array("ORDER_ID" => $orderID),
 				array("delivery_ID" => $res["data"]["order"]["id"])
 			);
 			if (!$dbRes)
-				CDeliveryYandexHelper::throwException(CDeliveryYandexSqlOrders::getErrorMessagesCustom(), array("method" => $method, "request" => $arSend, "result" => $res));
+				CDeliveryYaHelper::throwException(CDeliveryYaSqlOrders::getErrorMessagesCustom(), array("method" => $method, "request" => $arSend, "result" => $res));
 		}
 		else
-			CDeliveryYandexHelper::throwException("Draft order error", array("method" => $method, "request" => $arSend, "result" => $res));
+			CDeliveryYaHelper::throwException("Draft order error", array("method" => $method, "request" => $arSend, "result" => $res));
 		
 		return $res;
 	}
 	
 	static public function getOrderInfo($orderID)
 	{
-		//		if (!CDeliveryYandexHelper::isAdmin())
-		//			CDeliveryYandexHelper::throwException("Access denied");
+		//		if (!CDeliveryYaHelper::isAdmin())
+		//			CDeliveryYaHelper::throwException("Access denied");
 		
 		if (empty($orderID))
-			CDeliveryYandexHelper::throwException("Empty order ID");
+			CDeliveryYaHelper::throwException("Empty order ID");
 		
 		self::getOrderConfirm($orderID);
 		
 		if (empty(self::$tmpOrderConfirm["savedParams"]["delivery_ID"]))
-			CDeliveryYandexHelper::throwException("Order not found in yandex");
+			CDeliveryYaHelper::throwException("Order not found in yandex");
 		
 		$arSend = array(
 			"order_id" => self::$tmpOrderConfirm["savedParams"]["delivery_ID"]
@@ -773,11 +773,11 @@ class CDeliveryYandexDriver
 	
 	static public function getWarehouseInfo($warehouseID)
 	{
-		if (!CDeliveryYandexHelper::isAdmin("R"))
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin("R"))
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		if (empty($warehouseID))
-			CDeliveryYandexHelper::throwException("Empty warehouseID");
+			CDeliveryYaHelper::throwException("Empty warehouseID");
 		
 		$arSend = array(
 			"warehouse_id" => $warehouseID
@@ -791,11 +791,11 @@ class CDeliveryYandexDriver
 	
 	static public function getSenderInfo($senderID)
 	{
-		if (!CDeliveryYandexHelper::isAdmin("R"))
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin("R"))
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		if (empty($senderID))
-			CDeliveryYandexHelper::throwException("Empty senderID");
+			CDeliveryYaHelper::throwException("Empty senderID");
 		
 		$arSend = array();
 		
@@ -811,8 +811,8 @@ class CDeliveryYandexDriver
 	
 	public static function getRequisiteInfo()
 	{
-		//		if (!CDeliveryYandexHelper::isAdmin("R"))
-		//			CDeliveryYandexHelper::throwException("Access denied");
+		//		if (!CDeliveryYaHelper::isAdmin("R"))
+		//			CDeliveryYaHelper::throwException("Access denied");
 		
 		self::getRequestConfig();
 		$requisiteID = self::$requestConfig["requisite_id"][0];
@@ -835,14 +835,14 @@ class CDeliveryYandexDriver
 	
 	static public function confirmOrder($orderID, $deliveryType, $shipmentDate = false)
 	{
-		if (!CDeliveryYandexHelper::isAdmin())
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin())
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		if (empty($orderID))
-			CDeliveryYandexHelper::throwException("Empty order ID");
+			CDeliveryYaHelper::throwException("Empty order ID");
 		
 		if (empty($deliveryType))
-			CDeliveryYandexHelper::throwException("Empty deliveryType");
+			CDeliveryYaHelper::throwException("Empty deliveryType");
 		
 		self::getOrderConfirm($orderID);
 		
@@ -850,7 +850,7 @@ class CDeliveryYandexDriver
 			$shipmentDate = self::getShipmentDate();//== завтра\
 		
 		if (empty(self::$tmpOrderConfirm["savedParams"]["delivery_ID"]))
-			CDeliveryYandexHelper::throwException("Order not found in yandex", array("data" => self::$tmpOrderConfirm));
+			CDeliveryYaHelper::throwException("Order not found in yandex", array("data" => self::$tmpOrderConfirm));
 		
 		$arSend = array(
 			"order_ids" => self::$tmpOrderConfirm["savedParams"]["delivery_ID"],
@@ -867,7 +867,7 @@ class CDeliveryYandexDriver
 			foreach ($res["data"]["result"]["success"] as $parcel)
 				if (!empty($parcel["parcel_id"]) && !empty($parcel["orders"]))
 				{
-					$dbRes = CDeliveryYandexSqlOrders::updateCustom(
+					$dbRes = CDeliveryYaSqlOrders::updateCustom(
 						array(
 							"ORDER_ID" => $orderID
 						),
@@ -877,11 +877,11 @@ class CDeliveryYandexDriver
 					);
 					
 					if (!$dbRes)
-						CDeliveryYandexHelper::throwException(CDeliveryYandexSqlOrders::getErrorMessagesCustom(), array("method" => $method, "request" => $arSend, "result" => $res));
+						CDeliveryYaHelper::throwException(CDeliveryYaSqlOrders::getErrorMessagesCustom(), array("method" => $method, "request" => $arSend, "result" => $res));
 				}
 		}
 		else
-			CDeliveryYandexHelper::throwException("Confirm order error", array("method" => $method, "request" => $arSend, "result" => $res));
+			CDeliveryYaHelper::throwException("Confirm order error", array("method" => $method, "request" => $arSend, "result" => $res));
 		
 		return $res;
 	}
@@ -890,17 +890,17 @@ class CDeliveryYandexDriver
 	
 	static public function createDeliveryOrder($orderID, $deliveryType, $importType)
 	{
-		if (!CDeliveryYandexHelper::isAdmin())
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin())
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		if (empty($orderID))
-			CDeliveryYandexHelper::throwException("Empty order ID");
+			CDeliveryYaHelper::throwException("Empty order ID");
 		
 		if (empty($deliveryType))
-			CDeliveryYandexHelper::throwException("Empty deliveryType");
+			CDeliveryYaHelper::throwException("Empty deliveryType");
 		
 		if (empty($importType))
-			CDeliveryYandexHelper::throwException("Empty importType");
+			CDeliveryYaHelper::throwException("Empty importType");
 		
 		self::getOrderConfirm($orderID);
 		self::getModuleSetups();
@@ -908,7 +908,7 @@ class CDeliveryYandexDriver
 		self::getOrderBasket(array("ORDER_ID" => $orderID));
 		
 		if (empty(self::$tmpOrderConfirm["savedParams"]["delivery_ID"]))
-			CDeliveryYandexHelper::throwException("Order not found in yandex");
+			CDeliveryYaHelper::throwException("Order not found in yandex");
 		
 		// объем посылки, габариты в сантиметрах(уже переведены), объем в куб.м
 		$volume = self::$tmpOrderDimension["LENGTH"] * self::$tmpOrderDimension["LENGTH"] * self::$tmpOrderDimension["LENGTH"] / 1000000;
@@ -953,7 +953,7 @@ class CDeliveryYandexDriver
 		}
 		
 		if (!$method)
-			CDeliveryYandexHelper::throwException("Cant't detect delivery method createWithdraw or createImport");
+			CDeliveryYaHelper::throwException("Cant't detect delivery method createWithdraw or createImport");
 		
 		// $arSend["order_ids"] = array(self::$tmpOrderConfirm["savedParams"]["delivery_ID"]);
 		$arSend["order_ids"] = self::$tmpOrderConfirm["savedParams"]["delivery_ID"];
@@ -963,7 +963,7 @@ class CDeliveryYandexDriver
 		if ($res["status"] == "ok")
 			return $res;
 		else
-			CDeliveryYandexHelper::throwException("createDeliveryOrder error", array("method" => $method, "request" => $arSend, "result" => $res));
+			CDeliveryYaHelper::throwException("createDeliveryOrder error", array("method" => $method, "request" => $arSend, "result" => $res));
 		
 		return false;
 	}
@@ -972,11 +972,11 @@ class CDeliveryYandexDriver
 	
 	static public function confirmParcel($parcel_id)
 	{
-		if (!CDeliveryYandexHelper::isAdmin())
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin())
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		if (empty($parcel_id))
-			CDeliveryYandexHelper::throwException("confirmParcel error parcel_id empty");
+			CDeliveryYaHelper::throwException("confirmParcel error parcel_id empty");
 		
 		$arSend = array(
 			"parcel_ids" => $parcel_id
@@ -988,7 +988,7 @@ class CDeliveryYandexDriver
 		if ($res["status"] == "ok" && empty($res["data"]["result"]["error"]))
 			return $res["data"]["result"];
 		else
-			CDeliveryYandexHelper::throwException("confirmSenderParcels error", array("method" => $method, "request" => $arSend, "result" => $res));
+			CDeliveryYaHelper::throwException("confirmSenderParcels error", array("method" => $method, "request" => $arSend, "result" => $res));
 		
 		return false;
 	}
@@ -997,11 +997,11 @@ class CDeliveryYandexDriver
 	
 	static public function getFormIntervalWarehouse($params)
 	{
-		if (!CDeliveryYandexHelper::isAdmin("R"))
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin("R"))
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		if (empty($params))
-			CDeliveryYandexHelper::throwException("Empty params");
+			CDeliveryYaHelper::throwException("Empty params");
 		
 		$arResult = array();
 		
@@ -1015,14 +1015,14 @@ class CDeliveryYandexDriver
 	
 	static public function getInterval($deliveryName, $deliveryType)
 	{
-		if (!CDeliveryYandexHelper::isAdmin("R"))
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin("R"))
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		if (empty($deliveryName))
-			CDeliveryYandexHelper::throwException("Empty deliveryName");
+			CDeliveryYaHelper::throwException("Empty deliveryName");
 		
 		if (empty($deliveryType))
-			CDeliveryYandexHelper::throwException("Empty deliveryType");
+			CDeliveryYaHelper::throwException("Empty deliveryType");
 		
 		$obCache = new CPHPCache();
 		
@@ -1044,14 +1044,14 @@ class CDeliveryYandexDriver
 			// надо запомнить номер отгрузки
 			if ($res["status"] == "ok" && !empty($res["data"]["schedules"][0]))
 			{
-				$arReturn = CDeliveryYandexHelper::convertFromUTF($res["data"]["schedules"]);
+				$arReturn = CDeliveryYaHelper::convertFromUTF($res["data"]["schedules"]);
 				$obCache->StartDataCache();
 				$obCache->EndDataCache($arReturn);
 				
 				return $arReturn;
 			}
 			else
-				CDeliveryYandexHelper::throwException("getInterval error", array("method" => $method, "request" => $arSend, "result" => $res));
+				CDeliveryYaHelper::throwException("getInterval error", array("method" => $method, "request" => $arSend, "result" => $res));
 		}
 		
 		return false;
@@ -1061,8 +1061,8 @@ class CDeliveryYandexDriver
 	
 	static public function getDeliveries()
 	{
-		if (!CDeliveryYandexHelper::isAdmin("R"))
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin("R"))
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		$obCache = new CPHPCache();
 		$cachename = "trade_yandex_delivery";
@@ -1079,7 +1079,7 @@ class CDeliveryYandexDriver
 			// надо запомнить номер отгрузки
 			if ($res["status"] == "ok" && !empty($res["data"]["deliveries"]))
 			{
-				$arReturn = CDeliveryYandexHelper::convertFromUTF($res["data"]["deliveries"]);
+				$arReturn = CDeliveryYaHelper::convertFromUTF($res["data"]["deliveries"]);
 				
 				$arReturn["selectedDeliveries"] = COption::GetOptionString(self::$MODULE_ID, "deliveries", "");
 				
@@ -1089,7 +1089,7 @@ class CDeliveryYandexDriver
 				return $arReturn;
 			}
 			else
-				CDeliveryYandexHelper::throwException("getDeliveries error", array("method" => $method, "request" => $arSend, "result" => $res));
+				CDeliveryYaHelper::throwException("getDeliveries error", array("method" => $method, "request" => $arSend, "result" => $res));
 		}
 		
 		return false;
@@ -1099,15 +1099,15 @@ class CDeliveryYandexDriver
 	
 	static public function cancelOrder($params)
 	{
-		if (!CDeliveryYandexHelper::isAdmin())
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin())
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		if (empty($params["ORDER_ID"]))
-			CDeliveryYandexHelper::throwException("Empty order ID");
+			CDeliveryYaHelper::throwException("Empty order ID");
 		
 		$orderID = $params["ORDER_ID"];
 		
-		$orderInfo = CDeliveryYandexSqlOrders::getList(array(
+		$orderInfo = CDeliveryYaSqlOrders::getList(array(
 			"filter" => array("ORDER_ID" => $orderID)
 		))->Fetch();
 		
@@ -1124,7 +1124,7 @@ class CDeliveryYandexDriver
 			
 			if ($status == "CANCELED")
 			{
-				$dbRes = CDeliveryYandexSqlOrders::updateCustom(
+				$dbRes = CDeliveryYaSqlOrders::updateCustom(
 					array(
 						"ORDER_ID" => $orderID
 					),
@@ -1135,7 +1135,7 @@ class CDeliveryYandexDriver
 				);
 				
 				if (!$dbRes)
-					CDeliveryYandexHelper::throwException(CDeliveryYandexSqlOrders::getErrorMessagesCustom(), array("method" => $method, "request" => $arSend, "result" => $res));
+					CDeliveryYaHelper::throwException(CDeliveryYaSqlOrders::getErrorMessagesCustom(), array("method" => $method, "request" => $arSend, "result" => $res));
 				
 				self::updateOrderStatus(array($orderID => "NEW"));
 			}
@@ -1194,7 +1194,7 @@ class CDeliveryYandexDriver
 			// "time" => date(DateTime::ISO8601),
 			"time" => date("Y-m-d\TH:i:sP"),
 			"domain" => $_SERVER["HTTP_HOST"],
-			"settings" => array_merge(self::$options, array("DELIVERY_ACTIVE" => CDeliveryYandexHelper::isActive())),
+			"settings" => array_merge(self::$options, array("DELIVERY_ACTIVE" => CDeliveryYaHelper::isActive())),
 			"unique_key" => COption::GetOptionString(self::$MODULE_ID, "unique_num")
 		);
 		
@@ -1239,7 +1239,7 @@ class CDeliveryYandexDriver
 		if (empty(self::$tmpOrder))
 		{
 			if (!CModule::IncludeModule("sale"))
-				CDeliveryYandexHelper::throwException("Module sale not found");
+				CDeliveryYaHelper::throwException("Module sale not found");
 			
 			$arOrder = CSaleOrder::GetList(
 				array(),
@@ -1247,7 +1247,7 @@ class CDeliveryYandexDriver
 			)->Fetch();
 			
 			if (empty($arOrder))
-				CDeliveryYandexHelper::throwException("Order not found", array("ORDER_ID" => $orderID));
+				CDeliveryYaHelper::throwException("Order not found", array("ORDER_ID" => $orderID));
 			
 			self::$tmpOrder = $arOrder;
 			
@@ -1264,7 +1264,7 @@ class CDeliveryYandexDriver
 		if (empty(self::$tmpOrderProps))
 		{
 			if (!CModule::IncludeModule("sale"))
-				CDeliveryYandexHelper::throwException("Module sale not found");
+				CDeliveryYaHelper::throwException("Module sale not found");
 			
 			$dbOrderProps = CSaleOrderPropsValue::GetList(
 				array(),
@@ -1326,16 +1326,16 @@ class CDeliveryYandexDriver
 		self::getModuleSetups();
 		if (empty(self::$tmpOrderConfirm))
 		{
-			$sqlOrder = CDeliveryYandexSqlOrders::getList(array(
+			$sqlOrder = CDeliveryYaSqlOrders::getList(array(
 				"filter" => array("ORDER_ID" => $orderID)
 			))->Fetch();
 			
 			if (!$sqlOrder)
 				return false;
 			
-			self::$tmpOrderConfirm["widgetData"] = CDeliveryYandexHelper::convertFromUTF(json_decode(CDeliveryYandexHelper::convertToUTF($sqlOrder["PARAMS"]), true));
+			self::$tmpOrderConfirm["widgetData"] = CDeliveryYaHelper::convertFromUTF(json_decode(CDeliveryYaHelper::convertToUTF($sqlOrder["PARAMS"]), true));
 			
-			self::$tmpOrderConfirm["formData"] = CDeliveryYandexHelper::convertFromUTF(json_decode(CDeliveryYandexHelper::convertToUTF($sqlOrder["MESSAGE"]), true));
+			self::$tmpOrderConfirm["formData"] = CDeliveryYaHelper::convertFromUTF(json_decode(CDeliveryYaHelper::convertToUTF($sqlOrder["MESSAGE"]), true));
 			
 			unset($sqlOrder["PARAMS"]);
 			unset($sqlOrder["MESSAGE"]);
@@ -1376,12 +1376,12 @@ class CDeliveryYandexDriver
 			self::$tmpOrderID = null;
 			
 			if (!CModule::IncludeModule("sale"))
-				CDeliveryYandexHelper::throwException("Module sale not found");
+				CDeliveryYaHelper::throwException("Module sale not found");
 			
 			if ($params["PRODUCT_ID"])
 			{
 				if (!CModule::IncludeModule("catalog"))
-					CDeliveryYandexHelper::throwException("Module catalog not found");
+					CDeliveryYaHelper::throwException("Module catalog not found");
 				
 				$arProduct = CCatalogProduct::GetList(
 					array(),
@@ -1431,7 +1431,7 @@ class CDeliveryYandexDriver
 					);
 				}
 				
-				$vatID = CDeliveryYandexHelper::getVatIDDefault();
+				$vatID = CDeliveryYaHelper::getVatIDDefault();
 				if ($arProduct["VAT_ID"])
 				{
 					$arVat = CCatalogVat::getListEx(
@@ -1446,7 +1446,7 @@ class CDeliveryYandexDriver
 					
 					if ($arVat)
 					{
-						$vatID = CDeliveryYandexHelper::getVatID((int) $arVat["RATE"]);
+						$vatID = CDeliveryYaHelper::getVatID((int) $arVat["RATE"]);
 					}
 				}
 				
@@ -1486,7 +1486,7 @@ class CDeliveryYandexDriver
 					$arBasket["DIMENSIONS"] = unserialize($arBasket["DIMENSIONS"]);
 					$orderBasket[$arBasket["PRODUCT_ID"]] = $arBasket;
 					
-					$orderBasket[$arBasket["PRODUCT_ID"]]["VAT_YD_ID"] = CDeliveryYandexHelper::getVatID($arBasket["VAT_RATE"]);
+					$orderBasket[$arBasket["PRODUCT_ID"]]["VAT_YD_ID"] = CDeliveryYaHelper::getVatID($arBasket["VAT_RATE"]);
 				}
 				
 				if (!is_null($arOrderItems))
@@ -1516,7 +1516,7 @@ class CDeliveryYandexDriver
 							),
 							"QUANTITY" => $item["QUANTITY"],
 							"PRICE" => $item["PRICE"],
-							"VAT_YD_ID" => CDeliveryYandexHelper::getVatIDDefault()
+							"VAT_YD_ID" => CDeliveryYaHelper::getVatIDDefault()
 						);
 				}
 				else
@@ -1534,7 +1534,7 @@ class CDeliveryYandexDriver
 							),
 							"QUANTITY" => 1,
 							"PRICE" => 1000,
-							"VAT_YD_ID" => CDeliveryYandexHelper::getVatIDDefault()
+							"VAT_YD_ID" => CDeliveryYaHelper::getVatIDDefault()
 						)
 					);
 				}
@@ -1557,7 +1557,7 @@ class CDeliveryYandexDriver
 				if ($artnumberCode || $sideMode != "def" || $weightMode != "CATALOG_WEIGHT")
 				{
 					if (!CModule::IncludeModule("iblock"))
-						CDeliveryYandexHelper::throwException("Module iblock not found");
+						CDeliveryYaHelper::throwException("Module iblock not found");
 					
 					$productIDs = array();
 					// собираем id товаров в корзине
@@ -1605,12 +1605,12 @@ class CDeliveryYandexDriver
 								if ($artnumberCode == "ID")
 									$orderBasket[$arElem["ID"]]["artnumber"] = $arElem["ID"];
 								else
-									$orderBasket[$arElem["ID"]]["artnumber"] = $arElem["PROPERTY_" . CDeliveryYandexHelper::toUpper($artnumberCode) . "_VALUE"];
+									$orderBasket[$arElem["ID"]]["artnumber"] = $arElem["PROPERTY_" . CDeliveryYaHelper::toUpper($artnumberCode) . "_VALUE"];
 							
 							// габариты
 							if ($sideMode == "unit")
 							{
-								$arDims = explode(self::$options["sidesUnitSprtr"], $arElem['PROPERTY_' . CDeliveryYandexHelper::toUpper(self::$options["sidesUnit"]) . '_VALUE']);
+								$arDims = explode(self::$options["sidesUnitSprtr"], $arElem['PROPERTY_' . CDeliveryYaHelper::toUpper(self::$options["sidesUnit"]) . '_VALUE']);
 								$orderBasket[$arElem["ID"]]["DIMENSIONS"] = array(
 									"WIDTH" => $arDims[0],
 									"HEIGHT" => $arDims[1],
@@ -1619,14 +1619,14 @@ class CDeliveryYandexDriver
 							}
 							elseif ($sideMode == "sep")
 								$orderBasket[$arElem["ID"]]["DIMENSIONS"] = array(
-									"WIDTH" => $arElem['PROPERTY_' . CDeliveryYandexHelper::toUpper(self::$options["sidesSep"]['W']) . '_VALUE'],
-									"HEIGHT" => $arElem['PROPERTY_' . CDeliveryYandexHelper::toUpper(self::$options["sidesSep"]['H']) . '_VALUE'],
-									"LENGTH" => $arElem['PROPERTY_' . CDeliveryYandexHelper::toUpper(self::$options["sidesSep"]['L']) . '_VALUE']
+									"WIDTH" => $arElem['PROPERTY_' . CDeliveryYaHelper::toUpper(self::$options["sidesSep"]['W']) . '_VALUE'],
+									"HEIGHT" => $arElem['PROPERTY_' . CDeliveryYaHelper::toUpper(self::$options["sidesSep"]['H']) . '_VALUE'],
+									"LENGTH" => $arElem['PROPERTY_' . CDeliveryYaHelper::toUpper(self::$options["sidesSep"]['L']) . '_VALUE']
 								);
 							
 							// вес
 							if ($weightMode != "CATALOG_WEIGHT")
-								$orderBasket[$arElem["ID"]]["WEIGHT"] = $arElem["PROPERTY_" . CDeliveryYandexHelper::toUpper(self::$options["weightPr"]) . "_VALUE"];
+								$orderBasket[$arElem["ID"]]["WEIGHT"] = $arElem["PROPERTY_" . CDeliveryYaHelper::toUpper(self::$options["weightPr"]) . "_VALUE"];
 						}
 					}
 				}
@@ -1828,11 +1828,11 @@ class CDeliveryYandexDriver
 		{
 			self::$options = array(
 				// "assessedCost" => COption::GetOptionString(self::$MODULE_ID, "assessedCost", 0),
-				"assessedCostPercent" => FloatVal(COption::GetOptionString(CDeliveryYandexDriver::$MODULE_ID, 'assessedCostPercent', '100')),
+				"assessedCostPercent" => FloatVal(COption::GetOptionString(CDeliveryYaDriver::$MODULE_ID, 'assessedCostPercent', '100')),
 				"artnumber" => COption::GetOptionString(self::$MODULE_ID, "artnumber", ""),
 				"cityFrom" => COption::GetOptionString(self::$MODULE_ID, "cityFrom", "MOSCOW"),
 				"to_yd_warehouse" => COption::GetOptionString(self::$MODULE_ID, "to_yd_warehouse", ""),
-				"defaultWarehouse" => COption::GetOptionString(CDeliveryYandexDriver::$MODULE_ID, 'defaultWarehouse', '0'),
+				"defaultWarehouse" => COption::GetOptionString(CDeliveryYaDriver::$MODULE_ID, 'defaultWarehouse', '0'),
 				
 				"ADDRESS" => array(
 					"fname" => COption::GetOptionString(self::$MODULE_ID, "fname", "FIO"),
@@ -1871,7 +1871,7 @@ class CDeliveryYandexDriver
 				)
 			);
 			
-			$arStatuses = CDeliveryYandexHelper::getDeliveryStatuses();
+			$arStatuses = CDeliveryYaHelper::getDeliveryStatuses();
 			
 			foreach ($arStatuses as $status => $descr)
 			{
@@ -1943,7 +1943,7 @@ class CDeliveryYandexDriver
 			$configFilePath = $_SERVER['DOCUMENT_ROOT'] . "/bitrix/js/" . self::$MODULE_ID . "/private/";
 			
 			// время последнего изменения файла
-			$lastConfigFileTime = COption::GetOptionString(CDeliveryYandexDriver::$MODULE_ID, "lastConfigFileTime", 0);
+			$lastConfigFileTime = COption::GetOptionString(CDeliveryYaDriver::$MODULE_ID, "lastConfigFileTime", 0);
 			$fileName = md5(CMain::GetServerUniqID() . $lastConfigFileTime);
 			if (!file_exists($configFilePath . $fileName . ".conf"))
 				$fileName = md5($lastConfigFileTime);
@@ -1965,7 +1965,7 @@ class CDeliveryYandexDriver
 					$newFileName = md5(CMain::GetServerUniqID() . $curTime);
 					
 					if (file_put_contents($configFilePath . $newFileName . ".conf", $fileContent))
-						if (COption::SetOptionString(CDeliveryYandexDriver::$MODULE_ID, "lastConfigFileTime", $curTime))
+						if (COption::SetOptionString(CDeliveryYaDriver::$MODULE_ID, "lastConfigFileTime", $curTime))
 						{
 							unlink($configFilePath . $fileName . ".conf");
 							$fileName = $newFileName;
@@ -2042,12 +2042,12 @@ class CDeliveryYandexDriver
 	public static function MakeRequest($method, $arSend)
 	{
 		if (!function_exists('curl_init'))
-			CDeliveryYandexHelper::throwException("curl not found");
+			CDeliveryYaHelper::throwException("curl not found");
 		
 		self::$requestSend = $arSend;
 		
 		// Подписываем запрос
-		self::$requestSend = CDeliveryYandexHelper::convertToUTF(self::$requestSend);
+		self::$requestSend = CDeliveryYaHelper::convertToUTF(self::$requestSend);
 		self::sign($method);
 		
 		$request = http_build_query(self::$requestSend);
@@ -2114,13 +2114,13 @@ class CDeliveryYandexDriver
 //			"res" => $logRes
 //		), "calculate");
 		
-		CDeliveryYandexHelper::errorLog(self::$debug);
+		CDeliveryYaHelper::errorLog(self::$debug);
 		
 		if ($code != 200)
 		{
 			return "request error";
 		}
-		//			CDeliveryYandexHelper::throwException("request error");
+		//			CDeliveryYaHelper::throwException("request error");
 		
 		return $arResult;
 	}
@@ -2129,8 +2129,8 @@ class CDeliveryYandexDriver
 	
 	public static function setConfig($params)
 	{
-		if (!CDeliveryYandexHelper::isAdmin())
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin())
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		$oldFormat = false;
 		
@@ -2149,7 +2149,7 @@ class CDeliveryYandexDriver
 		}
 		
 		if (empty($clientParams))
-			CDeliveryYandexHelper::throwException("Client params error", array("decode_error" => self::json_last_error_msg(), "config2" => $params["config2"]));
+			CDeliveryYaHelper::throwException("Client params error", array("decode_error" => self::json_last_error_msg(), "config2" => $params["config2"]));
 		
 		$keys = $params["config1"];
 		$keys = json_decode($keys, true);
@@ -2168,7 +2168,7 @@ class CDeliveryYandexDriver
 		}
 		
 		if (empty($keys))
-			CDeliveryYandexHelper::throwException("API-keys error", array("decode_error" => self::json_last_error_msg(), "config1" => $params["config1"]));
+			CDeliveryYaHelper::throwException("API-keys error", array("decode_error" => self::json_last_error_msg(), "config1" => $params["config1"]));
 		
 		$arReplacer = array(
 			"sender_ids" => "sender_id",
@@ -2259,7 +2259,7 @@ class CDeliveryYandexDriver
 			
 			if (self::$tmpOrderID)
 			{
-				$dbOrders = CDeliveryYandexSqlOrders::getList(array(
+				$dbOrders = CDeliveryYaSqlOrders::getList(array(
 					"filter" => array("ORDER_ID" => self::$tmpOrderID)
 				))->Fetch();
 				
@@ -2272,7 +2272,7 @@ class CDeliveryYandexDriver
 						"LENGTH"
 					);
 					
-					$formData = CDeliveryYandexHelper::convertFromUTF(json_decode(CDeliveryYandexHelper::convertToUTF($dbOrders["MESSAGE"]), true));
+					$formData = CDeliveryYaHelper::convertFromUTF(json_decode(CDeliveryYaHelper::convertToUTF($dbOrders["MESSAGE"]), true));
 					
 					// проверяем наличие сохраненных габаритов
 					$returnFormData = true;

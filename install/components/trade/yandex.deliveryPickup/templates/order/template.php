@@ -18,16 +18,16 @@ if (empty($arResult["ERRORS"]))
 	$htmlIDs = array();
 	$deliveryIDs = array();
 
-	if (CDeliveryYandexHelper::isConverted())
+	if (CDeliveryYaHelper::isConverted())
 	{
 		$dTS = Bitrix\Sale\Delivery\Services\Table::getList(array(
 			'order' => array('SORT' => 'ASC', 'NAME' => 'ASC'),
-			'filter' => array('CODE' => 'tradeDeliveryYandex:%')
+			'filter' => array('CODE' => 'tradeDeliveryYa:%')
 		));
 
 		while ($dataShip = $dTS->Fetch())
 		{
-			$profileName = preg_replace("/tradeDeliveryYandex:/", "", $dataShip["CODE"]);
+			$profileName = preg_replace("/tradeDeliveryYa:/", "", $dataShip["CODE"]);
 			$htmlIDs[$profileName] = 'ID_DELIVERY_ID_' . $dataShip['ID'];
 			$deliveryIDs[$profileName] = $dataShip['ID'];
 		}
@@ -35,14 +35,14 @@ if (empty($arResult["ERRORS"]))
 	else
 	{
 		$htmlIDs = array(
-			"pickup" => 'ID_DELIVERY_tradeDeliveryYandex_pickup',
-			"courier" => 'ID_DELIVERY_tradeDeliveryYandex_courier',
-			"post" => 'ID_DELIVERY_tradeDeliveryYandex_post'
+			"pickup" => 'ID_DELIVERY_tradeDeliveryYa_pickup',
+			"courier" => 'ID_DELIVERY_tradeDeliveryYa_courier',
+			"post" => 'ID_DELIVERY_tradeDeliveryYa_post'
 		);
 		$deliveryIDs = array(
-			"pickup" => "tradeDeliveryYandex:pickup",
-			"courier" => "tradeDeliveryYandex:courier",
-			"post" => "tradeDeliveryYandex:post"
+			"pickup" => "tradeDeliveryYa:pickup",
+			"courier" => "tradeDeliveryYa:courier",
+			"post" => "tradeDeliveryYa:post"
 		);
 	}
 
@@ -498,7 +498,7 @@ if (empty($arResult["ERRORS"]))
                         ydwidget.trade_putDataToForm(ydwidget.trade_deliveryPrice, "yd_ajaxDeliveryPrice");
 
                     if (ydwidget.trade_checkCurrentDelivery())
-                        tmpDelivSelect.val("tradeDeliveryYandex");
+                        tmpDelivSelect.val("tradeDeliveryYa");
                     else
                         tmpDelivSelect.val("false");
 

@@ -210,7 +210,7 @@ function TRADE_YANDEX_DELIVERY_getSelect(&$arOptions, $selected, $blockName, $em
                     draggable: true,
                     height: '502',
                     width: '692',
-                    buttons: ['<input type="button" <?if (!CDeliveryYandexHelper::isAdmin())
+                    buttons: ['<input type="button" <?if (!CDeliveryYaHelper::isAdmin())
 					{
 						echo "disabled";
 					}?> value="<?=GetMessage('TRADE_YANDEX_DELIVERY_BUTTON_LOAD')?>" onclick="TRADE_YANDEX_DELIVERY_CONFIG_LOAD()"/><input type="button" value="<?=GetMessage('TRADE_YANDEX_DELIVERY_BUTTON_CANSEL')?>" onclick="TRADE_YANDEX_DELIVERY_CONFIG_wnd.Close()"/>']
@@ -438,7 +438,7 @@ foreach ($arPopups as $pop)
 ?>
 
 <?
-$dost = CDeliveryYandexHelper::getDelivery();
+$dost = CDeliveryYaHelper::getDelivery();
 if ($dost)
 {
 	if ($dost['ACTIVE'] != 'Y')
@@ -535,7 +535,7 @@ else
 	{
 		if (!empty($warehouse))
 		{
-			$warehouseInfo = CDeliveryYandexHelper::convertFromUTF(CDeliveryYandexDriver::getWarehouseInfo($warehouse));
+			$warehouseInfo = CDeliveryYaHelper::convertFromUTF(CDeliveryYaDriver::getWarehouseInfo($warehouse));
 			if ($warehouseInfo["warehouseInfo"]["data"]["field_name"])
 				$arWarehouses[$num] .= " " . $warehouseInfo["warehouseInfo"]["data"]["field_name"];
 		}
@@ -545,7 +545,7 @@ else
 	{
 		if (!empty($sender))
 		{
-			$senderInfo = CDeliveryYandexHelper::convertFromUTF(CDeliveryYandexDriver::getSenderInfo($sender));
+			$senderInfo = CDeliveryYaHelper::convertFromUTF(CDeliveryYaDriver::getSenderInfo($sender));
 			if ($senderInfo["clientInfo"]["data"]["field_name"])
 				$arSenders[$num] .= " " . $senderInfo["clientInfo"]["data"]["field_name"];
 		}
@@ -562,10 +562,10 @@ else
 <? } ?>
 <?
 // делаем запрос на расчет доставки, чтобы получить ограничения на оценочную стоимость
-CDeliveryYandex::$clearOrderData = false;
-CDeliveryYandex::$cityTo = GetMessage("TRADE_YANDEX_DELIVERY_DEFAULT_FAKE_CITY_TO_CALC");
-CDeliveryYandex::getDeliveryProfiles(null, null);
-$arRes = (array)CDeliveryYandex::$calculateRequestResult;
+CDeliveryYa::$clearOrderData = false;
+CDeliveryYa::$cityTo = GetMessage("TRADE_YANDEX_DELIVERY_DEFAULT_FAKE_CITY_TO_CALC");
+CDeliveryYa::getDeliveryProfiles(null, null);
+$arRes = (array)CDeliveryYa::$calculateRequestResult;
 
 $arAssessedLimits = array();
 if (!empty($arRes))
@@ -773,11 +773,11 @@ foreach ($arAllOptions["orderProps"] as $optValue)
 	<? ShowParamsHTMLByArray($arAllOptions["templateOptions"]); ?>
     <tr>
         <td style="padding:0 0 20px;" colspan="2" align="center">
-			<? if (!CDeliveryYandexHelper::isAdmin())
+			<? if (!CDeliveryYaHelper::isAdmin())
 			{
 				echo GetMessage("TRADE_YANDEX_DELIVERY_HELPER_RightsNotAllow_AutoPropFix");
 			} ?>
-            <input <? if (!CDeliveryYandexHelper::isAdmin())
+            <input <? if (!CDeliveryYaHelper::isAdmin())
 			{
 				echo "disabled";
 			} ?> type="button" class="adm-btn"

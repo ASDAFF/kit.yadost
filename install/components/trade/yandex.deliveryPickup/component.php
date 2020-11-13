@@ -34,8 +34,8 @@ else
 }
 
 // ORDER_PROPS
-CDeliveryYandexDriver::getModuleSetups();
-$arAdrFields = CDeliveryYandexDriver::$options["ADDRESS"];
+CDeliveryYaDriver::getModuleSetups();
+$arAdrFields = CDeliveryYaDriver::$options["ADDRESS"];
 
 $arProps = CSaleOrderProps::GetList(
 	array(),
@@ -57,11 +57,11 @@ if (!empty($arParams["CITY_NAME"]))
 else
 {
 	if (empty($arParams["CITY_ID"]))
-		$arParams["CITY_ID"] = CDeliveryYandexHelper::getDefaultCityFromModuleSale();
+		$arParams["CITY_ID"] = CDeliveryYaHelper::getDefaultCityFromModuleSale();
 	
 	if ($arParams["CITY_ID"])
 	{
-		$arCity = CDeliveryYandexHelper::getCityNameByID($arParams["CITY_ID"]);
+		$arCity = CDeliveryYaHelper::getCityNameByID($arParams["CITY_ID"]);
 		$arResult["CITY_NAME"] = $arCity["NAME"];
 		
 		if ($arCity["REGION"])
@@ -76,17 +76,17 @@ $basketFilter = false;
 if ("Y" == $arParams["USE_ITEM"])
 	$basketFilter = array("PRODUCT_ID" => $arParams["ITEM_ID"], "PRODUCT_QUANTITY" => $arParams["ITEM_QUANTITY"]);
 
-CDeliveryYandexDriver::getOrderBasket($basketFilter);
+CDeliveryYaDriver::getOrderBasket($basketFilter);
 
 $arResult["ORDER_DIMENSIONS"] = array(
-	"WIDTH" => CDeliveryYandexDriver::$tmpOrderDimension["WIDTH"],
-	"HEIGHT" => CDeliveryYandexDriver::$tmpOrderDimension["HEIGHT"],
-	"LENGTH" => CDeliveryYandexDriver::$tmpOrderDimension["LENGTH"]
+	"WIDTH" => CDeliveryYaDriver::$tmpOrderDimension["WIDTH"],
+	"HEIGHT" => CDeliveryYaDriver::$tmpOrderDimension["HEIGHT"],
+	"LENGTH" => CDeliveryYaDriver::$tmpOrderDimension["LENGTH"]
 );
 
-$arResult["TOTAL_PRICE"] = CDeliveryYandexDriver::$tmpOrderDimension["PRICE"];
-$arResult["TOTAL_WEIGHT"] = CDeliveryYandexDriver::$tmpOrderDimension["WEIGHT"];
-$arResult["TOTAL_QUANTITY"] = CDeliveryYandexDriver::$tmpOrderDimension["QUANTITY"];
+$arResult["TOTAL_PRICE"] = CDeliveryYaDriver::$tmpOrderDimension["PRICE"];
+$arResult["TOTAL_WEIGHT"] = CDeliveryYaDriver::$tmpOrderDimension["WEIGHT"];
+$arResult["TOTAL_QUANTITY"] = CDeliveryYaDriver::$tmpOrderDimension["QUANTITY"];
 
-CDeliveryYandexDriver::clearOrderData();
+CDeliveryYaDriver::clearOrderData();
 $this->IncludeComponentTemplate();

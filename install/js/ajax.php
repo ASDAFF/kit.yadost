@@ -27,29 +27,29 @@ if ($moduleMode == 3)
 if ($moduleMode == 0)
 	die();
 
-CDeliveryYandexHelper::checkLogParams($_GET);
+CDeliveryYaHelper::checkLogParams($_GET);
 
 if (!check_bitrix_sessid())
 	die();
 
 // if (!$GLOBALS["USER"]->IsAdmin())
 	// die("Access denied!");
-if (!CDeliveryYandexHelper::isAdmin("R"))
+if (!CDeliveryYaHelper::isAdmin("R"))
 	die("Access denied");
 
 try{
 	if($_REQUEST['action'] == "propFixer")
-		$data = CDeliveryYandexProps::Start($_REQUEST);
+		$data = CDeliveryYaProps::Start($_REQUEST);
 	else
 	{
 		// классы модуля с доступными методами ajax-обработчиками
 		$moduleClasses = array(
-			'CDeliveryYandexHelper' => array(
+			'CDeliveryYaHelper' => array(
 				"clearNoticeFile", // очистка файла с флагом изменения заказа
 				"deleteOrderFromChange", // убирает признак изменения заказа
 				"clearCache", // очистка кеша
 			),
-			'CDeliveryYandexDriver' => array(
+			'CDeliveryYaDriver' => array(
 				"saveFormData", // сохранение данных формы
 				"sendOrder", // отправка заказа
 				"getOrderDocuments", // получение документов и ярлыков
@@ -69,7 +69,7 @@ try{
 				"cancelOrder", // отмена заказа
 				"setConfig", // сохранение конфига
 			),
-			'CDeliveryYandex' => array(
+			'CDeliveryYa' => array(
 				"calculateOrder" // пересчет стоимости заказа на ФОЗ
 			)
 		);
@@ -91,7 +91,7 @@ try{
 				}
 		
 		if (!$methodFind)
-			CDeliveryYandexHelper::throwException("Unknown action!", array(
+			CDeliveryYaHelper::throwException("Unknown action!", array(
 				"request" => $_REQUEST
 			));
 	}
@@ -100,17 +100,17 @@ try{
 }
 catch (Exception $e)
 {
-	CDeliveryYandexHelper::errorLog(CDeliveryYandexDriver::$debug);
+	CDeliveryYaHelper::errorLog(CDeliveryYaDriver::$debug);
 	$success = false;
-	$data = CDeliveryYandexHelper::convertFromUTF(CDeliveryYandexHelper::$exceptionData);
+	$data = CDeliveryYaHelper::convertFromUTF(CDeliveryYaHelper::$exceptionData);
 }
 
-CDeliveryYandexHelper::errorLog(CDeliveryYandexDriver::$debug);
+CDeliveryYaHelper::errorLog(CDeliveryYaDriver::$debug);
 
 if ("N" != $_POST["echoAJAX"])
 {
 	$GLOBALS["APPLICATION"]->RestartBuffer();
-	echo json_encode(array("success" => $success, "data" => CDeliveryYandexHelper::convertToUTF($data)));
+	echo json_encode(array("success" => $success, "data" => CDeliveryYaHelper::convertToUTF($data)));
 	die();
 }
 ?>

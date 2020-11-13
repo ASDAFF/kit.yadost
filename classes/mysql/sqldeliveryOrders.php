@@ -6,7 +6,7 @@
 // class sqldeliveryOrders
 class sqldeliveryOrdersTable
 {
-	// public function deliveryLog($wat,$sign){CDeliveryYandexDriver::deliveryLog($wat,$sign);}
+	// public function deliveryLog($wat,$sign){CDeliveryYaDriver::deliveryLog($wat,$sign);}
 	private static $tableName = "yandexDelivery_yandexDelivery";
 	public static function Add($Data)
     {
@@ -134,7 +134,7 @@ class sqldeliveryOrdersTable
 	
 	private static function checkjson($value)
 	{
-		if (!json_decode(CDeliveryYandexHelper::convertToUTF($value)))
+		if (!json_decode(CDeliveryYaHelper::convertToUTF($value)))
 			throw new Exception("Invalid json");
 		
 		$tmp = self::checkstring($value);

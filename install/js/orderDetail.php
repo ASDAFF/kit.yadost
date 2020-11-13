@@ -7,25 +7,25 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 	die();
 $orderID = $_REQUEST['ID'];
 
-CDeliveryYandexDriver::getOrder($orderID);
-CDeliveryYandexDriver::getOrderProps($orderID);
-CDeliveryYandexDriver::getOrderConfirm($orderID);
-CDeliveryYandexDriver::getOrderBasket(array("ORDER_ID" => $orderID));
-$arEndStatus = CDeliveryYandexDriver::getEndStatus();
-$arErrorStatus = CDeliveryYandexDriver::getErrorStatus();
-$arNotEditStatus = CDeliveryYandexDriver::getNotEditableStatus();
+CDeliveryYaDriver::getOrder($orderID);
+CDeliveryYaDriver::getOrderProps($orderID);
+CDeliveryYaDriver::getOrderConfirm($orderID);
+CDeliveryYaDriver::getOrderBasket(array("ORDER_ID" => $orderID));
+$arEndStatus = CDeliveryYaDriver::getEndStatus();
+$arErrorStatus = CDeliveryYaDriver::getErrorStatus();
+$arNotEditStatus = CDeliveryYaDriver::getNotEditableStatus();
 
 // проверка обновлений модуля
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/classes/general/update_client_partner.php");
 $stableVersionsOnly = COption::GetOptionString("main", "stable_versions_only", "Y");
-$arRequestedModules = array(CDeliveryYandexDriver::$MODULE_ID);
+$arRequestedModules = array(CDeliveryYaDriver::$MODULE_ID);
 $lastVersion = false;
 if ($arUpdateList = CUpdateClientPartner::GetUpdatesList($errorMessage, LANG, $stableVersionsOnly, $arRequestedModules))
 {
 	$arUpdateList = $arUpdateList["MODULE"];
 	$thisModule = false;
 	foreach ($arUpdateList as $key => $module)
-		if ($module["@"]["ID"] == CDeliveryYandexDriver::$MODULE_ID)
+		if ($module["@"]["ID"] == CDeliveryYaDriver::$MODULE_ID)
 			$thisModule = $module;
 	
 	if ($thisModule)
@@ -65,13 +65,13 @@ foreach ($arWarnings as $warningCode)
 if ($lastVersion)
 	$arLangsWarning["newModuleVersionDetected"] = GetMessage("TRADE_YANDEX_DELIVERY_WARNING_newModuleVersionDetected", array(
 		"#MODULE_UPDATE_VERSION#" => $lastVersion,
-		"#MODULE_ID#" => CDeliveryYandexDriver::$MODULE_ID
+		"#MODULE_ID#" => CDeliveryYaDriver::$MODULE_ID
 	));
 
 // флаги отмены, оплаты, изменения заказа
-$isOrderPayed = ("Y" == CDeliveryYandexDriver::$tmpOrder["PAYED"]) ? true : false;
-$isOrderCancel = ("Y" == CDeliveryYandexDriver::$tmpOrder["CANCELED"]) ? true : false;
-$isOrderChange = CDeliveryYandexHelper::isOrderChanged($orderID);
+$isOrderPayed = ("Y" == CDeliveryYaDriver::$tmpOrder["PAYED"]) ? true : false;
+$isOrderCancel = ("Y" == CDeliveryYaDriver::$tmpOrder["CANCELED"]) ? true : false;
+$isOrderChange = CDeliveryYaHelper::isOrderChanged($orderID);
 
 CJSCore::Init(array("jquery"));
 
@@ -106,7 +106,7 @@ $formElements["warning_fictive"] = array(
 $arLabels = array("ORDER_ID", "delivery_ID", "parcel_ID", "STATUS");
 foreach ($arLabels as $label)
 {
-	$value = CDeliveryYandexDriver::$tmpOrderConfirm["savedParams"][$label];
+	$value = CDeliveryYaDriver::$tmpOrderConfirm["savedParams"][$label];
 	
 	if (empty($value) && $label == "STATUS")
 		$value = "NEW";
@@ -140,18 +140,18 @@ foreach ($arLabels as $label)
 
 // статус запрашиваем, если заказ уже отправлен
 $status = null;
-if (CDeliveryYandexDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"])
+if (CDeliveryYaDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"])
 {
-	$status = CDeliveryYandexDriver::getOrderStatus(array("delivery_ID" => CDeliveryYandexDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"]));
+	$status = CDeliveryYaDriver::getOrderStatus(array("delivery_ID" => CDeliveryYaDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"]));
 	
 	if ($status)
 	{
 		$formElements["STATUS"]["value"] = $status;
-		CDeliveryYandexDriver::updateOrderStatus(array($orderID => $status));
+		CDeliveryYaDriver::updateOrderStatus(array($orderID => $status));
 	}
 }
 
-$statusNames = CDeliveryYandexHelper::getDeliveryStatuses();
+$statusNames = CDeliveryYaHelper::getDeliveryStatuses();
 $statusNames["NEW"] = GetMessage("TRADE_YANDEX_DELIVERY_YD_STATUS_NEW");
 
 foreach ($statusNames as $code => $value)
@@ -168,22 +168,22 @@ $formElements["status_info"] = array(
 $formElements["is_payed"] = array(
 	"type" => "checkbox",
 	"name" => GetMessage("TRADE_YANDEX_DELIVERY_INPUTS_is_payed_NAME"),
-	"value" => ("Y" == CDeliveryYandexDriver::$tmpOrder["PAYED"]) ? "Y" : "N",
+	"value" => ("Y" == CDeliveryYaDriver::$tmpOrder["PAYED"]) ? "Y" : "N",
 	"sended" => false,
 	"group" => "COMMON",
 	"disabled" => true
 );
 
 // если статус не из категории запрещенных для редактирования, подключаем виджет
-// if (!in_array($statusNames[CDeliveryYandexDriver::$tmpOrderConfirm["savedParams"]["STATUS"]], $arNotEditStatus))
+// if (!in_array($statusNames[CDeliveryYaDriver::$tmpOrderConfirm["savedParams"]["STATUS"]], $arNotEditStatus))
 $GLOBALS['APPLICATION']->AddHeadString(COption::GetOptionString("yandex.delivery", "basketWidget"));
 
 // название доставки
 $formElements["delivery_name"] = array(
 	"type" => "label",
 	"name" => GetMessage("TRADE_YANDEX_DELIVERY_INPUTS_delivery_name_NAME"),
-	"value" => CDeliveryYandexDriver::$tmpOrderConfirm["widgetData"]["delivery"]["name"],
-	"data" => CDeliveryYandexDriver::$tmpOrderConfirm["widgetData"]["delivery"]["unique_name"],
+	"value" => CDeliveryYaDriver::$tmpOrderConfirm["widgetData"]["delivery"]["name"],
+	"data" => CDeliveryYaDriver::$tmpOrderConfirm["widgetData"]["delivery"]["unique_name"],
 	"sended" => true,
 	"group" => "DELIVERY"
 );
@@ -201,24 +201,24 @@ foreach ($arTariffNames as $code => $value)
 $formElements["profile_name"] = array(
 	"type" => "label",
 	"name" => GetMessage("TRADE_YANDEX_DELIVERY_INPUTS_profile_name_NAME"),
-	"value" => $arLangs["profile_name"][CDeliveryYandexDriver::$tmpOrderConfirm["widgetData"]["type"]],
-	"data" => CDeliveryYandexDriver::$tmpOrderConfirm["widgetData"]["type"],
+	"value" => $arLangs["profile_name"][CDeliveryYaDriver::$tmpOrderConfirm["widgetData"]["type"]],
+	"data" => CDeliveryYaDriver::$tmpOrderConfirm["widgetData"]["type"],
 	"sended" => true,
 	"group" => "DELIVERY"
 );
 
-CDeliveryYandexDriver::getModuleSetups();
-CDeliveryYandexDriver::getOrderProps($orderID);
+CDeliveryYaDriver::getModuleSetups();
+CDeliveryYaDriver::getOrderProps($orderID);
 
 // город доставки
 // смотрим не изменился ли город
-$locationValue = CDeliveryYandexHelper::getOrderLocationValue($orderID, CDeliveryYandexDriver::$tmpOrder["PERSON_TYPE_ID"]);
+$locationValue = CDeliveryYaHelper::getOrderLocationValue($orderID, CDeliveryYaDriver::$tmpOrder["PERSON_TYPE_ID"]);
 
 $city = null;
 if ($locationValue)
-	$city = CDeliveryYandexHelper::getCityNameByID($locationValue);
+	$city = CDeliveryYaHelper::getCityNameByID($locationValue);
 
-$cityName = $city["NAME"] ? $city["NAME"] : CDeliveryYandexDriver::$tmpOrderConfirm["widgetData"]["deliveryCity"];
+$cityName = $city["NAME"] ? $city["NAME"] : CDeliveryYaDriver::$tmpOrderConfirm["widgetData"]["deliveryCity"];
 
 if ($city["REGION"])
     $cityName = $city["REGION"] . " " . $cityName;
@@ -226,19 +226,19 @@ if ($city["REGION"])
 $formElements["city"] = array(
 	"type" => "label",
 	"name" => GetMessage("TRADE_YANDEX_DELIVERY_INPUTS_deliveryCity_NAME"),
-	// "value" => CDeliveryYandexDriver::$tmpOrderConfirm["widgetData"]["deliveryCity"],
+	// "value" => CDeliveryYaDriver::$tmpOrderConfirm["widgetData"]["deliveryCity"],
 	"value" => $cityName,
 	"sended" => true,// признак, что это поле читается с формы и отправляется в аякс
 	"group" => "DELIVERY"
 );
 
 // поля адреса доставки
-foreach (CDeliveryYandexDriver::$options["ADDRESS"] as $name => $value)
+foreach (CDeliveryYaDriver::$options["ADDRESS"] as $name => $value)
 {
-	// $propValue = !empty(CDeliveryYandexDriver::$tmpOrderConfirm["formData"][$name])?
-	// CDeliveryYandexDriver::$tmpOrderConfirm["formData"][$name]:
-	// CDeliveryYandexDriver::$tmpOrderProps[$name];
-	$propValue = CDeliveryYandexDriver::$tmpOrderProps[$name];
+	// $propValue = !empty(CDeliveryYaDriver::$tmpOrderConfirm["formData"][$name])?
+	// CDeliveryYaDriver::$tmpOrderConfirm["formData"][$name]:
+	// CDeliveryYaDriver::$tmpOrderProps[$name];
+	$propValue = CDeliveryYaDriver::$tmpOrderProps[$name];
 	
 	// если адрес пустой, пробуем взять его из свойства адрес ПВЗ
     if ($name == "address" && empty($propValue))
@@ -287,10 +287,10 @@ $formElements["delivery_type"] = array(
 	),
 	"empty" => false, // признак, может ли быть пустым,
 	"sended" => true,
-	"selected" => (!empty(CDeliveryYandexDriver::$tmpOrderConfirm["formData"]["delivery_type"])) ?
-		CDeliveryYandexDriver::$tmpOrderConfirm["formData"]["delivery_type"] :
+	"selected" => (!empty(CDeliveryYaDriver::$tmpOrderConfirm["formData"]["delivery_type"])) ?
+		CDeliveryYaDriver::$tmpOrderConfirm["formData"]["delivery_type"] :
 		// "import",
-		COption::GetOptionString(CDeliveryYandexDriver::$MODULE_ID, "delivery_type_import_widthdraw", "import"),
+		COption::GetOptionString(CDeliveryYaDriver::$MODULE_ID, "delivery_type_import_widthdraw", "import"),
 	"events" => array(
 		"onChange" => "deliverySender.deliveryTypeChange();"
 	),
@@ -299,9 +299,9 @@ $formElements["delivery_type"] = array(
 
 
 // стоимость доставки
-$deliveryPrice = CDeliveryYandexDriver::$tmpOrderConfirm["widgetData"]["costWithRules"];
-if (CDeliveryYandexDriver::$tmpOrderConfirm["formData"]["delivery_price"])
-	$deliveryPrice = CDeliveryYandexDriver::$tmpOrderConfirm["formData"]["delivery_price"];
+$deliveryPrice = CDeliveryYaDriver::$tmpOrderConfirm["widgetData"]["costWithRules"];
+if (CDeliveryYaDriver::$tmpOrderConfirm["formData"]["delivery_price"])
+	$deliveryPrice = CDeliveryYaDriver::$tmpOrderConfirm["formData"]["delivery_price"];
 
 $formElements["delivery_price"] = array(
 	"type" => "label",
@@ -312,9 +312,9 @@ $formElements["delivery_price"] = array(
 );
 
 
-$deliveryTerms = CDeliveryYandex::getDeliveryTerm(
-	CDeliveryYandexDriver::$tmpOrderConfirm["widgetData"]["minDays"],
-	CDeliveryYandexDriver::$tmpOrderConfirm["widgetData"]["maxDays"]
+$deliveryTerms = CDeliveryYa::getDeliveryTerm(
+	CDeliveryYaDriver::$tmpOrderConfirm["widgetData"]["minDays"],
+	CDeliveryYaDriver::$tmpOrderConfirm["widgetData"]["maxDays"]
 );
 
 // время доставки
@@ -327,7 +327,7 @@ $formElements["delivery_terms"] = array(
 );
 
 // изменить стоимость доставки в заказе
-$changeDeliveryPrice = CDeliveryYandexDriver::$tmpOrderConfirm["formData"]["change_delivery_price"];
+$changeDeliveryPrice = CDeliveryYaDriver::$tmpOrderConfirm["formData"]["change_delivery_price"];
 if (empty($changeDeliveryPrice))
 	$changeDeliveryPrice = "Y";
 
@@ -349,16 +349,16 @@ $formElements["import_type"] = array(
 	),
 	"empty" => false, // признак, может ли быть пустым
 	"sended" => true,
-	"selected" => (CDeliveryYandexDriver::$tmpOrderConfirm["formData"]["import_type"])?
-		CDeliveryYandexDriver::$tmpOrderConfirm["formData"]["import_type"]:
+	"selected" => (CDeliveryYaDriver::$tmpOrderConfirm["formData"]["import_type"])?
+		CDeliveryYaDriver::$tmpOrderConfirm["formData"]["import_type"]:
 		"courier",
 	"group" => "OPTIONAL"
 );*/
 
 // дата отгрузки
-$shipmentDate = CDeliveryYandexDriver::$tmpOrderConfirm["formData"]["shipment_date"];
+$shipmentDate = CDeliveryYaDriver::$tmpOrderConfirm["formData"]["shipment_date"];
 if (empty($shipmentDate))
-	$shipmentDate = CDeliveryYandexDriver::getShipmentDate("d.m.Y");
+	$shipmentDate = CDeliveryYaDriver::getShipmentDate("d.m.Y");
 
 $formElements["shipment_date"] = array(
 	"type" => "date",
@@ -374,9 +374,9 @@ $formElements["shipment_date"] = array(
 
 
 // способ доставки на склад ЯД
-$toYdWarehouse = CDeliveryYandexDriver::$tmpOrderConfirm["formData"]["to_yd_warehouse"];
+$toYdWarehouse = CDeliveryYaDriver::$tmpOrderConfirm["formData"]["to_yd_warehouse"];
 if (empty($toYdWarehouse))
-	$toYdWarehouse = CDeliveryYandexDriver::$options["to_yd_warehouse"];
+	$toYdWarehouse = CDeliveryYaDriver::$options["to_yd_warehouse"];
 
 $formElements["to_yd_warehouse"] = array(
 	"type" => "checkbox",
@@ -390,21 +390,21 @@ $formElements["to_yd_warehouse"] = array(
 );
 
 // ID склада отправителя
-CDeliveryYandexDriver::getRequestConfig();
-$arRequestConfig = CDeliveryYandexDriver::$requestConfig;
+CDeliveryYaDriver::getRequestConfig();
+$arRequestConfig = CDeliveryYaDriver::$requestConfig;
 
 $arWarehouses = $arRequestConfig["warehouse_id"];
 
-if (isset(CDeliveryYandexDriver::$tmpOrderConfirm["formData"]["warehouseConfigNum"]))
-	$warehouseConfigNum = CDeliveryYandexDriver::$tmpOrderConfirm["formData"]["warehouseConfigNum"];
+if (isset(CDeliveryYaDriver::$tmpOrderConfirm["formData"]["warehouseConfigNum"]))
+	$warehouseConfigNum = CDeliveryYaDriver::$tmpOrderConfirm["formData"]["warehouseConfigNum"];
 else
-	$warehouseConfigNum = CDeliveryYandexDriver::$options["defaultWarehouse"];
+	$warehouseConfigNum = CDeliveryYaDriver::$options["defaultWarehouse"];
 
 foreach ($arWarehouses as $num => $warehouse)
 {
 	if (!empty($warehouse))
 	{
-		$warehouseInfo = CDeliveryYandexHelper::convertFromUTF(CDeliveryYandexDriver::getWarehouseInfo($warehouse));
+		$warehouseInfo = CDeliveryYaHelper::convertFromUTF(CDeliveryYaDriver::getWarehouseInfo($warehouse));
 		if ($warehouseInfo["warehouseInfo"]["data"]["field_name"])
 			$arWarehouses[$num] .= " " . $warehouseInfo["warehouseInfo"]["data"]["field_name"];
 	}
@@ -420,9 +420,9 @@ $formElements["warehouseConfigNum"] = array(
 	"group" => "OPTIONAL"
 );
 
-$assessedCostPercent = CDeliveryYandexDriver::$tmpOrderConfirm["formData"]["assessedCostPercent"];
+$assessedCostPercent = CDeliveryYaDriver::$tmpOrderConfirm["formData"]["assessedCostPercent"];
 if (empty($assessedCostPercent))
-	$assessedCostPercent = CDeliveryYandexDriver::$options["assessedCostPercent"];
+	$assessedCostPercent = CDeliveryYaDriver::$options["assessedCostPercent"];
 $formElements["assessedCostPercent"] = array(
 	"type" => "input",
 	"name" => GetMessage("TRADE_YANDEX_DELIVERY_INPUTS_assessedCostPercent_NAME"),
@@ -444,9 +444,9 @@ $arGabsValues = array(
 
 foreach ($arGabsValues as $code)
 {
-	$val = CDeliveryYandexDriver::$tmpOrderConfirm["formData"][$code];
-	if (!isset(CDeliveryYandexDriver::$tmpOrderConfirm["formData"][$code]))
-		$val = CDeliveryYandexDriver::$tmpOrderDimension[$code];
+	$val = CDeliveryYaDriver::$tmpOrderConfirm["formData"][$code];
+	if (!isset(CDeliveryYaDriver::$tmpOrderConfirm["formData"][$code]))
+		$val = CDeliveryYaDriver::$tmpOrderDimension[$code];
 	
 	$formElements[$code] = array(
 		"type" => "input",
@@ -509,7 +509,7 @@ while ($arSite = $rsSites->Fetch()) {
 <script>
     $(document).ready(function ()
     {
-        var siteIDs = <?=CUtil::PHPtoJSObject(CDeliveryYandexHelper::selectSite())?>;
+        var siteIDs = <?=CUtil::PHPtoJSObject(CDeliveryYaHelper::selectSite())?>;
         var siteID = <?=CUtil::PHPtoJSObject($siteDomain)?>;
 
         if (siteIDs.indexOf(siteID) != -1 || siteIDs == 0) {
@@ -528,7 +528,7 @@ while ($arSite = $rsSites->Fetch()) {
             endStatus: <?=CUtil::PHPtoJSObject($arEndStatus)?>,
             errorStatus: <?=CUtil::PHPtoJSObject($arErrorStatus)?>,
             notEditableStatus: <?=CUtil::PHPtoJSObject($arNotEditStatus)?>,
-            tmpOrderConfirm: <?=CUtil::PHPtoJSObject(CDeliveryYandexDriver::$tmpOrderConfirm)?>,
+            tmpOrderConfirm: <?=CUtil::PHPtoJSObject(CDeliveryYaDriver::$tmpOrderConfirm)?>,
             formElements: <?=CUtil::PHPtoJSObject($formElements)?>,
             formElementsGroups: <?=CUtil::PHPtoJSObject($arOptionsGroupsName)?>,
             formElementsGroupsSort: <?=CUtil::PHPtoJSObject($arOptionsGroupsSort)?>,
@@ -539,9 +539,9 @@ while ($arSite = $rsSites->Fetch()) {
             isOrderChange: <?=CUtil::PHPtoJSObject($isOrderChange)?>,
 
             lastVersion: <?=CUtil::PHPtoJSObject($lastVersion)?>,
-            tmpOrderDimension: <?=CUtil::PHPtoJSObject(CDeliveryYandexDriver::$tmpOrderDimension)?>,
+            tmpOrderDimension: <?=CUtil::PHPtoJSObject(CDeliveryYaDriver::$tmpOrderDimension)?>,
 
-            isAdmin: <?=CUtil::PHPtoJSObject(CDeliveryYandexHelper::isAdmin())?>,
+            isAdmin: <?=CUtil::PHPtoJSObject(CDeliveryYaHelper::isAdmin())?>,
 
             formOpened: false,// признак, что форма открывалась
             recalculate: true,// признак необходимости перерасчета стоиомости доставки
@@ -1948,7 +1948,7 @@ while ($arSite = $rsSites->Fetch()) {
                 ajaxData["sessid"] = BX.bitrix_sessid();
 
                 $.ajax({
-                    url: "/bitrix/js/<?=CDeliveryYandexDriver::$MODULE_ID?>/ajax.php",
+                    url: "/bitrix/js/<?=CDeliveryYaDriver::$MODULE_ID?>/ajax.php",
                     data: ajaxData,
                     type: "POST",
                     dataType: "json",
@@ -2123,7 +2123,7 @@ while ($arSite = $rsSites->Fetch()) {
                 //общая стоимость товаров в корзине
                 'cost': function ()
                 {
-                    return <?=CDeliveryYandexDriver::$tmpOrderDimension["PRICE"]?>;
+                    return <?=CDeliveryYaDriver::$tmpOrderDimension["PRICE"]?>;
                 },
 
                 //общее количество товаров в корзине
@@ -2132,7 +2132,7 @@ while ($arSite = $rsSites->Fetch()) {
                     return 1;
                 },
 
-                'assessed_value': <?=CDeliveryYandexDriver::$tmpOrderDimension["PRICE"]?>,
+                'assessed_value': <?=CDeliveryYaDriver::$tmpOrderDimension["PRICE"]?>,
 
                 'order': {
                     //имя, фамилия, телефон, улица, дом, индекс
@@ -2162,7 +2162,7 @@ while ($arSite = $rsSites->Fetch()) {
                     },
 
                     //объявленная ценность заказа
-                    'order_assessed_value': <?=CDeliveryYandexDriver::$tmpOrderDimension["PRICE"]?>,
+                    'order_assessed_value': <?=CDeliveryYaDriver::$tmpOrderDimension["PRICE"]?>,
                     //флаг отправки заказа через единый склад.
                     'delivery_to_yd_warehouse': (deliverySender.formElements.to_yd_warehouse.value == "Y") ? 1 : 0,
                     //товарные позиции в заказе

@@ -1,12 +1,12 @@
 <?
 /**
- * Copyright (c) 27/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
 cmodule::includeModule('sale');
 IncludeModuleLangFile(__FILE__);
 
-class CDeliveryYandex{
+class CDeliveryYa{
 	static $MODULE_ID = "yandex.delivery";
 	static $locationTo;
 	static $personType;
@@ -43,7 +43,7 @@ class CDeliveryYandex{
 		
 		return array(
 			/* Basic description */
-			"SID" => "tradeDeliveryYandex",
+			"SID" => "tradeDeliveryYa",
 			"NAME" => GetMessage("TRADE_YANDEX_DELIVERY_DELIV_NAME"),
 			"DESCRIPTION" => GetMessage('TRADE_YANDEX_DELIVERY_DELIV_DESCR'),
 			"DESCRIPTION_INNER" => GetMessage('TRADE_YANDEX_DELIVERY_DESCRIPTION_INNER'),
@@ -51,11 +51,11 @@ class CDeliveryYandex{
 			"HANDLER" => __FILE__,
 
 			/* Handler methods */
-			"DBGETSETTINGS" => array("CDeliveryYandex", "GetSettings"),
-			"DBSETSETTINGS" => array("CDeliveryYandex", "SetSettings"),
+			"DBGETSETTINGS" => array("CDeliveryYa", "GetSettings"),
+			"DBSETSETTINGS" => array("CDeliveryYa", "SetSettings"),
 
-			"COMPABILITY" => array("CDeliveryYandex", "Compability"),
-			"CALCULATOR" => array("CDeliveryYandex", "Calculate"),
+			"COMPABILITY" => array("CDeliveryYa", "Compability"),
+			"CALCULATOR" => array("CDeliveryYa", "Calculate"),
 
 			/* List of delivery profiles */
 			"PROFILES" => $arProfiles,
@@ -97,12 +97,12 @@ class CDeliveryYandex{
 		if (self::$clearOrderData)
 		{
 			self::$cityTo = null;
-			CDeliveryYandexDriver::clearOrderData();
+			CDeliveryYaDriver::clearOrderData();
 		}
 		
 		if (empty(self::$cityTo))
 		{
-			$tmpCity = CDeliveryYandexHelper::getCityNameByID($arOrder["LOCATION_TO"]);
+			$tmpCity = CDeliveryYaHelper::getCityNameByID($arOrder["LOCATION_TO"]);
 			self::$cityTo = $tmpCity["NAME"];
 		}
 		
@@ -114,11 +114,11 @@ class CDeliveryYandex{
 		if (isset($arOrder["ITEMS"]) && $arOrder["ITEMS"])
 			$orderItems = $arOrder["ITEMS"];
 		
-		CDeliveryYandexDriver::getOrderBasket($basketFilter, $orderItems);
-		CDeliveryYandexDriver::getModuleSetups();
+		CDeliveryYaDriver::getOrderBasket($basketFilter, $orderItems);
+		CDeliveryYaDriver::getModuleSetups();
 		
-		$arCityFrom = CDeliveryYandexHelper::getCityFromNames();
-		$cityFrom = CDeliveryYandexDriver::$options["cityFrom"];
+		$arCityFrom = CDeliveryYaHelper::getCityFromNames();
+		$cityFrom = CDeliveryYaDriver::$options["cityFrom"];
 		self::$cityFrom = $arCityFrom[$cityFrom];
 		
 		$obCache = new CPHPCache();
@@ -126,7 +126,7 @@ class CDeliveryYandex{
 			"trade_yandex_delivery|".
 			self::$cityFrom."|".
 			self::$cityTo."|".
-			CDeliveryYandexDriver::$options["to_yd_warehouse"];
+			CDeliveryYaDriver::$options["to_yd_warehouse"];
 			
 		$arNeedDims = array(
 			"WEIGHT",
@@ -136,11 +136,11 @@ class CDeliveryYandex{
 			"PRICE"
 		);
 		foreach ($arNeedDims as $dim)
-			$cachename .= "|".CDeliveryYandexDriver::$tmpOrderDimension[$dim];
+			$cachename .= "|".CDeliveryYaDriver::$tmpOrderDimension[$dim];
 		
 		// оценочная стоимость
 		if (self::$assessedCostPercent === null)
-			self::$assessedCostPercent = FloatVal(COption::GetOptionString(CDeliveryYandexDriver::$MODULE_ID, 'assessedCostPercent', '100'));
+			self::$assessedCostPercent = FloatVal(COption::GetOptionString(CDeliveryYaDriver::$MODULE_ID, 'assessedCostPercent', '100'));
 		
 		$cachename .= "|". self::$assessedCostPercent;
 		
@@ -154,21 +154,21 @@ class CDeliveryYandex{
 				"city_from" => self::$cityFrom,
 				"city_to" => self::$cityTo,
 				
-				"weight" => CDeliveryYandexDriver::$tmpOrderDimension["WEIGHT"],
-				"height" => CDeliveryYandexDriver::$tmpOrderDimension["HEIGHT"],
-				"width" => CDeliveryYandexDriver::$tmpOrderDimension["WIDTH"],
-				"length" => CDeliveryYandexDriver::$tmpOrderDimension["LENGTH"],
+				"weight" => CDeliveryYaDriver::$tmpOrderDimension["WEIGHT"],
+				"height" => CDeliveryYaDriver::$tmpOrderDimension["HEIGHT"],
+				"width" => CDeliveryYaDriver::$tmpOrderDimension["WIDTH"],
+				"length" => CDeliveryYaDriver::$tmpOrderDimension["LENGTH"],
 				
-				"total_cost" => CDeliveryYandexDriver::$tmpOrderDimension["PRICE"],
-				"order_cost" => CDeliveryYandexDriver::$tmpOrderDimension["PRICE"],
-				"assessed_value" => CDeliveryYandexDriver::$tmpOrderDimension["PRICE"] * (self::$assessedCostPercent/100),
+				"total_cost" => CDeliveryYaDriver::$tmpOrderDimension["PRICE"],
+				"order_cost" => CDeliveryYaDriver::$tmpOrderDimension["PRICE"],
+				"assessed_value" => CDeliveryYaDriver::$tmpOrderDimension["PRICE"] * (self::$assessedCostPercent/100),
 				
-				"to_yd_warehouse" => CDeliveryYandexDriver::$options["to_yd_warehouse"]=="Y"?1:0
+				"to_yd_warehouse" => CDeliveryYaDriver::$options["to_yd_warehouse"]=="Y"?1:0
 			);
 			
 			$method = "searchDeliveryList";
 			
-			$res = CDeliveryYandexHelper::convertFromUTF(CDeliveryYandexDriver::MakeRequest($method, $arSend));
+			$res = CDeliveryYaHelper::convertFromUTF(CDeliveryYaDriver::MakeRequest($method, $arSend));
 			
 			if ($res["status"] == "ok")
 			{
@@ -219,11 +219,11 @@ class CDeliveryYandex{
 			
 			if ($orderID)
 			{
-				$orderInfo = CDeliveryYandexSqlOrders::getList(array(
+				$orderInfo = CDeliveryYaSqlOrders::getList(array(
 					"filter" => array("ORDER_ID" => $orderID)
 				))->Fetch();
 				
-				$orderInfo = json_decode(CDeliveryYandexHelper::convertToUTF($orderInfo["PARAMS"]), true);
+				$orderInfo = json_decode(CDeliveryYaHelper::convertToUTF($orderInfo["PARAMS"]), true);
 				
 				$profileType = $arProfilesConversion[$orderInfo["type"]];
 				$arProfiles[$profileType] = array(
@@ -245,16 +245,16 @@ class CDeliveryYandex{
 	static $assessedCostPercent = null;
 	static public function calculateOrder($params)
 	{
-		if (!CDeliveryYandexHelper::isAdmin("R"))
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin("R"))
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		if (empty($params["ORDER_ID"]))
-			CDeliveryYandexHelper::throwException("Order not found", $params);
+			CDeliveryYaHelper::throwException("Order not found", $params);
 		
 		$orderID = $params["ORDER_ID"];
 		
 		// получаем тип плательщика
-		$orderData = CDeliveryYandexDriver::getOrder($orderID);
+		$orderData = CDeliveryYaDriver::getOrder($orderID);
 		
 		// вытаскиваем местоположение
 		$arLocationProp = CSaleOrderProps::GetList(
@@ -281,11 +281,11 @@ class CDeliveryYandex{
 			// подставляем габариты с формы отправки заявки
 			if ($params["data"]["formData"])
 			{
-				CDeliveryYandexDriver::getOrderBasket(array("ORDER_ID" => $orderID));
-				CDeliveryYandexDriver::$tmpOrderDimension["WEIGHT"] = $params["data"]["formData"]["WEIGHT"];
-				CDeliveryYandexDriver::$tmpOrderDimension["LENGTH"] = $params["data"]["formData"]["LENGTH"];
-				CDeliveryYandexDriver::$tmpOrderDimension["WIDTH"] = $params["data"]["formData"]["WIDTH"];
-				CDeliveryYandexDriver::$tmpOrderDimension["HEIGHT"] = $params["data"]["formData"]["HEIGHT"];
+				CDeliveryYaDriver::getOrderBasket(array("ORDER_ID" => $orderID));
+				CDeliveryYaDriver::$tmpOrderDimension["WEIGHT"] = $params["data"]["formData"]["WEIGHT"];
+				CDeliveryYaDriver::$tmpOrderDimension["LENGTH"] = $params["data"]["formData"]["LENGTH"];
+				CDeliveryYaDriver::$tmpOrderDimension["WIDTH"] = $params["data"]["formData"]["WIDTH"];
+				CDeliveryYaDriver::$tmpOrderDimension["HEIGHT"] = $params["data"]["formData"]["HEIGHT"];
 				
 				// не чистим данные до запроса на расчет доставки
 				self::$clearOrderData = false;
@@ -306,9 +306,9 @@ class CDeliveryYandex{
 					{
 						// собираем для товаров заказа данные для открытия их по ссылке
 						if (!CModule::IncludeModule("iblock"))
-							CDeliveryYandexHelper::throwException("Module iblock not found");
+							CDeliveryYaHelper::throwException("Module iblock not found");
 						
-						$arGoodsIDs = array_merge(CDeliveryYandexDriver::$zeroGabsGoods, CDeliveryYandexDriver::$zeroWeightGoods);
+						$arGoodsIDs = array_merge(CDeliveryYaDriver::$zeroGabsGoods, CDeliveryYaDriver::$zeroWeightGoods);
 						$zeroGabs = array();
 						$zeroWeight = array();
 						foreach ($arGoodsIDs as $elemID)
@@ -325,10 +325,10 @@ class CDeliveryYandex{
 							);
 							// $tmpEl = $dbRes;
 							
-							if (CDeliveryYandexDriver::$zeroGabsGoods[$elemID])
+							if (CDeliveryYaDriver::$zeroGabsGoods[$elemID])
 								$zeroGabs[$elemID] = $tmpEl;
 							
-							if (CDeliveryYandexDriver::$zeroWeightGoods[$elemID])
+							if (CDeliveryYaDriver::$zeroWeightGoods[$elemID])
 								$zeroWeight[$elemID] = $tmpEl;
 						}
 						
@@ -344,18 +344,18 @@ class CDeliveryYandex{
 							
 							"date_limits" => array(
 								"import" => array(
-									"ds" => CDeliveryYandexDriver::convertDataToAdmin($res["date_limits"]["import"]["min"]),
-									"ff" => CDeliveryYandexDriver::convertDataToAdmin($res["date_limits"]["import_sort"]["min"])
+									"ds" => CDeliveryYaDriver::convertDataToAdmin($res["date_limits"]["import"]["min"]),
+									"ff" => CDeliveryYaDriver::convertDataToAdmin($res["date_limits"]["import_sort"]["min"])
 								),
 								"withdraw" => array(
-									"ds" => CDeliveryYandexDriver::convertDataToAdmin($res["date_limits"]["withdraw"]["min"]),
-									"ff" => CDeliveryYandexDriver::convertDataToAdmin($res["date_limits"]["withdraw_sort"]["min"])
+									"ds" => CDeliveryYaDriver::convertDataToAdmin($res["date_limits"]["withdraw"]["min"]),
+									"ff" => CDeliveryYaDriver::convertDataToAdmin($res["date_limits"]["withdraw_sort"]["min"])
 								)
 							),
 							
 							"zeroGabs" => $zeroGabs,
 							"zeroWeight" => $zeroWeight,
-							"totalWeightMoreDefault" => CDeliveryYandexDriver::$totalWeightMoreDefault,
+							"totalWeightMoreDefault" => CDeliveryYaDriver::$totalWeightMoreDefault,
 							"isZeroGabsWeight" => !(empty($zeroGabs) && empty($zeroWeight))
 						);
 					}
@@ -364,13 +364,13 @@ class CDeliveryYandex{
 				if (empty($arResult))
 					return false;
 				else
-					return array_merge($arResult, array("debug" => CDeliveryYandexDriver::$debug));
+					return array_merge($arResult, array("debug" => CDeliveryYaDriver::$debug));
 			}
 			else
-				CDeliveryYandexHelper::throwException("No delivery calculated", array($params, $calculateResult));
+				CDeliveryYaHelper::throwException("No delivery calculated", array($params, $calculateResult));
 		}
 		else
-			CDeliveryYandexHelper::throwException("Cant find LOCATION or PERSON_TYPE", array($params, $orderData, $arLocationProp, $locationValue, $calculateResult));
+			CDeliveryYaHelper::throwException("Cant find LOCATION or PERSON_TYPE", array($params, $orderData, $arLocationProp, $locationValue, $calculateResult));
 	
 		return true;
 	}
@@ -420,7 +420,7 @@ class CDeliveryYandex{
 		if (!empty($requestProfilePrices))
 		{
 			if (!$tmpProfilePrices = json_decode($requestProfilePrices, true))
-				$tmpProfilePrices = json_decode(CDeliveryYandexHelper::convertToUTF($requestProfilePrices), true);
+				$tmpProfilePrices = json_decode(CDeliveryYaHelper::convertToUTF($requestProfilePrices), true);
 			
 			$requestProfilePrices = $tmpProfilePrices;
 		}
@@ -432,7 +432,7 @@ class CDeliveryYandex{
 		{
 			$deliveryPrice = $requestProfilePrices[$profile]["price"];
 			$term = $requestProfilePrices[$profile]["term"];
-			$deliveryProvider = CDeliveryYandexHelper::convertFromUTF($requestProfilePrices[$profile]["provider"]) . "<br/>";
+			$deliveryProvider = CDeliveryYaHelper::convertFromUTF($requestProfilePrices[$profile]["provider"]) . "<br/>";
 		}
 		
         $arReturn = array(
@@ -452,7 +452,7 @@ class CDeliveryYandex{
 	static $selectedDelivery = "";
 	static public function pickupLoader($arResult, $arUserResult)
 	{
-		if(!CDeliveryYandexHelper::isActive())
+		if(!CDeliveryYaHelper::isActive())
 			return;
 		
 		self::$selectedDelivery = $arUserResult['DELIVERY_ID'];
@@ -462,11 +462,11 @@ class CDeliveryYandex{
 	
 	static public function setLocationFromCookie(&$arResult, &$arUserResult, &$arParams)
 	{
-		$cityGeo = CDeliveryYandexHelper::convertFromUTF($_COOKIE["city_to"]);// город из геовиджета
+		$cityGeo = CDeliveryYaHelper::convertFromUTF($_COOKIE["city_to"]);// город из геовиджета
 	
 		if (!empty($cityGeo))
 		{
-			$code = CDeliveryYandexHelper::getCityCodeByName($cityGeo);
+			$code = CDeliveryYaHelper::getCityCodeByName($cityGeo);
 			
 			if ($code)
 			{
@@ -498,7 +498,7 @@ class CDeliveryYandex{
 		self::$locationTo = $arUserResult["DELIVERY_LOCATION"];
 		self::$selectedDelivery = $arUserResult['DELIVERY_ID'];
 		
-		if(CDeliveryYandexHelper::isActive() && $_REQUEST['is_ajax_post'] != 'Y' && $_REQUEST["AJAX_CALL"] != 'Y' && !$_REQUEST["ORDER_AJAX"])
+		if(CDeliveryYaHelper::isActive() && $_REQUEST['is_ajax_post'] != 'Y' && $_REQUEST["AJAX_CALL"] != 'Y' && !$_REQUEST["ORDER_AJAX"])
 		{
 			global $APPLICATION;
 			$APPLICATION->IncludeComponent(
@@ -519,16 +519,16 @@ class CDeliveryYandex{
 	}
 	
 	static public function onEpilog(){//отображение формы отправки заявки
-		CDeliveryYandexHelper::checkLocationChange();
+		CDeliveryYaHelper::checkLocationChange();
 	
 		// проверяем надо ли отображать сообщения об изменениях заказа и отображаем их
-		if (defined('ADMIN_SECTION') && /*$GLOBALS["USER"]->IsAdmin()*/CDeliveryYandexHelper::isAdmin("R"))
-			CDeliveryYandexHelper::showMessageNotice();
+		if (defined('ADMIN_SECTION') && /*$GLOBALS["USER"]->IsAdmin()*/CDeliveryYaHelper::isAdmin("R"))
+			CDeliveryYaHelper::showMessageNotice();
 		
 		if(
 			!self::isOrderDetailPage() || 
 			!cmodule::includeModule('sale') ||
-			!CDeliveryYandexHelper::isAdmin("R")
+			!CDeliveryYaHelper::isAdmin("R")
 		)
 			return false;
 		
@@ -566,10 +566,10 @@ class CDeliveryYandex{
 		if ((defined("ADMIN_SECTION") && ADMIN_SECTION===true) || strpos($_SERVER['PHP_SELF'], "/bitrix/admin") ===
             true) return;
 		
-		if (CDeliveryYandexHelper::isActive() && self::$personType && self::$selectedDelivery)
+		if (CDeliveryYaHelper::isActive() && self::$personType && self::$selectedDelivery)
 		{
 			$noJson = self::no_json($content);
-			$arCity = CDeliveryYandexHelper::getCityNameByID(self::$locationTo);
+			$arCity = CDeliveryYaHelper::getCityNameByID(self::$locationTo);
 			
 			// Таким вот странным способом мы передаем наши данные из PHP в js в момент Ajax-запроса.
 			if(($_REQUEST['is_ajax_post'] == 'Y' || $_REQUEST["AJAX_CALL"] == 'Y') && self::$locationTo && ($_REQUEST["confirmorder"] != "Y") && $noJson) 
@@ -580,13 +580,13 @@ class CDeliveryYandex{
 			}
 			elseif(($_REQUEST['action'] == 'refreshOrderAjax' || $_REQUEST['soa-action'] == 'refreshOrderAjax') && !$noJson)
 			{
-				$content = substr($content,0,strlen($content)-1).',"trade_yandex_delivery":{"yd_ajaxPersonType":"'.self::$personType.'","yd_ajaxDeliveryID":"'.self::$selectedDelivery.'", "yd_ajaxLocation":"'.CDeliveryYandexHelper::convertToUTF($arCity["REGION"] . " " . $arCity["NAME"]).'"}}';
+				$content = substr($content,0,strlen($content)-1).',"trade_yandex_delivery":{"yd_ajaxPersonType":"'.self::$personType.'","yd_ajaxDeliveryID":"'.self::$selectedDelivery.'", "yd_ajaxLocation":"'.CDeliveryYaHelper::convertToUTF($arCity["REGION"] . " " . $arCity["NAME"]).'"}}';
 			}
 		}
 	}
 	
 	static public function no_json(&$wat){
-		return is_null(json_decode(CDeliveryYandexHelper::convertToUTF($wat),true));
+		return is_null(json_decode(CDeliveryYaHelper::convertToUTF($wat),true));
 	}
 	
 	static public function getDeliveryTerm($min, $max)
@@ -608,7 +608,7 @@ class CDeliveryYandex{
 	
 	static public function orderCreate($orderID, $orderFields)
 	{
-		if ($_REQUEST["yd_is_select"] == "tradeDeliveryYandex")
+		if ($_REQUEST["yd_is_select"] == "tradeDeliveryYa")
 		{
 			if (!cmodule::includemodule('sale'))
 				return true;
@@ -619,13 +619,13 @@ class CDeliveryYandex{
 				"PARAMS" => $_REQUEST["yd_deliveryData"]
 			);
 			
-			CDeliveryYandexSqlOrders::Add($Data);
+			CDeliveryYaSqlOrders::Add($Data);
 			
-			if (CDeliveryYandexHelper::controlProps())
+			if (CDeliveryYaHelper::controlProps())
 			{
-				$orderPropValue = CDeliveryYandexHelper::getOrderPropsCodeFormID();
+				$orderPropValue = CDeliveryYaHelper::getOrderPropsCodeFormID();
 				
-				$arOrderPropsCode = CDeliveryYandexHelper::getOrderPropsCode();
+				$arOrderPropsCode = CDeliveryYaHelper::getOrderPropsCode();
 				
 				foreach ($arOrderPropsCode as $propCode)
 				{

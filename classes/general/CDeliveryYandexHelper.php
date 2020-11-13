@@ -5,7 +5,7 @@
 
 IncludeModuleLangFile(__FILE__);
 
-class CDeliveryYandexHelper
+class CDeliveryYaHelper
 {
 	static $exceptionData = array();
 	
@@ -27,8 +27,8 @@ class CDeliveryYandexHelper
 	
 	public static function clearCache()
 	{
-		if (!CDeliveryYandexHelper::isAdmin())
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin())
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		$obCache = new CPHPCache();
 		$obCache->CleanDir('/trade_yandex_delivery/');
@@ -38,7 +38,7 @@ class CDeliveryYandexHelper
 	
 	public static function isAdmin($right = "W")
 	{
-		$userRight = CMain::GetUserRight(CDeliveryYandexDriver::$MODULE_ID);
+		$userRight = CMain::GetUserRight(CDeliveryYaDriver::$MODULE_ID);
 		
 		$DEPTH = array(
 			'D' => 1,
@@ -53,12 +53,12 @@ class CDeliveryYandexHelper
 	
 	public static function throwException($code, $data = null)
 	{
-		self::$exceptionData = array("code" => self::convertToUTF($code), "data" => $data, "debug" => CDeliveryYandexDriver::$debug);
+		self::$exceptionData = array("code" => self::convertToUTF($code), "data" => $data, "debug" => CDeliveryYaDriver::$debug);
 		
 		$dataToCode = print_r($data, true);
-		$dataToCode .= print_r(array("debug" => CDeliveryYandexDriver::$debug), true);
+		$dataToCode .= print_r(array("debug" => CDeliveryYaDriver::$debug), true);
 		
-		self::errorLog(CDeliveryYandexDriver::$debug);
+		self::errorLog(CDeliveryYaDriver::$debug);
 		
 		throw new Exception($code . "\n" . $dataToCode);
 	}
@@ -72,11 +72,11 @@ class CDeliveryYandexHelper
 		{
 			$dS = Bitrix\Sale\Delivery\Services\Table::getList(array(
 				'order' => array('SORT' => 'ASC', 'NAME' => 'ASC'),
-				'filter' => array('CODE' => 'tradeDeliveryYandex')
+				'filter' => array('CODE' => 'tradeDeliveryYa')
 			))->Fetch();
 		}
 		else
-			$dS = CSaleDeliveryHandler::GetBySID('tradeDeliveryYandex')->Fetch();
+			$dS = CSaleDeliveryHandler::GetBySID('tradeDeliveryYa')->Fetch();
 		
 		return $dS;
 	}
@@ -263,7 +263,7 @@ class CDeliveryYandexHelper
 		$dbProps = CSaleOrderProps::GetList(
 			array(),
 			array(
-				"PERSON_TYPE_ID" => CDeliveryYandexDriver::$tmpOrder["PERSON_TYPE_ID"],
+				"PERSON_TYPE_ID" => CDeliveryYaDriver::$tmpOrder["PERSON_TYPE_ID"],
 				"TYPE" => "LOCATION",
 				"ACTIVE" => "Y"
 			)
@@ -450,11 +450,11 @@ class CDeliveryYandexHelper
 	
 	static public function getNoticeFileName()
 	{
-		self::$noticeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CDeliveryYandexDriver::$MODULE_ID . "/private/notice.txt";
-		self::$changeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CDeliveryYandexDriver::$MODULE_ID . "/private/change.txt";
+		self::$noticeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CDeliveryYaDriver::$MODULE_ID . "/private/notice.txt";
+		self::$changeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CDeliveryYaDriver::$MODULE_ID . "/private/change.txt";
 		
-		$oldNoticeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CDeliveryYandexDriver::$MODULE_ID . "/notice.txt";
-		$oldChangeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CDeliveryYandexDriver::$MODULE_ID . "/change.txt";
+		$oldNoticeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CDeliveryYaDriver::$MODULE_ID . "/notice.txt";
+		$oldChangeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CDeliveryYaDriver::$MODULE_ID . "/change.txt";
 		
 		if (file_exists($oldNoticeFileName))
 		{
@@ -474,8 +474,8 @@ class CDeliveryYandexHelper
 	
 	static public function clearNoticeFile()
 	{
-		if (!CDeliveryYandexHelper::isAdmin("R"))
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin("R"))
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		self::getNoticeFileName();
 		
@@ -566,7 +566,7 @@ class CDeliveryYandexHelper
 					};
 
 					$.ajax({
-						url: "/bitrix/js/<?=CDeliveryYandexDriver::$MODULE_ID?>/ajax.php",
+						url: "/bitrix/js/<?=CDeliveryYaDriver::$MODULE_ID?>/ajax.php",
 						data: ajaxData,
 						type: "POST",
 						dataType: "json",
@@ -623,8 +623,8 @@ class CDeliveryYandexHelper
 		if (self::$isOrderAdd || isset($arFields["LOCKED_BY"]))
 			return true;
 		
-		CDeliveryYandexDriver::$tmpOrder = false;
-		self::$orderBeforeUpdate = CDeliveryYandexDriver::getOrder($orderID);
+		CDeliveryYaDriver::$tmpOrder = false;
+		self::$orderBeforeUpdate = CDeliveryYaDriver::getOrder($orderID);
 		$needDeliveries = self::getDeliveryIDs();
 		$curDeliveryID = self::$orderBeforeUpdate["DELIVERY_ID"];
 		if (!in_array($curDeliveryID, $needDeliveries))
@@ -641,8 +641,8 @@ class CDeliveryYandexHelper
 	static public function getOrderCheckedPropsValues($orderID)
 	{
 		// свойства заказа, которые необходимо проверить
-		CDeliveryYandexDriver::$tmpOrderProps = false;
-		$orderProps = CDeliveryYandexDriver::getOrderProps($orderID);
+		CDeliveryYaDriver::$tmpOrderProps = false;
+		$orderProps = CDeliveryYaDriver::getOrderProps($orderID);
 		$propsToCheck = self::getUpdatedEventProps();
 		
 		$saveProps = array();
@@ -673,13 +673,13 @@ class CDeliveryYandexHelper
 			);
 		}
 		
-		CDeliveryYandexDriver::getOrderConfirm($orderID);
+		CDeliveryYaDriver::getOrderConfirm($orderID);
 		if (
 			isset($arFields["CANCELED"]) &&
 			$arFields["CANCELED"] != self::$orderBeforeUpdate["CANCELED"] &&
 			self::$orderBeforeUpdate["CANCELED"] == "N" &&
 			in_array($curDeliveryID, $needDeliveries) &&
-			!empty(CDeliveryYandexDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"])
+			!empty(CDeliveryYaDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"])
 		)
 			$arChange[] = array(
 				"event" => "CANCEL_ORDER",
@@ -713,9 +713,9 @@ class CDeliveryYandexHelper
 		$orderPropsBeforeUpdate = $_SESSION["trade_orderPropsBeforeUpdate"];
 		unset($_SESSION["trade_orderPropsBeforeUpdate"]);
 		
-		CDeliveryYandexDriver::$tmpOrder = false;
-		CDeliveryYandexDriver::getOrder($orderID);
-		$curLocation = self::getOrderLocationValue($orderID, CDeliveryYandexDriver::$tmpOrder["PERSON_TYPE_ID"]);
+		CDeliveryYaDriver::$tmpOrder = false;
+		CDeliveryYaDriver::getOrder($orderID);
+		$curLocation = self::getOrderLocationValue($orderID, CDeliveryYaDriver::$tmpOrder["PERSON_TYPE_ID"]);
 		
 		$locationChange = false;
 		if ($orderLocationBeforeUpdate != $curLocation)
@@ -758,8 +758,8 @@ class CDeliveryYandexHelper
 			return true;
 		
 		// собираем корзину заказа до изменений
-		CDeliveryYandexDriver::$tmpOrderBasket = false;
-		self::$orderBasketBeforeUpdate = CDeliveryYandexDriver::getOrderBasket(array("ORDER_ID" => $arFields["ORDER_ID"]));
+		CDeliveryYaDriver::$tmpOrderBasket = false;
+		self::$orderBasketBeforeUpdate = CDeliveryYaDriver::getOrderBasket(array("ORDER_ID" => $arFields["ORDER_ID"]));
 		
 		return true;
 	}
@@ -773,16 +773,16 @@ class CDeliveryYandexHelper
 		
 		$orderID = $arFields["ORDER_ID"];
 		$needDeliveries = self::getDeliveryIDs();
-		$arOrder = CDeliveryYandexDriver::getOrder($orderID);
+		$arOrder = CDeliveryYaDriver::getOrder($orderID);
 		
 		if (in_array($arOrder["DELIVERY_ID"], $needDeliveries))
 		{
 			// собираем текущую корзину заказа
-			CDeliveryYandexDriver::$tmpOrderBasket = false;
-			CDeliveryYandexDriver::getOrderBasket(array("ORDER_ID" => $orderID));
+			CDeliveryYaDriver::$tmpOrderBasket = false;
+			CDeliveryYaDriver::getOrderBasket(array("ORDER_ID" => $orderID));
 			
 			// анализируем изменения
-			$changeOrder = self::compareBasket(self::$orderBasketBeforeUpdate, CDeliveryYandexDriver::$tmpOrderBasket);
+			$changeOrder = self::compareBasket(self::$orderBasketBeforeUpdate, CDeliveryYaDriver::$tmpOrderBasket);
 			
 			if ($changeOrder)
 			{
@@ -964,12 +964,12 @@ class CDeliveryYandexHelper
 		$changed = $entity->getFields()->getChangedValues();
 		$deliveryID = $entity->getField("DELIVERY_ID");
 		
-		CDeliveryYandexDriver::getOrderConfirm($orderID);
+		CDeliveryYaDriver::getOrderConfirm($orderID);
 		if (
 			$orderID &&
 			in_array($deliveryID, $needDeliveries) &&
 			$changed["CANCELED"] == "Y" &&
-			!empty(CDeliveryYandexDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"])
+			!empty(CDeliveryYaDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"])
 		)
 		{
 			$arChange = array(
@@ -1025,13 +1025,13 @@ class CDeliveryYandexHelper
 	
 	static public function getCheckedUpdatedOrderProps()
 	{
-		CDeliveryYandexDriver::getModuleSetups();
+		CDeliveryYaDriver::getModuleSetups();
 		
 		$needProps = self::getUpdatedEventProps();
 		
 		$arResult = array();
 		foreach ($needProps as $prop)
-			$arResult[$prop] = CDeliveryYandexDriver::$options["ADDRESS"][$prop];
+			$arResult[$prop] = CDeliveryYaDriver::$options["ADDRESS"][$prop];
 		
 		return $arResult;
 	}
@@ -1045,9 +1045,9 @@ class CDeliveryYandexHelper
 			"build"
 		);
 		
-		CDeliveryYandexDriver::getModuleSetups();
+		CDeliveryYaDriver::getModuleSetups();
 		foreach ($needProps as $key => $prop)
-			if (empty(CDeliveryYandexDriver::$options["ADDRESS"][$prop]))
+			if (empty(CDeliveryYaDriver::$options["ADDRESS"][$prop]))
 				unset($needProps[$key]);
 		
 		return $needProps;
@@ -1123,8 +1123,8 @@ class CDeliveryYandexHelper
 	
 	static public function deleteOrderFromChange($params)
 	{
-		if (!CDeliveryYandexHelper::isAdmin("R"))
-			CDeliveryYandexHelper::throwException("Access denied");
+		if (!CDeliveryYaHelper::isAdmin("R"))
+			CDeliveryYaHelper::throwException("Access denied");
 		
 		self::getNoticeFileName();
 		
@@ -1177,7 +1177,7 @@ class CDeliveryYandexHelper
 	
 	static public function errorLog($val)
 	{
-		$fileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CDeliveryYandexDriver::$MODULE_ID . "/errLog.txt";
+		$fileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CDeliveryYaDriver::$MODULE_ID . "/errLog.txt";
 		
 		self::checkLogParams($_REQUEST);
 		
@@ -1195,13 +1195,13 @@ class CDeliveryYandexHelper
 		$sendStat = false;
 		
 		if (is_array($arModules))
-			if (in_array(CDeliveryYandexDriver::$MODULE_ID, $arModules))
+			if (in_array(CDeliveryYaDriver::$MODULE_ID, $arModules))
 				$sendStat = true;
-			elseif (CDeliveryYandexDriver::$MODULE_ID == $arModules)
+			elseif (CDeliveryYaDriver::$MODULE_ID == $arModules)
 				$sendStat = true;
 		
 		if ($sendStat)
-			CDeliveryYandexDriver::sendStatistic(array("type" => "update"));
+			CDeliveryYaDriver::sendStatistic(array("type" => "update"));
 	}
 	
 	/**
@@ -1214,8 +1214,8 @@ class CDeliveryYandexHelper
 		if (!is_null(self::$chosenSender))
 			return self::$chosenSender;
 		
-		CDeliveryYandexDriver::getRequestConfig();
-		$chosenSender = CDeliveryYandexDriver::$requestConfig["sender_id"][COption::GetOptionString(CDeliveryYandexDriver::$MODULE_ID, 'defaultSender', '0')];
+		CDeliveryYaDriver::getRequestConfig();
+		$chosenSender = CDeliveryYaDriver::$requestConfig["sender_id"][COption::GetOptionString(CDeliveryYaDriver::$MODULE_ID, 'defaultSender', '0')];
 		
 		self::$chosenSender = (int)$chosenSender;
 		
@@ -1233,7 +1233,7 @@ class CDeliveryYandexHelper
 		
 		if ($chosenSender)
 		{
-			$senderInfo = CDeliveryYandexDriver::getSenderInfo($chosenSender);
+			$senderInfo = CDeliveryYaDriver::getSenderInfo($chosenSender);
 			
 			if ($senderInfo["clientInfo"]["status"] == "ok")
 				return $senderInfo["clientInfo"]["data"]["vat_settings"];
@@ -1249,7 +1249,7 @@ class CDeliveryYandexHelper
 	 */
 	public static function getVatIDDefault()
 	{
-		$requisiteInfo = CDeliveryYandexDriver::getRequisiteInfo();
+		$requisiteInfo = CDeliveryYaDriver::getRequisiteInfo();
 		
 		if ($requisiteInfo["requisiteInfo"]["status"] == "ok")
 		{
@@ -1298,7 +1298,7 @@ class CDeliveryYandexHelper
 		if (!CModule::includeModule("sale"))
 			return false;
 		
-		if (CDeliveryYandexHelper::controlProps())
+		if (CDeliveryYaHelper::controlProps())
 		{
 			$propCode = "yandex_delivery_PVZ_ADDRESS";
 			
@@ -1373,7 +1373,7 @@ class CDeliveryYandexHelper
 	
 	static public function selectSite()
 	{
-		$site = \Bitrix\Main\Config\Option::get(CDeliveryYandexDriver::$MODULE_ID, "site_selection");
+		$site = \Bitrix\Main\Config\Option::get(CDeliveryYaDriver::$MODULE_ID, "site_selection");
 		
 		return $site;
 	}

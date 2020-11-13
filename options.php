@@ -30,22 +30,22 @@ if ($curlFind)
 			COption::SetOptionString($module_id, "unique_num", $unique_num);
 		}
 		
-		CAgent::AddAgent("CDeliveryYandexDriver::agentOrderStates();", $module_id, "N", 1800);//обновление статусов заказов
+		CAgent::AddAgent("CDeliveryYaDriver::agentOrderStates();", $module_id, "N", 1800);//обновление статусов заказов
 		
-		$converted = CDeliveryYandexHelper::isConverted();
+		$converted = CDeliveryYaHelper::isConverted();
 		
-		$arCityFrom = CDeliveryYandexHelper::getCityFromNames();
+		$arCityFrom = CDeliveryYaHelper::getCityFromNames();
 		
-		$siteIds = CDeliveryYandexHelper::getSiteIds();
+		$siteIds = CDeliveryYaHelper::getSiteIds();
 		
-		$selectSites = CDeliveryYandexHelper::selectSite();
+		$selectSites = CDeliveryYaHelper::selectSite();
 		
-		CDeliveryYandexDriver::getConfigFileName();
-		$configFilePath = CDeliveryYandexDriver::$configFileName;
+		CDeliveryYaDriver::getConfigFileName();
+		$configFilePath = CDeliveryYaDriver::$configFileName;
 		if (file_exists($configFilePath))
 		{
-			CDeliveryYandexDriver::getRequestConfig();
-			$arRequestConfig = CDeliveryYandexDriver::$requestConfig;
+			CDeliveryYaDriver::getRequestConfig();
+			$arRequestConfig = CDeliveryYaDriver::$requestConfig;
 		}
 		
 		$arAllOptions = array(
@@ -136,7 +136,7 @@ if ($curlFind)
 			$arStatuses[$arStatus["ID"]] = $arStatus["NAME"];
 		}
 		
-		$arDeliveryStatus = CDeliveryYandexHelper::getDeliveryStatuses();
+		$arDeliveryStatus = CDeliveryYaHelper::getDeliveryStatuses();
 		
 		foreach ($arDeliveryStatus as $statusID => $statusName)
 			$arAllOptions["arStatus"][] = Array($statusID, $statusName, '', Array("selectbox", $arStatuses));
@@ -193,7 +193,7 @@ if ($curlFind)
 		/** @var $Update string */
 		/** @var $Apply string */
 		/** @var $RestoreDefaults string */
-		if ($REQUEST_METHOD == "POST" && strlen($Update . $Apply . $RestoreDefaults) > 0 && check_bitrix_sessid() && CDeliveryYandexHelper::isAdmin())
+		if ($REQUEST_METHOD == "POST" && strlen($Update . $Apply . $RestoreDefaults) > 0 && check_bitrix_sessid() && CDeliveryYaHelper::isAdmin())
 		{
 			if (strlen($RestoreDefaults) > 0)
 				COption::RemoveOption("yandex.delivery");
@@ -215,7 +215,7 @@ if ($curlFind)
 							$arSetups[$option] = COption::GetOptionString($module_id, $option, false);
 					}
 				
-				CDeliveryYandexDriver::sendStatistic(array("type" => "settings"));
+				CDeliveryYaDriver::sendStatistic(array("type" => "settings"));
 			}
 			if ($_REQUEST["back_url_settings"] <> "" && $_REQUEST["Apply"] == "")
 				echo '<script type="text/javascript">window.location="' . CUtil::addslashes($_REQUEST["back_url_settings"]) . '";</script>';
@@ -328,12 +328,12 @@ if ($curlFind)
 			$tabControl->Buttons();
 			?>
             <div id="trade_buttons_block" align="left" style='position: relative;'>
-				<? if (!CDeliveryYandexHelper::isAdmin())
+				<? if (!CDeliveryYaHelper::isAdmin())
 				{
 					echo GetMessage("TRADE_YANDEX_DELIVERY_HELPER_RightsNotAllow_SaveOption");
 				} ?>
                 <input type="hidden" name="Update" value="Y">
-                <input type="submit" <? if (!CDeliveryYandexHelper::isAdmin())
+                <input type="submit" <? if (!CDeliveryYaHelper::isAdmin())
 					echo " disabled "; ?> name="Update" value="<? echo GetMessage("MAIN_SAVE") ?>">
             </div>
 			

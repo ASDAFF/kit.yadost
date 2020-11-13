@@ -10,25 +10,25 @@ class deliveryPropsFixer
 	// запускает процесс правки свойств
 	public static function Start($data)
 	{
-		if (!CDeliveryYandexHelper::isAdmin())
+		if (!CDeliveryYaHelper::isAdmin())
 			self::throwException("Access denied");
 		
 		if (!CModule::IncludeModule("sale"))
-			CDeliveryYandexHelper::throwException("Module sale not found");
+			CDeliveryYaHelper::throwException("Module sale not found");
 		
 		if (!isset($data['personeTypeId'])) {
 			$result = array_values(deliveryPropsFixer::getPersonTypes());
 		} else {
 			if (!isset($data['step'])) {
-				CDeliveryYandexHelper::throwException(GetMessage("TRADE_YANDEX_DELIVERY_propfix_stepNotFound"));
+				CDeliveryYaHelper::throwException(GetMessage("TRADE_YANDEX_DELIVERY_propfix_stepNotFound"));
 			}
 			
-			self::$oldTemplate = COption::GetOptionString(CDeliveryYandexDriver::$MODULE_ID, "oldTemplate", "Y")=="Y"?true:false;
+			self::$oldTemplate = COption::GetOptionString(CDeliveryYaDriver::$MODULE_ID, "oldTemplate", "Y")=="Y"?true:false;
 			$personeTypeId = $data['personeTypeId'];
 			$method = 'fixProp'. ucfirst($data['step']);
 
 			if (!method_exists('deliveryPropsFixer', $method)) {
-				CDeliveryYandexHelper::throwException(GetMessage("TRADE_YANDEX_DELIVERY_propfix_stepNotFound"));
+				CDeliveryYaHelper::throwException(GetMessage("TRADE_YANDEX_DELIVERY_propfix_stepNotFound"));
 			}
 
 			$result = call_user_func(array('deliveryPropsFixer', $method), $personeTypeId);
@@ -45,7 +45,7 @@ class deliveryPropsFixer
 	 */
 	public static function DELIVERY_COURIER_ID()
 	{
-		$arDelivery = CDeliveryYandexHelper::getDeliveryIDs();
+		$arDelivery = CDeliveryYaHelper::getDeliveryIDs();
 		return $arDelivery["yandexDelivery:courier"];
 	}
 
@@ -54,7 +54,7 @@ class deliveryPropsFixer
 	 */
 	public static function DELIVERY_POST_ID()
 	{
-		$arDelivery = CDeliveryYandexHelper::getDeliveryIDs();
+		$arDelivery = CDeliveryYaHelper::getDeliveryIDs();
 		return $arDelivery["yandexDelivery:post"];
 	}
 
@@ -63,7 +63,7 @@ class deliveryPropsFixer
 	 */
 	public static function DELIVERY_PICKUP_ID()
 	{
-		$arDelivery = CDeliveryYandexHelper::getDeliveryIDs();
+		$arDelivery = CDeliveryYaHelper::getDeliveryIDs();
 		return $arDelivery["yandexDelivery:pickup"];
 	}
 
@@ -106,7 +106,7 @@ class deliveryPropsFixer
 		}
 
 		if (!array_key_exists($personeTypeId, self::getPersonTypes())) {
-			CDeliveryYandexHelper::throwException(GetMessage("TRADE_YANDEX_DELIVERY_propfix_persTypeNotFound"));
+			CDeliveryYaHelper::throwException(GetMessage("TRADE_YANDEX_DELIVERY_propfix_persTypeNotFound"));
 		}
 
 		$rsItems = CSaleOrderProps::GetList(
@@ -182,7 +182,7 @@ class deliveryPropsFixer
 			self::updateOrderProp(array_merge($findProp, array('NAME' => GetMessage("TRADE_YANDEX_DELIVERY_propfix_PROP_FIO"), "CODE" => "FIO")));
 		}
 		
-		COption::SetOptionString(CDeliveryYandexDriver::$MODULE_ID, "fname", "FIO");
+		COption::SetOptionString(CDeliveryYaDriver::$MODULE_ID, "fname", "FIO");
 
 		$propName = self::getPropName('LAST_NAME');
 		if (!isset($arProps[$propName])) {
@@ -201,7 +201,7 @@ class deliveryPropsFixer
 			$arAddedFields[] = $propName;
 		}
 		
-		COption::SetOptionString(CDeliveryYandexDriver::$MODULE_ID, "lname", $propName);
+		COption::SetOptionString(CDeliveryYaDriver::$MODULE_ID, "lname", $propName);
 
 		$propName = self::getPropName('SECOND_NAME');
 		if (!isset($arProps[$propName])) {
@@ -220,7 +220,7 @@ class deliveryPropsFixer
 			$arAddedFields[] = $propName;
 		}
 		
-		COption::SetOptionString(CDeliveryYandexDriver::$MODULE_ID, "mname", $propName);
+		COption::SetOptionString(CDeliveryYaDriver::$MODULE_ID, "mname", $propName);
 
 		// return array(self::getPropName('LAST_NAME'), self::getPropName('SECOND_NAME'));
 		return $arAddedFields;
@@ -304,7 +304,7 @@ class deliveryPropsFixer
 			}
 		}
 		
-		COption::SetOptionString(CDeliveryYandexDriver::$MODULE_ID, "address", "");
+		COption::SetOptionString(CDeliveryYaDriver::$MODULE_ID, "address", "");
 
 		$propsToCreate = array(
 			self::getPropName('STREET')     => array('NAME' => GetMessage("TRADE_YANDEX_DELIVERY_propfix_PROP_STREET"), 'REQUIED' => self::$oldTemplate?'N':'Y'),
@@ -339,12 +339,12 @@ class deliveryPropsFixer
 			}
 			$arProp['ID'] = self::updateOrderProp($arProp);
 			
-			COption::SetOptionString(CDeliveryYandexDriver::$MODULE_ID, $propsSuggest[$code], $code);
+			COption::SetOptionString(CDeliveryYaDriver::$MODULE_ID, $propsSuggest[$code], $code);
 
 			self::fixDeliveryTies($arProps['ADDRESS']['ID'], $arProp['ID']);
 		}
 		
-		COption::SetOptionString(CDeliveryYandexDriver::$MODULE_ID, "addressMode", "sep");
+		COption::SetOptionString(CDeliveryYaDriver::$MODULE_ID, "addressMode", "sep");
 
 		return array_keys($propsToCreate);
 	}
@@ -371,7 +371,7 @@ class deliveryPropsFixer
 			$propId = $arProps['ZIP']['ID'];
 		}
 		
-		COption::SetOptionString(CDeliveryYandexDriver::$MODULE_ID, "index", "ZIP");
+		COption::SetOptionString(CDeliveryYaDriver::$MODULE_ID, "index", "ZIP");
 
 		self::fixDeliveryTies($propId, $propId);
 
@@ -387,7 +387,7 @@ class deliveryPropsFixer
 	 */
 	public static function fixDeliveryTies($fromPropId, $toPropId)
 	{
-		if (!CDeliveryYandexHelper::isConverted() || self::$oldTemplate)
+		if (!CDeliveryYaHelper::isConverted() || self::$oldTemplate)
 			return;
 		
 		$rsTies = CSaleOrderProps::GetOrderPropsRelations(array('PROPERTY_ID' => $fromPropId));
@@ -437,7 +437,7 @@ class deliveryPropsFixer
 		$ret = CSaleOrderProps::UpdateOrderPropsRelations($toPropId, $curDeliveryTies, 'D');
 		
 		if (!$ret) {
-			CDeliveryYandexHelper::throwException(GetMessage("TRADE_YANDEX_DELIVERY_propfix_ERR_PROP"). $toPropId);
+			CDeliveryYaHelper::throwException(GetMessage("TRADE_YANDEX_DELIVERY_propfix_ERR_PROP"). $toPropId);
 		}
 	}
 
@@ -458,7 +458,7 @@ class deliveryPropsFixer
 			if($ex = $GLOBALS["APPLICATION"]->GetException())
 				$strError = $ex->GetString();
 			
-			CDeliveryYandexHelper::throwException(GetMessage("TRADE_YANDEX_DELIVERY_propfix_ERR_UPDATE",
+			CDeliveryYaHelper::throwException(GetMessage("TRADE_YANDEX_DELIVERY_propfix_ERR_UPDATE",
 				array("OPERATION" => $operation, "PROP_CODE" => $arFields['CODE'])
 			)." ".$strError);
 		}

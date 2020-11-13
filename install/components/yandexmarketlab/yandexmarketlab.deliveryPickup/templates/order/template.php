@@ -6,7 +6,7 @@
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 if (empty($arResult["ERRORS"]))
 {
-if(CDeliveryYandexHelper::isConverted())
+if(CDeliveryYaHelper::isConverted())
 {
 	$dTS = Bitrix\Sale\Delivery\Services\Table::getList(array(
 		 'order'  => array('SORT' => 'ASC', 'NAME' => 'ASC'),
