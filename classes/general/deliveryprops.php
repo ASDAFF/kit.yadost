@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 27/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
 IncludeModuleLangFile(__FILE__);
