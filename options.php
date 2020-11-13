@@ -1,6 +1,6 @@
 <?
 /**
- * Copyright (c) 25/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 ?>
 <?
@@ -9,14 +9,14 @@ IncludeModuleLangFile(__FILE__);
 CJSCore::Init(array("jquery"));
 CModule::includeModule('sale');
 
-$module_id = "ipol.yadost";
+$module_id = "kit.yadost";
 global $APPLICATION;
 
 $curlFind = true;
 if (!function_exists('curl_init'))
 {
     $curlFind = false;
-	echo "<br>" . GetMessage("IPOLyadost_NOCURL_TEXT") . "<br><br>";
+	echo "<br>" . GetMessage("KITyadost_NOCURL_TEXT") . "<br><br>";
 }
 
 if ($curlFind)
@@ -30,84 +30,84 @@ if ($curlFind)
 			COption::SetOptionString($module_id, "unique_num", $unique_num);
 		}
 		
-		CAgent::AddAgent("CIPOLYadostDriver::agentOrderStates();", $module_id, "N", 1800);//обновление статусов заказов
+		CAgent::AddAgent("CKITYadostDriver::agentOrderStates();", $module_id, "N", 1800);//обновление статусов заказов
 		
-		$converted = CIPOLYadostHelper::isConverted();
+		$converted = CKITYadostHelper::isConverted();
 		
-		$arCityFrom = CIPOLYadostHelper::getCityFromNames();
+		$arCityFrom = CKITYadostHelper::getCityFromNames();
 		
-		$siteIds = CIPOLYadostHelper::getSiteIds();
+		$siteIds = CKITYadostHelper::getSiteIds();
 		
-		$selectSites = CIPOLYadostHelper::selectSite();
+		$selectSites = CKITYadostHelper::selectSite();
 		
-		CIPOLYadostDriver::getConfigFileName();
-		$configFilePath = CIPOLYadostDriver::$configFileName;
+		CKITYadostDriver::getConfigFileName();
+		$configFilePath = CKITYadostDriver::$configFileName;
 		if (file_exists($configFilePath))
 		{
-			CIPOLYadostDriver::getRequestConfig();
-			$arRequestConfig = CIPOLYadostDriver::$requestConfig;
+			CKITYadostDriver::getRequestConfig();
+			$arRequestConfig = CKITYadostDriver::$requestConfig;
 		}
 		
 		$arAllOptions = array(
 			"msOptions" => Array(//Настройки обмена
-				Array("basketWidget", GetMessage("IPOLyadost_OPT_basketWidget"), '', Array("textarea")),
-				Array("cityFrom", GetMessage("IPOLyadost_OPT_cityFrom"), "MOSCOW", Array("selectbox", $arCityFrom)),
-				Array("to_yd_warehouse", GetMessage("IPOLyadost_OPT_to_yd_warehouse"), '', Array("checkbox")),
-				Array("delivery_type_import_widthdraw", GetMessage("IPOLyadost_OPT_delivery_type_import_widthdraw"), 'import',
+				Array("basketWidget", GetMessage("KITyadost_OPT_basketWidget"), '', Array("textarea")),
+				Array("cityFrom", GetMessage("KITyadost_OPT_cityFrom"), "MOSCOW", Array("selectbox", $arCityFrom)),
+				Array("to_yd_warehouse", GetMessage("KITyadost_OPT_to_yd_warehouse"), '', Array("checkbox")),
+				Array("delivery_type_import_widthdraw", GetMessage("KITyadost_OPT_delivery_type_import_widthdraw"), 'import',
 					Array("selectbox", array(
-						"import" => GetMessage("IPOLyadost_INPUTS_delivery_type_import"),
-						"withdraw" => GetMessage("IPOLyadost_INPUTS_delivery_type_withdraw")
+						"import" => GetMessage("KITyadost_INPUTS_delivery_type_import"),
+						"withdraw" => GetMessage("KITyadost_INPUTS_delivery_type_withdraw")
 					))
 				),
-				Array("site_selection", GetMessage("IPOLyadost_OPT_site_selection"), '', Array("multiselectbox", $siteIds))
+				Array("site_selection", GetMessage("KITyadost_OPT_site_selection"), '', Array("multiselectbox", $siteIds))
 			),
 			"defaultSenderOptions" => array(// значения из конфига по умолчанию
-				Array("defaultSender", GetMessage("IPOLyadost_OPT_default_sender"), '0', Array("text")),
-				Array("defaultWarehouse", GetMessage("IPOLyadost_OPT_default_warehouse"), '0', Array("text")),
-				Array("assessedCostPercent", GetMessage("IPOLyadost_OPT_assessedCostPercent"), '100', Array("text")),
+				Array("defaultSender", GetMessage("KITyadost_OPT_default_sender"), '0', Array("text")),
+				Array("defaultWarehouse", GetMessage("KITyadost_OPT_default_warehouse"), '0', Array("text")),
+				Array("assessedCostPercent", GetMessage("KITyadost_OPT_assessedCostPercent"), '100', Array("text")),
 			),
 			"dimensions" => Array(//Габариты товаров
-				Array("sideMode", GetMessage("IPOLyadost_OPT_sideMode"), 'sep', Array("text")),//одним свойством / раздельными свойствами (unit / sep)
-				Array("sidesUnit", GetMessage("IPOLyadost_OPT_sides"), 'DIMESIONS', Array("text")),//стороны одним
-				Array("sidesUnitSprtr", GetMessage("IPOLyadost_OPT_sidesUnitSprtr"), 'x', Array("text")),//символ-разделитель в одной стороне
-				Array("sidesSep", GetMessage("IPOLyadost_OPT_sides"), 'a:3:{s:1:"L";s:6:"LENGTH";s:1:"W";s:5:"WIDTH";s:1:"H";s:6:"HEIGHT";}', Array("text")),//стороны раздельными
-				Array("weightPr", GetMessage("IPOLyadost_OPT_weight"), 'CATALOG_WEIGHT', Array("text")),//откуда брать вес
-				Array("sidesMeas", GetMessage("IPOLyadost_OPT_sidesMeas"), 'mm', Array("text")),//единицы измерения размеров
-				Array("weightMeas", GetMessage("IPOLyadost_OPT_sidesMeas"), 'g', Array("text")),//единицы измерения веса
+				Array("sideMode", GetMessage("KITyadost_OPT_sideMode"), 'sep', Array("text")),//одним свойством / раздельными свойствами (unit / sep)
+				Array("sidesUnit", GetMessage("KITyadost_OPT_sides"), 'DIMESIONS', Array("text")),//стороны одним
+				Array("sidesUnitSprtr", GetMessage("KITyadost_OPT_sidesUnitSprtr"), 'x', Array("text")),//символ-разделитель в одной стороне
+				Array("sidesSep", GetMessage("KITyadost_OPT_sides"), 'a:3:{s:1:"L";s:6:"LENGTH";s:1:"W";s:5:"WIDTH";s:1:"H";s:6:"HEIGHT";}', Array("text")),//стороны раздельными
+				Array("weightPr", GetMessage("KITyadost_OPT_weight"), 'CATALOG_WEIGHT', Array("text")),//откуда брать вес
+				Array("sidesMeas", GetMessage("KITyadost_OPT_sidesMeas"), 'mm', Array("text")),//единицы измерения размеров
+				Array("weightMeas", GetMessage("KITyadost_OPT_sidesMeas"), 'g', Array("text")),//единицы измерения веса
 			),
 			"sidesDefaut" => Array(//Габариты товаров (дефолтные)
-				Array("lengthD", GetMessage("IPOLyadost_OPT_lengthD"), '400', Array("text")),
-				Array("widthD", GetMessage("IPOLyadost_OPT_widthD"), '300', Array("text")),
-				Array("heightD", GetMessage("IPOLyadost_OPT_heightD"), '200', Array("text")),
+				Array("lengthD", GetMessage("KITyadost_OPT_lengthD"), '400', Array("text")),
+				Array("widthD", GetMessage("KITyadost_OPT_widthD"), '300', Array("text")),
+				Array("heightD", GetMessage("KITyadost_OPT_heightD"), '200', Array("text")),
 				
-				// Array("assessedCost", GetMessage("IPOLyadost_OPT_assessedCost"), '0', Array("text")),
+				// Array("assessedCost", GetMessage("KITyadost_OPT_assessedCost"), '0', Array("text")),
 			),
 			"weightDefault" => Array(//Габариты товаров (дефолтный вес)
-				Array("weightD", GetMessage("IPOLyadost_OPT_weightD"), '1', Array("text")),
+				Array("weightD", GetMessage("KITyadost_OPT_weightD"), '1', Array("text")),
 			),
 			"propsDefault" => Array(//Свойства товаров (артикул и т.д.)
-				Array("artnumber", GetMessage("IPOLyadost_OPT_artnumber"), 'ARTNUMBER', Array("text")),
+				Array("artnumber", GetMessage("KITyadost_OPT_artnumber"), 'ARTNUMBER', Array("text")),
 			),
 			"orderProps" => Array(//свойства заказа откуда брать
-				Array("fname", GetMessage("IPOLyadost_OPT_fname"), 'FIO', Array("text")),
-				Array("lname", GetMessage("IPOLyadost_OPT_lname"), 'FIO', Array("text")),
-				Array("mname", GetMessage("IPOLyadost_OPT_mname"), 'FIO', Array("text")),
-				Array("email", GetMessage("IPOLyadost_OPT_email"), 'EMAIL', Array("text")),
-				Array("phone", GetMessage("IPOLyadost_OPT_phone"), 'PHONE', Array("text")),
-				Array("index", GetMessage("IPOLyadost_OPT_index"), 'ZIP', Array("text")),
-				Array("addressMode", GetMessage("IPOLyadost_OPT_addressMode"), 'one', Array("text")),
-				Array("address", GetMessage("IPOLyadost_OPT_address"), 'ADDRESS', Array("text")),
-				Array("street", GetMessage("IPOLyadost_OPT_street"), 'STREET', Array("text")),
-				Array("house", GetMessage("IPOLyadost_OPT_house"), 'HOUSE', Array("text")),
-				Array("build", GetMessage("IPOLyadost_OPT_build"), 'BUILD', Array("text")),
-				Array("flat", GetMessage("IPOLyadost_OPT_flat"), 'FLAT', Array("text")),
+				Array("fname", GetMessage("KITyadost_OPT_fname"), 'FIO', Array("text")),
+				Array("lname", GetMessage("KITyadost_OPT_lname"), 'FIO', Array("text")),
+				Array("mname", GetMessage("KITyadost_OPT_mname"), 'FIO', Array("text")),
+				Array("email", GetMessage("KITyadost_OPT_email"), 'EMAIL', Array("text")),
+				Array("phone", GetMessage("KITyadost_OPT_phone"), 'PHONE', Array("text")),
+				Array("index", GetMessage("KITyadost_OPT_index"), 'ZIP', Array("text")),
+				Array("addressMode", GetMessage("KITyadost_OPT_addressMode"), 'one', Array("text")),
+				Array("address", GetMessage("KITyadost_OPT_address"), 'ADDRESS', Array("text")),
+				Array("street", GetMessage("KITyadost_OPT_street"), 'STREET', Array("text")),
+				Array("house", GetMessage("KITyadost_OPT_house"), 'HOUSE', Array("text")),
+				Array("build", GetMessage("KITyadost_OPT_build"), 'BUILD', Array("text")),
+				Array("flat", GetMessage("KITyadost_OPT_flat"), 'FLAT', Array("text")),
 			),
 			"templateOptions" => array(
-				Array("oldTemplate", GetMessage("IPOLyadost_OPT_oldTemplate"), 'Y', Array("checkbox")),
+				Array("oldTemplate", GetMessage("KITyadost_OPT_oldTemplate"), 'Y', Array("checkbox")),
 			),
 			"delivSigns" => Array(//Службы доставки до двери подписи
-				Array("showWidgetOnProfile", GetMessage("IPOLyadost_OPT_showWidgetOnProfile"), 'N', array('checkbox')),//открывать виджет при клике на профиль доставки
-				// Array("idOfPVZ",GetMessage("IPOLyadost_OPT_idOfPVZ"),'',array('text')),//id элемента, куда выводить пвз
+				Array("showWidgetOnProfile", GetMessage("KITyadost_OPT_showWidgetOnProfile"), 'N', array('checkbox')),//открывать виджет при клике на профиль доставки
+				// Array("idOfPVZ",GetMessage("KITyadost_OPT_idOfPVZ"),'',array('text')),//id элемента, куда выводить пвз
 			),
 			/*"courier" => array(// настройки курьера магазина, доставляющего заказ
 				Array("courier_name", GetMessage("delivery_OPT_courier_name"), '', Array("text")),
@@ -136,7 +136,7 @@ if ($curlFind)
 			$arStatuses[$arStatus["ID"]] = $arStatus["NAME"];
 		}
 		
-		$arDeliveryStatus = CIPOLYadostHelper::getDeliveryStatuses();
+		$arDeliveryStatus = CKITYadostHelper::getDeliveryStatuses();
 		
 		foreach ($arDeliveryStatus as $statusID => $statusName)
 			$arAllOptions["arStatus"][] = Array($statusID, $statusName, '', Array("selectbox", $arStatuses));
@@ -165,26 +165,26 @@ if ($curlFind)
 				$addressMode = $_REQUEST["addressMode"];
 		}
 		
-		$_REQUEST['sidesSep'] = serialize(array('L' => $_POST['IPOLyadost_MEA_SEP_L'], 'W' => $_POST['IPOLyadost_MEA_SEP_W'], 'H' => $_POST['IPOLyadost_MEA_SEP_H']));
+		$_REQUEST['sidesSep'] = serialize(array('L' => $_POST['KITyadost_MEA_SEP_L'], 'W' => $_POST['KITyadost_MEA_SEP_W'], 'H' => $_POST['KITyadost_MEA_SEP_H']));
 		
 		$sides = unserialize(COption::GetOptionString($module_id, 'sidesSep', 'a:3:{s:1:"L";s:6:"LENGTH";s:1:"W";s:5:"WIDTH";s:1:"H";s:6:"HEIGHT";}'));
 		if (
-			isset($_POST['IPOLyadost_MEA_SEP_L']) &&
-			isset($_POST['IPOLyadost_MEA_SEP_W']) &&
-			isset($_POST['IPOLyadost_MEA_SEP_H'])
+			isset($_POST['KITyadost_MEA_SEP_L']) &&
+			isset($_POST['KITyadost_MEA_SEP_W']) &&
+			isset($_POST['KITyadost_MEA_SEP_H'])
 		)
 			$sides = unserialize($_REQUEST['sidesSep']);
 		
-		$IPOLyadost_weight = COption::getOptionString($module_id, 'weightPr', 'CATALOG_WEIGHT');
+		$KITyadost_weight = COption::getOptionString($module_id, 'weightPr', 'CATALOG_WEIGHT');
 		if ($_REQUEST["weiMode"] == "cat")
-			$IPOLyadost_weight = $_REQUEST["weightPr"] = "CATALOG_WEIGHT";
+			$KITyadost_weight = $_REQUEST["weightPr"] = "CATALOG_WEIGHT";
         elseif ($_REQUEST["weightPr"])
-			$IPOLyadost_weight = $_REQUEST["weightPr"];
+			$KITyadost_weight = $_REQUEST["weightPr"];
 		
 		$aTabs = array(
 			array("DIV" => "edit1", "TAB" => GetMessage("MAIN_TAB_SET"), "TITLE" => GetMessage("MAIN_TAB_TITLE_SET")),
-			array("DIV" => "edit2", "TAB" => GetMessage("IPOLyadost_FAQ_TAB_SETUP"), "TITLE" => GetMessage("IPOLyadost_FAQ_TAB_SETUP")),
-			array("DIV" => "edit3", "TAB" => GetMessage("IPOLyadost_FAQ_TAB_RIGHTS"), "TITLE" => GetMessage("IPOLyadost_FAQ_TAB_RIGHTS"))
+			array("DIV" => "edit2", "TAB" => GetMessage("KITyadost_FAQ_TAB_SETUP"), "TITLE" => GetMessage("KITyadost_FAQ_TAB_SETUP")),
+			array("DIV" => "edit3", "TAB" => GetMessage("KITyadost_FAQ_TAB_RIGHTS"), "TITLE" => GetMessage("KITyadost_FAQ_TAB_RIGHTS"))
 		);
 		
 		$tabControl = new CAdminTabControl("tabControl", $aTabs);
@@ -193,10 +193,10 @@ if ($curlFind)
 		/** @var $Update string */
 		/** @var $Apply string */
 		/** @var $RestoreDefaults string */
-		if ($REQUEST_METHOD == "POST" && strlen($Update . $Apply . $RestoreDefaults) > 0 && check_bitrix_sessid() && CIPOLYadostHelper::isAdmin())
+		if ($REQUEST_METHOD == "POST" && strlen($Update . $Apply . $RestoreDefaults) > 0 && check_bitrix_sessid() && CKITYadostHelper::isAdmin())
 		{
 			if (strlen($RestoreDefaults) > 0)
-				COption::RemoveOption("ipol.yadost");
+				COption::RemoveOption("kit.yadost");
 			else
 			{
 				foreach ($arAllOptions as $aOptGroup)
@@ -215,7 +215,7 @@ if ($curlFind)
 							$arSetups[$option] = COption::GetOptionString($module_id, $option, false);
 					}
 				
-				CIPOLYadostDriver::sendStatistic(array("type" => "settings"));
+				CKITYadostDriver::sendStatistic(array("type" => "settings"));
 			}
 			if ($_REQUEST["back_url_settings"] <> "" && $_REQUEST["Apply"] == "")
 				echo '<script type="text/javascript">window.location="' . CUtil::addslashes($_REQUEST["back_url_settings"]) . '";</script>';
@@ -327,13 +327,13 @@ if ($curlFind)
 			
 			$tabControl->Buttons();
 			?>
-            <div id="ipol_buttons_block" align="left" style='position: relative;'>
-				<? if (!CIPOLYadostHelper::isAdmin())
+            <div id="kit_buttons_block" align="left" style='position: relative;'>
+				<? if (!CKITYadostHelper::isAdmin())
 				{
-					echo GetMessage("IPOLyadost_HELPER_RightsNotAllow_SaveOption");
+					echo GetMessage("KITyadost_HELPER_RightsNotAllow_SaveOption");
 				} ?>
                 <input type="hidden" name="Update" value="Y">
-                <input type="submit" <? if (!CIPOLYadostHelper::isAdmin())
+                <input type="submit" <? if (!CKITYadostHelper::isAdmin())
 					echo " disabled "; ?> name="Update" value="<? echo GetMessage("MAIN_SAVE") ?>">
             </div>
 			
@@ -344,7 +344,7 @@ if ($curlFind)
 
         <div id="pop-assessed_limits" class="b-popup" style="display: none; width: 420px;">
             <div class="pop-text">
-				<?= GetMessage("IPOLyadost_HELPER_assessed_limits") ?>
+				<?= GetMessage("KITyadost_HELPER_assessed_limits") ?>
 				<? echo $limitsHtml; ?>
             </div>
             <div class="close" onclick="$(this).closest('.b-popup').hide();"></div>
@@ -353,6 +353,6 @@ if ($curlFind)
 	<? }
 	else
 	{
-		echo GetMessage("IPOLyadost_DEMO_MODE_EXPIRED");
+		echo GetMessage("KITyadost_DEMO_MODE_EXPIRED");
 	}
 }?>

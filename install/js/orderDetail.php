@@ -1,31 +1,31 @@
 <?
 /**
- * Copyright (c) 24/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 	die();
 $orderID = $_REQUEST['ID'];
 
-CIPOLYadostDriver::getOrder($orderID);
-CIPOLYadostDriver::getOrderProps($orderID);
-CIPOLYadostDriver::getOrderConfirm($orderID);
-CIPOLYadostDriver::getOrderBasket(array("ORDER_ID" => $orderID));
-$arEndStatus = CIPOLYadostDriver::getEndStatus();
-$arErrorStatus = CIPOLYadostDriver::getErrorStatus();
-$arNotEditStatus = CIPOLYadostDriver::getNotEditableStatus();
+CKITYadostDriver::getOrder($orderID);
+CKITYadostDriver::getOrderProps($orderID);
+CKITYadostDriver::getOrderConfirm($orderID);
+CKITYadostDriver::getOrderBasket(array("ORDER_ID" => $orderID));
+$arEndStatus = CKITYadostDriver::getEndStatus();
+$arErrorStatus = CKITYadostDriver::getErrorStatus();
+$arNotEditStatus = CKITYadostDriver::getNotEditableStatus();
 
 // проверка обновлений модуля
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/classes/general/update_client_partner.php");
 $stableVersionsOnly = COption::GetOptionString("main", "stable_versions_only", "Y");
-$arRequestedModules = array(CIPOLYadostDriver::$MODULE_ID);
+$arRequestedModules = array(CKITYadostDriver::$MODULE_ID);
 $lastVersion = false;
 if ($arUpdateList = CUpdateClientPartner::GetUpdatesList($errorMessage, LANG, $stableVersionsOnly, $arRequestedModules))
 {
 	$arUpdateList = $arUpdateList["MODULE"];
 	$thisModule = false;
 	foreach ($arUpdateList as $key => $module)
-		if ($module["@"]["ID"] == CIPOLYadostDriver::$MODULE_ID)
+		if ($module["@"]["ID"] == CKITYadostDriver::$MODULE_ID)
 			$thisModule = $module;
 	
 	if ($thisModule)
@@ -60,18 +60,18 @@ $arWarnings = array(
 
 $arLangsWarning = array();
 foreach ($arWarnings as $warningCode)
-	$arLangsWarning[$warningCode] = GetMessage("IPOLyadost_WARNING_" . $warningCode);
+	$arLangsWarning[$warningCode] = GetMessage("KITyadost_WARNING_" . $warningCode);
 
 if ($lastVersion)
-	$arLangsWarning["newModuleVersionDetected"] = GetMessage("IPOLyadost_WARNING_newModuleVersionDetected", array(
+	$arLangsWarning["newModuleVersionDetected"] = GetMessage("KITyadost_WARNING_newModuleVersionDetected", array(
 		"#MODULE_UPDATE_VERSION#" => $lastVersion,
-		"#MODULE_ID#" => CIPOLYadostDriver::$MODULE_ID
+		"#MODULE_ID#" => CKITYadostDriver::$MODULE_ID
 	));
 
 // флаги отмены, оплаты, изменения заказа
-$isOrderPayed = ("Y" == CIPOLYadostDriver::$tmpOrder["PAYED"]) ? true : false;
-$isOrderCancel = ("Y" == CIPOLYadostDriver::$tmpOrder["CANCELED"]) ? true : false;
-$isOrderChange = CIPOLYadostHelper::isOrderChanged($orderID);
+$isOrderPayed = ("Y" == CKITYadostDriver::$tmpOrder["PAYED"]) ? true : false;
+$isOrderCancel = ("Y" == CKITYadostDriver::$tmpOrder["CANCELED"]) ? true : false;
+$isOrderChange = CKITYadostHelper::isOrderChanged($orderID);
 
 CJSCore::Init(array("jquery"));
 
@@ -90,7 +90,7 @@ $arOptionsGroupsSort = array(
 
 $arOptionsGroupsName = array();
 foreach ($arOptionsGroupsSort as $group => $sort)
-	$arOptionsGroupsName[$group] = GetMessage("IPOLyadost_GROUP_" . $group);
+	$arOptionsGroupsName[$group] = GetMessage("KITyadost_GROUP_" . $group);
 
 // фиктивная невидимая настройка для отображения блока сообщений внизу формы
 $formElements["warning_fictive"] = array(
@@ -106,7 +106,7 @@ $formElements["warning_fictive"] = array(
 $arLabels = array("ORDER_ID", "delivery_ID", "parcel_ID", "STATUS");
 foreach ($arLabels as $label)
 {
-	$value = CIPOLYadostDriver::$tmpOrderConfirm["savedParams"][$label];
+	$value = CKITYadostDriver::$tmpOrderConfirm["savedParams"][$label];
 	
 	if (empty($value) && $label == "STATUS")
 		$value = "NEW";
@@ -119,7 +119,7 @@ foreach ($arLabels as $label)
 	
 	$formElements[$label] = array(
 		"type" => "label",
-		"name" => GetMessage("IPOLyadost_LABELS_" . $label),
+		"name" => GetMessage("KITyadost_LABELS_" . $label),
 		"value" => $value,
 		"sended" => false,
 		"group" => "COMMON"
@@ -140,26 +140,26 @@ foreach ($arLabels as $label)
 
 // статус запрашиваем, если заказ уже отправлен
 $status = null;
-if (CIPOLYadostDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"])
+if (CKITYadostDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"])
 {
-	$status = CIPOLYadostDriver::getOrderStatus(array("delivery_ID" => CIPOLYadostDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"]));
+	$status = CKITYadostDriver::getOrderStatus(array("delivery_ID" => CKITYadostDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"]));
 	
 	if ($status)
 	{
 		$formElements["STATUS"]["value"] = $status;
-		CIPOLYadostDriver::updateOrderStatus(array($orderID => $status));
+		CKITYadostDriver::updateOrderStatus(array($orderID => $status));
 	}
 }
 
-$statusNames = CIPOLYadostHelper::getDeliveryStatuses();
-$statusNames["NEW"] = GetMessage("IPOLyadost_YD_STATUS_NEW");
+$statusNames = CKITYadostHelper::getDeliveryStatuses();
+$statusNames["NEW"] = GetMessage("KITyadost_YD_STATUS_NEW");
 
 foreach ($statusNames as $code => $value)
-	$arLangs["status_name"][$code] = GetMessage("IPOLyadost_YD_STATUS_" . $code);
+	$arLangs["status_name"][$code] = GetMessage("KITyadost_YD_STATUS_" . $code);
 
 $formElements["status_info"] = array(
 	"type" => "label",
-	"name" => GetMessage("IPOLyadost_INPUTS_status_info_NAME"),
+	"name" => GetMessage("KITyadost_INPUTS_status_info_NAME"),
 	"value" => $statusNames[$status],
 	"group" => "COMMON"
 );
@@ -167,23 +167,23 @@ $formElements["status_info"] = array(
 // способ доставки на склад ЯД
 $formElements["is_payed"] = array(
 	"type" => "checkbox",
-	"name" => GetMessage("IPOLyadost_INPUTS_is_payed_NAME"),
-	"value" => ("Y" == CIPOLYadostDriver::$tmpOrder["PAYED"]) ? "Y" : "N",
+	"name" => GetMessage("KITyadost_INPUTS_is_payed_NAME"),
+	"value" => ("Y" == CKITYadostDriver::$tmpOrder["PAYED"]) ? "Y" : "N",
 	"sended" => false,
 	"group" => "COMMON",
 	"disabled" => true
 );
 
 // если статус не из категории запрещенных для редактирования, подключаем виджет
-// if (!in_array($statusNames[CIPOLYadostDriver::$tmpOrderConfirm["savedParams"]["STATUS"]], $arNotEditStatus))
-$GLOBALS['APPLICATION']->AddHeadString(COption::GetOptionString("ipol.yadost", "basketWidget"));
+// if (!in_array($statusNames[CKITYadostDriver::$tmpOrderConfirm["savedParams"]["STATUS"]], $arNotEditStatus))
+$GLOBALS['APPLICATION']->AddHeadString(COption::GetOptionString("kit.yadost", "basketWidget"));
 
 // название доставки
 $formElements["delivery_name"] = array(
 	"type" => "label",
-	"name" => GetMessage("IPOLyadost_INPUTS_delivery_name_NAME"),
-	"value" => CIPOLYadostDriver::$tmpOrderConfirm["widgetData"]["delivery"]["name"],
-	"data" => CIPOLYadostDriver::$tmpOrderConfirm["widgetData"]["delivery"]["unique_name"],
+	"name" => GetMessage("KITyadost_INPUTS_delivery_name_NAME"),
+	"value" => CKITYadostDriver::$tmpOrderConfirm["widgetData"]["delivery"]["name"],
+	"data" => CKITYadostDriver::$tmpOrderConfirm["widgetData"]["delivery"]["unique_name"],
 	"sended" => true,
 	"group" => "DELIVERY"
 );
@@ -196,49 +196,49 @@ $arTariffNames = array(
 );
 
 foreach ($arTariffNames as $code => $value)
-	$arLangs["profile_name"][$code] = GetMessage("IPOLyadost_INPUTS_profile_name_" . $code);
+	$arLangs["profile_name"][$code] = GetMessage("KITyadost_INPUTS_profile_name_" . $code);
 
 $formElements["profile_name"] = array(
 	"type" => "label",
-	"name" => GetMessage("IPOLyadost_INPUTS_profile_name_NAME"),
-	"value" => $arLangs["profile_name"][CIPOLYadostDriver::$tmpOrderConfirm["widgetData"]["type"]],
-	"data" => CIPOLYadostDriver::$tmpOrderConfirm["widgetData"]["type"],
+	"name" => GetMessage("KITyadost_INPUTS_profile_name_NAME"),
+	"value" => $arLangs["profile_name"][CKITYadostDriver::$tmpOrderConfirm["widgetData"]["type"]],
+	"data" => CKITYadostDriver::$tmpOrderConfirm["widgetData"]["type"],
 	"sended" => true,
 	"group" => "DELIVERY"
 );
 
-CIPOLYadostDriver::getModuleSetups();
-CIPOLYadostDriver::getOrderProps($orderID);
+CKITYadostDriver::getModuleSetups();
+CKITYadostDriver::getOrderProps($orderID);
 
 // город доставки
 // смотрим не изменился ли город
-$locationValue = CIPOLYadostHelper::getOrderLocationValue($orderID, CIPOLYadostDriver::$tmpOrder["PERSON_TYPE_ID"]);
+$locationValue = CKITYadostHelper::getOrderLocationValue($orderID, CKITYadostDriver::$tmpOrder["PERSON_TYPE_ID"]);
 
 $city = null;
 if ($locationValue)
-	$city = CIPOLYadostHelper::getCityNameByID($locationValue);
+	$city = CKITYadostHelper::getCityNameByID($locationValue);
 
-$cityName = $city["NAME"] ? $city["NAME"] : CIPOLYadostDriver::$tmpOrderConfirm["widgetData"]["deliveryCity"];
+$cityName = $city["NAME"] ? $city["NAME"] : CKITYadostDriver::$tmpOrderConfirm["widgetData"]["deliveryCity"];
 
 if ($city["REGION"])
     $cityName = $city["REGION"] . " " . $cityName;
 
 $formElements["city"] = array(
 	"type" => "label",
-	"name" => GetMessage("IPOLyadost_INPUTS_deliveryCity_NAME"),
-	// "value" => CIPOLYadostDriver::$tmpOrderConfirm["widgetData"]["deliveryCity"],
+	"name" => GetMessage("KITyadost_INPUTS_deliveryCity_NAME"),
+	// "value" => CKITYadostDriver::$tmpOrderConfirm["widgetData"]["deliveryCity"],
 	"value" => $cityName,
 	"sended" => true,// признак, что это поле читается с формы и отправляется в аякс
 	"group" => "DELIVERY"
 );
 
 // поля адреса доставки
-foreach (CIPOLYadostDriver::$options["ADDRESS"] as $name => $value)
+foreach (CKITYadostDriver::$options["ADDRESS"] as $name => $value)
 {
-	// $propValue = !empty(CIPOLYadostDriver::$tmpOrderConfirm["formData"][$name])?
-	// CIPOLYadostDriver::$tmpOrderConfirm["formData"][$name]:
-	// CIPOLYadostDriver::$tmpOrderProps[$name];
-	$propValue = CIPOLYadostDriver::$tmpOrderProps[$name];
+	// $propValue = !empty(CKITYadostDriver::$tmpOrderConfirm["formData"][$name])?
+	// CKITYadostDriver::$tmpOrderConfirm["formData"][$name]:
+	// CKITYadostDriver::$tmpOrderProps[$name];
+	$propValue = CKITYadostDriver::$tmpOrderProps[$name];
 	
 	// если адрес пустой, пробуем взять его из свойства адрес ПВЗ
     if ($name == "address" && empty($propValue))
@@ -247,7 +247,7 @@ foreach (CIPOLYadostDriver::$options["ADDRESS"] as $name => $value)
 			array(),
 			array(
 				"ORDER_ID" => $orderID,
-				"CODE" => "ipol_yadost_PVZ_ADDRESS"
+				"CODE" => "kit_yadost_PVZ_ADDRESS"
 			)
 		);
 		
@@ -265,7 +265,7 @@ foreach (CIPOLYadostDriver::$options["ADDRESS"] as $name => $value)
 	
 	$formElements[$name] = array(
 		"type" => "input",
-		"name" => GetMessage("IPOLyadost_INPUTS_" . $name . "_NAME"),
+		"name" => GetMessage("KITyadost_INPUTS_" . $name . "_NAME"),
 		"value" => $propValue,
 		"sended" => true,// признак, что это поле читается с формы и отправляется в аякс
 		"group" => "RECIPIENT",
@@ -280,17 +280,17 @@ $formElements["address"]["disabled"] = true;
 // это доставка на склад ЯД
 $formElements["delivery_type"] = array(
 	"type" => "select",
-	"name" => GetMessage("IPOLyadost_INPUTS_delivery_type_NAME"),
+	"name" => GetMessage("KITyadost_INPUTS_delivery_type_NAME"),
 	"value" => array(
-		"import" => GetMessage("IPOLyadost_INPUTS_delivery_type_import"),
-		"withdraw" => GetMessage("IPOLyadost_INPUTS_delivery_type_withdraw"),
+		"import" => GetMessage("KITyadost_INPUTS_delivery_type_import"),
+		"withdraw" => GetMessage("KITyadost_INPUTS_delivery_type_withdraw"),
 	),
 	"empty" => false, // признак, может ли быть пустым,
 	"sended" => true,
-	"selected" => (!empty(CIPOLYadostDriver::$tmpOrderConfirm["formData"]["delivery_type"])) ?
-		CIPOLYadostDriver::$tmpOrderConfirm["formData"]["delivery_type"] :
+	"selected" => (!empty(CKITYadostDriver::$tmpOrderConfirm["formData"]["delivery_type"])) ?
+		CKITYadostDriver::$tmpOrderConfirm["formData"]["delivery_type"] :
 		// "import",
-		COption::GetOptionString(CIPOLYadostDriver::$MODULE_ID, "delivery_type_import_widthdraw", "import"),
+		COption::GetOptionString(CKITYadostDriver::$MODULE_ID, "delivery_type_import_widthdraw", "import"),
 	"events" => array(
 		"onChange" => "deliverySender.deliveryTypeChange();"
 	),
@@ -299,41 +299,41 @@ $formElements["delivery_type"] = array(
 
 
 // стоимость доставки
-$deliveryPrice = CIPOLYadostDriver::$tmpOrderConfirm["widgetData"]["costWithRules"];
-if (CIPOLYadostDriver::$tmpOrderConfirm["formData"]["delivery_price"])
-	$deliveryPrice = CIPOLYadostDriver::$tmpOrderConfirm["formData"]["delivery_price"];
+$deliveryPrice = CKITYadostDriver::$tmpOrderConfirm["widgetData"]["costWithRules"];
+if (CKITYadostDriver::$tmpOrderConfirm["formData"]["delivery_price"])
+	$deliveryPrice = CKITYadostDriver::$tmpOrderConfirm["formData"]["delivery_price"];
 
 $formElements["delivery_price"] = array(
 	"type" => "label",
-	"name" => GetMessage("IPOLyadost_INPUTS_delivery_price_NAME"),
+	"name" => GetMessage("KITyadost_INPUTS_delivery_price_NAME"),
 	"value" => $deliveryPrice,
 	"sended" => true,// признак, что это поле читается с формы и отправляется в аякс
 	"group" => "DELIVERY"
 );
 
 
-$deliveryTerms = CIPOLYadost::getDeliveryTerm(
-	CIPOLYadostDriver::$tmpOrderConfirm["widgetData"]["minDays"],
-	CIPOLYadostDriver::$tmpOrderConfirm["widgetData"]["maxDays"]
+$deliveryTerms = CKITYadost::getDeliveryTerm(
+	CKITYadostDriver::$tmpOrderConfirm["widgetData"]["minDays"],
+	CKITYadostDriver::$tmpOrderConfirm["widgetData"]["maxDays"]
 );
 
 // время доставки
 $formElements["delivery_terms"] = array(
 	"type" => "label",
-	"name" => GetMessage("IPOLyadost_INPUTS_delivery_terms_NAME"),
+	"name" => GetMessage("KITyadost_INPUTS_delivery_terms_NAME"),
 	"value" => $deliveryTerms,
 	"sended" => true,// признак, что это поле читается с формы и отправляется в аякс
 	"group" => "DELIVERY"
 );
 
 // изменить стоимость доставки в заказе
-$changeDeliveryPrice = CIPOLYadostDriver::$tmpOrderConfirm["formData"]["change_delivery_price"];
+$changeDeliveryPrice = CKITYadostDriver::$tmpOrderConfirm["formData"]["change_delivery_price"];
 if (empty($changeDeliveryPrice))
 	$changeDeliveryPrice = "Y";
 
 $formElements["change_delivery_price"] = array(
 	"type" => "checkbox",
-	"name" => GetMessage("IPOLyadost_INPUTS_change_delivery_price_NAME"),
+	"name" => GetMessage("KITyadost_INPUTS_change_delivery_price_NAME"),
 	"value" => $changeDeliveryPrice,
 	"sended" => true,
 	"group" => "DELIVERY"
@@ -342,27 +342,27 @@ $formElements["change_delivery_price"] = array(
 // способ доставки на склад ЯД
 $formElements["import_type"] = array(
 	"type" => "select",
-	"name" => GetMessage("IPOLyadost_INPUTS_import_type_NAME"),
+	"name" => GetMessage("KITyadost_INPUTS_import_type_NAME"),
 	"value" => array(
-		"courier" => GetMessage("IPOLyadost_INPUTS_import_type_courier"),
-		"car" => GetMessage("IPOLyadost_INPUTS_import_type_car"),
+		"courier" => GetMessage("KITyadost_INPUTS_import_type_courier"),
+		"car" => GetMessage("KITyadost_INPUTS_import_type_car"),
 	),
 	"empty" => false, // признак, может ли быть пустым
 	"sended" => true,
-	"selected" => (CIPOLYadostDriver::$tmpOrderConfirm["formData"]["import_type"])?
-		CIPOLYadostDriver::$tmpOrderConfirm["formData"]["import_type"]:
+	"selected" => (CKITYadostDriver::$tmpOrderConfirm["formData"]["import_type"])?
+		CKITYadostDriver::$tmpOrderConfirm["formData"]["import_type"]:
 		"courier",
 	"group" => "OPTIONAL"
 );*/
 
 // дата отгрузки
-$shipmentDate = CIPOLYadostDriver::$tmpOrderConfirm["formData"]["shipment_date"];
+$shipmentDate = CKITYadostDriver::$tmpOrderConfirm["formData"]["shipment_date"];
 if (empty($shipmentDate))
-	$shipmentDate = CIPOLYadostDriver::getShipmentDate("d.m.Y");
+	$shipmentDate = CKITYadostDriver::getShipmentDate("d.m.Y");
 
 $formElements["shipment_date"] = array(
 	"type" => "date",
-	"name" => GetMessage("IPOLyadost_INPUTS_shipment_date_NAME"),
+	"name" => GetMessage("KITyadost_INPUTS_shipment_date_NAME"),
 	"empty" => false, // признак, может ли быть пустым
 	"sended" => true,
 	"value" => $shipmentDate,
@@ -374,13 +374,13 @@ $formElements["shipment_date"] = array(
 
 
 // способ доставки на склад ЯД
-$toYdWarehouse = CIPOLYadostDriver::$tmpOrderConfirm["formData"]["to_yd_warehouse"];
+$toYdWarehouse = CKITYadostDriver::$tmpOrderConfirm["formData"]["to_yd_warehouse"];
 if (empty($toYdWarehouse))
-	$toYdWarehouse = CIPOLYadostDriver::$options["to_yd_warehouse"];
+	$toYdWarehouse = CKITYadostDriver::$options["to_yd_warehouse"];
 
 $formElements["to_yd_warehouse"] = array(
 	"type" => "checkbox",
-	"name" => GetMessage("IPOLyadost_INPUTS_to_yd_warehouse_NAME"),
+	"name" => GetMessage("KITyadost_INPUTS_to_yd_warehouse_NAME"),
 	"value" => $toYdWarehouse,
 	"sended" => true,
 	"group" => "OPTIONAL",
@@ -390,21 +390,21 @@ $formElements["to_yd_warehouse"] = array(
 );
 
 // ID склада отправителя
-CIPOLYadostDriver::getRequestConfig();
-$arRequestConfig = CIPOLYadostDriver::$requestConfig;
+CKITYadostDriver::getRequestConfig();
+$arRequestConfig = CKITYadostDriver::$requestConfig;
 
 $arWarehouses = $arRequestConfig["warehouse_id"];
 
-if (isset(CIPOLYadostDriver::$tmpOrderConfirm["formData"]["warehouseConfigNum"]))
-	$warehouseConfigNum = CIPOLYadostDriver::$tmpOrderConfirm["formData"]["warehouseConfigNum"];
+if (isset(CKITYadostDriver::$tmpOrderConfirm["formData"]["warehouseConfigNum"]))
+	$warehouseConfigNum = CKITYadostDriver::$tmpOrderConfirm["formData"]["warehouseConfigNum"];
 else
-	$warehouseConfigNum = CIPOLYadostDriver::$options["defaultWarehouse"];
+	$warehouseConfigNum = CKITYadostDriver::$options["defaultWarehouse"];
 
 foreach ($arWarehouses as $num => $warehouse)
 {
 	if (!empty($warehouse))
 	{
-		$warehouseInfo = CIPOLYadostHelper::convertFromUTF(CIPOLYadostDriver::getWarehouseInfo($warehouse));
+		$warehouseInfo = CKITYadostHelper::convertFromUTF(CKITYadostDriver::getWarehouseInfo($warehouse));
 		if ($warehouseInfo["warehouseInfo"]["data"]["field_name"])
 			$arWarehouses[$num] .= " " . $warehouseInfo["warehouseInfo"]["data"]["field_name"];
 	}
@@ -412,7 +412,7 @@ foreach ($arWarehouses as $num => $warehouse)
 
 $formElements["warehouseConfigNum"] = array(
 	"type" => "select",
-	"name" => GetMessage("IPOLyadost_INPUTS_warehouse_ID_NAME"),
+	"name" => GetMessage("KITyadost_INPUTS_warehouse_ID_NAME"),
 	"value" => $arWarehouses,
 	"empty" => false, // признак, может ли быть пустым,
 	"sended" => true,
@@ -420,12 +420,12 @@ $formElements["warehouseConfigNum"] = array(
 	"group" => "OPTIONAL"
 );
 
-$assessedCostPercent = CIPOLYadostDriver::$tmpOrderConfirm["formData"]["assessedCostPercent"];
+$assessedCostPercent = CKITYadostDriver::$tmpOrderConfirm["formData"]["assessedCostPercent"];
 if (empty($assessedCostPercent))
-	$assessedCostPercent = CIPOLYadostDriver::$options["assessedCostPercent"];
+	$assessedCostPercent = CKITYadostDriver::$options["assessedCostPercent"];
 $formElements["assessedCostPercent"] = array(
 	"type" => "input",
-	"name" => GetMessage("IPOLyadost_INPUTS_assessedCostPercent_NAME"),
+	"name" => GetMessage("KITyadost_INPUTS_assessedCostPercent_NAME"),
 	"value" => $assessedCostPercent,
 	"sended" => true,// признак, что это поле читается с формы и отправляется в аякс
 	"group" => "OPTIONAL",
@@ -444,13 +444,13 @@ $arGabsValues = array(
 
 foreach ($arGabsValues as $code)
 {
-	$val = CIPOLYadostDriver::$tmpOrderConfirm["formData"][$code];
-	if (!isset(CIPOLYadostDriver::$tmpOrderConfirm["formData"][$code]))
-		$val = CIPOLYadostDriver::$tmpOrderDimension[$code];
+	$val = CKITYadostDriver::$tmpOrderConfirm["formData"][$code];
+	if (!isset(CKITYadostDriver::$tmpOrderConfirm["formData"][$code]))
+		$val = CKITYadostDriver::$tmpOrderDimension[$code];
 	
 	$formElements[$code] = array(
 		"type" => "input",
-		"name" => GetMessage("IPOLyadost_INPUTS_" . $code . "_NAME"),
+		"name" => GetMessage("KITyadost_INPUTS_" . $code . "_NAME"),
 		"value" => $val,
 		"sended" => true,// признак, что это поле читается с формы и отправляется в аякс
 		"group" => "GABS",
@@ -463,32 +463,32 @@ foreach ($arGabsValues as $code)
 <!--suppress ALL, JSUnresolvedFunction -->
 
 <style>
-    table.IPOLyadost_table_form {
+    table.KITyadost_table_form {
         width: 100%;
     }
 
-    table.IPOLyadost_table_form td {
+    table.KITyadost_table_form td {
         /*border: 1px solid red;*/
     }
 
-    table.IPOLyadost_table_form input[type="text"] {
+    table.KITyadost_table_form input[type="text"] {
         width: 130px;
     }
 
-    table.IPOLyadost_table_form textarea {
+    table.KITyadost_table_form textarea {
         width: 98.3%;
     }
 
-    table.IPOLyadost_table_form .yd_table_form_block_title {
+    table.KITyadost_table_form .yd_table_form_block_title {
         padding-top: 20px;
         text-transform: uppercase;
     }
 
-    table.IPOLyadost_table_form tr:first-child .yd_table_form_block_title {
+    table.KITyadost_table_form tr:first-child .yd_table_form_block_title {
         padding-top: 5px;
     }
 
-    table.IPOLyadost_table_form .yd_table_form_block_warning div {
+    table.KITyadost_table_form .yd_table_form_block_warning div {
         color: red;
         padding: 5px 0 10px;
     }
@@ -509,12 +509,12 @@ while ($arSite = $rsSites->Fetch()) {
 <script>
     $(document).ready(function ()
     {
-        var siteIDs = <?=CUtil::PHPtoJSObject(CIPOLYadostHelper::selectSite())?>;
+        var siteIDs = <?=CUtil::PHPtoJSObject(CKITYadostHelper::selectSite())?>;
         var siteID = <?=CUtil::PHPtoJSObject($siteDomain)?>;
 
         if (siteIDs.indexOf(siteID) != -1 || siteIDs == 0) {
             if(!$('#yadost_admin_dialog_button').hasClass('adm-btn')){
-                $('.adm-detail-toolbar').find('.adm-detail-toolbar-right').prepend("<a href='javascript:void(0)' onclick='deliverySender.ShowDialog();' class='adm-btn' id = 'yadost_admin_dialog_button'><?=GetMessage('IPOLyadost_JSC_SOD_BTNAME')?></a>");
+                $('.adm-detail-toolbar').find('.adm-detail-toolbar-right').prepend("<a href='javascript:void(0)' onclick='deliverySender.ShowDialog();' class='adm-btn' id = 'yadost_admin_dialog_button'><?=GetMessage('KITyadost_JSC_SOD_BTNAME')?></a>");
             }
             deliverySender.handleDialogButton();// управление цветом текста кнопки
         }
@@ -528,7 +528,7 @@ while ($arSite = $rsSites->Fetch()) {
             endStatus: <?=CUtil::PHPtoJSObject($arEndStatus)?>,
             errorStatus: <?=CUtil::PHPtoJSObject($arErrorStatus)?>,
             notEditableStatus: <?=CUtil::PHPtoJSObject($arNotEditStatus)?>,
-            tmpOrderConfirm: <?=CUtil::PHPtoJSObject(CIPOLYadostDriver::$tmpOrderConfirm)?>,
+            tmpOrderConfirm: <?=CUtil::PHPtoJSObject(CKITYadostDriver::$tmpOrderConfirm)?>,
             formElements: <?=CUtil::PHPtoJSObject($formElements)?>,
             formElementsGroups: <?=CUtil::PHPtoJSObject($arOptionsGroupsName)?>,
             formElementsGroupsSort: <?=CUtil::PHPtoJSObject($arOptionsGroupsSort)?>,
@@ -539,9 +539,9 @@ while ($arSite = $rsSites->Fetch()) {
             isOrderChange: <?=CUtil::PHPtoJSObject($isOrderChange)?>,
 
             lastVersion: <?=CUtil::PHPtoJSObject($lastVersion)?>,
-            tmpOrderDimension: <?=CUtil::PHPtoJSObject(CIPOLYadostDriver::$tmpOrderDimension)?>,
+            tmpOrderDimension: <?=CUtil::PHPtoJSObject(CKITYadostDriver::$tmpOrderDimension)?>,
 
-            isAdmin: <?=CUtil::PHPtoJSObject(CIPOLYadostHelper::isAdmin())?>,
+            isAdmin: <?=CUtil::PHPtoJSObject(CKITYadostHelper::isAdmin())?>,
 
             formOpened: false,// признак, что форма открывалась
             recalculate: true,// признак необходимости перерасчета стоиомости доставки
@@ -750,36 +750,36 @@ while ($arSite = $rsSites->Fetch()) {
             dialogButtons: {
                 "save": {
                     "action": "saveFormData",
-                    "value": "<?=GetMessage('IPOLyadost_SAVE_FORM_DATA')?>",
+                    "value": "<?=GetMessage('KITyadost_SAVE_FORM_DATA')?>",
                     "onclick": "deliverySender.saveFormData();"
                 },
                 "send": {
                     "action": "sendOrder",
-                    "value": "<?=GetMessage('IPOLyadost_SEND_DRAFT')?>",
+                    "value": "<?=GetMessage('KITyadost_SEND_DRAFT')?>",
                     "onclick": "deliverySender.sendOrder();"
                 },
                 "confirm": {
                     "perform_actions": "confirm",
-                    "value": "<?=GetMessage('IPOLyadost_SEND_CONFIRM')?>",
+                    "value": "<?=GetMessage('KITyadost_SEND_CONFIRM')?>",
                     "onclick": "deliverySender.sendOrder('confirm');"
                 },
                 "print": {
-                    "value": "<?=GetMessage('IPOLyadost_DOCS')?>",
+                    "value": "<?=GetMessage('KITyadost_DOCS')?>",
                     "onclick": "deliverySender.printDocs();"
                 },
                 "changeDelivery": {
-                    "value": "<?=GetMessage('IPOLyadost_CHANGE_DELIVERY')?>",
+                    "value": "<?=GetMessage('KITyadost_CHANGE_DELIVERY')?>",
                     "onclick": "deliverySender.initWidget();",
                     "data": {
                         "ydwidget-open": null
                     }
                 },
                 "cancel": {
-                    "value": "<?=GetMessage('IPOLyadost_CANCEL_ORDER')?>",
+                    "value": "<?=GetMessage('KITyadost_CANCEL_ORDER')?>",
                     "onclick": "deliverySender.cancelOrder();"
                 },
                 "edit": {
-                    "value": "<?=GetMessage('IPOLyadost_EDIT_ORDER')?>",
+                    "value": "<?=GetMessage('KITyadost_EDIT_ORDER')?>",
                     "onclick": "deliverySender.editOrder();"
                 },
             },
@@ -876,7 +876,7 @@ while ($arSite = $rsSites->Fetch()) {
                     }
                     else
                     {
-                        alert("<?=GetMessage("IPOLyadost_WARNING_requestError")?>");
+                        alert("<?=GetMessage("KITyadost_WARNING_requestError")?>");
                     }
                 });
             },
@@ -1106,7 +1106,7 @@ while ($arSite = $rsSites->Fetch()) {
                             html[sort] += "<span ";
 
                             if (typeof formInputs[i].data != "undefined")
-                                html[sort] += "data-IPOLyadostdata = '" + formInputs[i].data + "'";
+                                html[sort] += "data-KITyadostdata = '" + formInputs[i].data + "'";
 
                             html[sort] += "id = 'delivery_input_" + i + "'>";
 
@@ -1175,7 +1175,7 @@ while ($arSite = $rsSites->Fetch()) {
                             html[sort] += "<textarea rows = '2'";
 
                             if (formInputs[i].sended)
-                                html[sort] += "data-IPOLyadostSended = 'true' ";
+                                html[sort] += "data-KITyadostSended = 'true' ";
 
                             if (formInputs[i].disabled)
                                 html[sort] += "readonly disabled ";
@@ -1216,7 +1216,7 @@ while ($arSite = $rsSites->Fetch()) {
                 // ставим из языковых констант значения
                 deliverySender.setLangValues();
 
-                $("#IPOLyadost_table_form").html(deliverySender.getFormHTML());
+                $("#KITyadost_table_form").html(deliverySender.getFormHTML());
                 deliverySender.formOpened = true;
 
                 // задаем видимость кнопок, скрываем/отображаем
@@ -1312,8 +1312,8 @@ while ($arSite = $rsSites->Fetch()) {
                         deliverySender.warehouseAvailable = null;
 
                         var deliveryTypeName = {
-                            "import": "<?=GetMessage("IPOLyadost_INPUTS_delivery_type_import")?>",
-                            "withdraw": "<?=GetMessage("IPOLyadost_INPUTS_delivery_type_withdraw")?>",
+                            "import": "<?=GetMessage("KITyadost_INPUTS_delivery_type_import")?>",
+                            "withdraw": "<?=GetMessage("KITyadost_INPUTS_delivery_type_withdraw")?>",
                         };
 
                         for (var i in deliveryTypeName)
@@ -1480,8 +1480,8 @@ while ($arSite = $rsSites->Fetch()) {
             {
                 if (!deliverySender.Dialog)
                 {
-                    var html = $('#IPOLyadost_wndOrder').parent().html();
-                    $('#IPOLyadost_wndOrder').parent().remove();
+                    var html = $('#KITyadost_wndOrder').parent().html();
+                    $('#KITyadost_wndOrder').parent().remove();
 
                     // формируем кнопки
                     var buttons = [];
@@ -1516,11 +1516,11 @@ while ($arSite = $rsSites->Fetch()) {
 
                     // содержимое окна
                     var html = "";
-                    html += "<table class = 'IPOLyadost_table_form' id = 'IPOLyadost_table_form'>";
+                    html += "<table class = 'KITyadost_table_form' id = 'KITyadost_table_form'>";
                     html += "</table>";
 
                     deliverySender.Dialog = new BX.CDialog({
-                        title: "<?=GetMessage('IPOLyadost_JSC_SOD_WNDTITLE')?>",
+                        title: "<?=GetMessage('KITyadost_JSC_SOD_WNDTITLE')?>",
                         content: html,
                         icon: 'head-block',
                         resizable: true,
@@ -1533,7 +1533,7 @@ while ($arSite = $rsSites->Fetch()) {
                     deliverySender.Dialog.Show();
 
                     if (!deliverySender.isAdmin)
-                        $(".bx-core-adm-dialog-buttons").prepend("<div><?=GetMessage("IPOLyadost_JSC_SOD_RIGHT_NOT_ALLOW")?></div>");
+                        $(".bx-core-adm-dialog-buttons").prepend("<div><?=GetMessage("KITyadost_JSC_SOD_RIGHT_NOT_ALLOW")?></div>");
                 }
                 else
                     deliverySender.Dialog.Show();
@@ -1661,7 +1661,7 @@ while ($arSite = $rsSites->Fetch()) {
                         default:
                             curObj = $("#delivery_input_" + i);
 
-                            var data = curObj.attr("data-IPOLyadostdata");
+                            var data = curObj.attr("data-KITyadostdata");
 
                             if (typeof data != "undefined")
                             {
@@ -1672,7 +1672,7 @@ while ($arSite = $rsSites->Fetch()) {
                                 if (typeof changeVals != "undefined" && typeof changeVals[i] != "undefined")
                                 {
                                     curVal = changeVals[i];
-                                    curObj.attr("data-IPOLyadostdata", curVal);
+                                    curObj.attr("data-KITyadostdata", curVal);
 
                                     if (typeof deliverySender.arLangs[i] != "undefined" && typeof deliverySender.arLangs[i][curVal] != "undefined")
                                         curObj.html(deliverySender.arLangs[i][curVal]);
@@ -1746,7 +1746,7 @@ while ($arSite = $rsSites->Fetch()) {
 
                 if (needToFill.length > 0)
                 {
-                    confirm("<?=GetMessage("IPOLyadost_FILL_REQ")?>" + needToFill);
+                    confirm("<?=GetMessage("KITyadost_FILL_REQ")?>" + needToFill);
                     return false;
                 }
                 else
@@ -1786,12 +1786,12 @@ while ($arSite = $rsSites->Fetch()) {
                     // console.log(data);
                     if (data.success)
                     {
-                        confirm("<?=GetMessage('IPOLyadost_SAVE_FORM_DATA_SUCCESS')?>");
+                        confirm("<?=GetMessage('KITyadost_SAVE_FORM_DATA_SUCCESS')?>");
                     }
                     else
                     {
                         console.log(data);
-                        confirm("<?=GetMessage('IPOLyadost_SAVE_FORM_DATA_ERROR')?>\n\n" + data.data.code);
+                        confirm("<?=GetMessage('KITyadost_SAVE_FORM_DATA_ERROR')?>\n\n" + data.data.code);
                     }
                 });
             },
@@ -1833,7 +1833,7 @@ while ($arSite = $rsSites->Fetch()) {
                             deliverySender.formElements.parcel_ID.value = confirmOrder.parcel_id;
                         }
 
-                        confirm("<?=GetMessage('IPOLyadost_SEND_SUCCESS')?>");
+                        confirm("<?=GetMessage('KITyadost_SEND_SUCCESS')?>");
 
                         // обновляем форму после отправки
                         deliverySender.drawForm();
@@ -1864,7 +1864,7 @@ while ($arSite = $rsSites->Fetch()) {
                             // console.log("Error in data.data.data.result.data.result.error not found");
                         }
 
-                        confirm("<?=GetMessage('IPOLyadost_SEND_ERROR')?>\n\n" + str);
+                        confirm("<?=GetMessage('KITyadost_SEND_ERROR')?>\n\n" + str);
                     }
                 });
             },
@@ -1872,13 +1872,13 @@ while ($arSite = $rsSites->Fetch()) {
             // отмена заказа
             cancelOrder: function ()
             {
-                if (!confirm("<?=GetMessage('IPOLyadost_CANCEL_CONFIRM')?>"))
+                if (!confirm("<?=GetMessage('KITyadost_CANCEL_CONFIRM')?>"))
                     return false;
 
                 var status = deliverySender.getStatusGroup();
 				<?/*if (status != 1)
                 {
-                    confirm("<?=GetMessage('IPOLyadost_CANCEL_CANT_PERFORM')?>");
+                    confirm("<?=GetMessage('KITyadost_CANCEL_CANT_PERFORM')?>");
                     return false;
                 }*/?>
 
@@ -1898,7 +1898,7 @@ while ($arSite = $rsSites->Fetch()) {
 
                         // deliverySender.isOrderChange = false;
 
-                        confirm("<?=GetMessage('IPOLyadost_CANCEL_SUCCESS')?>");
+                        confirm("<?=GetMessage('KITyadost_CANCEL_SUCCESS')?>");
 
                         deliverySender.drawForm();
                     }
@@ -1908,7 +1908,7 @@ while ($arSite = $rsSites->Fetch()) {
                         var str = "";
 
                         str += data.data.data.order_id;
-                        confirm("<?=GetMessage('IPOLyadost_SEND_ERROR')?>\n\n" + str);
+                        confirm("<?=GetMessage('KITyadost_SEND_ERROR')?>\n\n" + str);
                     }
                 });
             },
@@ -1935,9 +1935,9 @@ while ($arSite = $rsSites->Fetch()) {
                         // str += data.data.data[i] + "\n";
 
                         // if (str != "")
-                        // confirm("<?=GetMessage('IPOLyadost_SEND_ERROR')?>\n\n" + str);
+                        // confirm("<?=GetMessage('KITyadost_SEND_ERROR')?>\n\n" + str);
                         // else
-                        confirm("<?=GetMessage('IPOLyadost_DOCUMENT_NOT_READY_YET')?>");
+                        confirm("<?=GetMessage('KITyadost_DOCUMENT_NOT_READY_YET')?>");
                     }
                 });
             },
@@ -1948,7 +1948,7 @@ while ($arSite = $rsSites->Fetch()) {
                 ajaxData["sessid"] = BX.bitrix_sessid();
 
                 $.ajax({
-                    url: "/bitrix/js/<?=CIPOLYadostDriver::$MODULE_ID?>/ajax.php",
+                    url: "/bitrix/js/<?=CKITYadostDriver::$MODULE_ID?>/ajax.php",
                     data: ajaxData,
                     type: "POST",
                     dataType: "json",
@@ -2001,10 +2001,10 @@ while ($arSite = $rsSites->Fetch()) {
                 if (delivery.type == "PICKUP")
                 {
                     // адрес для самовывоза
-                    address = '<?=GetMessage('IPOLyadost_JS_PICKUP')?>: ';
+                    address = '<?=GetMessage('KITyadost_JS_PICKUP')?>: ';
                     address += delivery.full_address + ' | ';
-                    address += delivery.days + ' <?=GetMessage('IPOLyadost_JS_DAY')?> | ';
-                    address += delivery.costWithRules + ' <?=GetMessage('IPOLyadost_JS_RUB')?>';
+                    address += delivery.days + ' <?=GetMessage('KITyadost_JS_DAY')?> | ';
+                    address += delivery.costWithRules + ' <?=GetMessage('KITyadost_JS_RUB')?>';
                     address += ' #' + delivery.pickuppointId;
                 }
 
@@ -2123,7 +2123,7 @@ while ($arSite = $rsSites->Fetch()) {
                 //общая стоимость товаров в корзине
                 'cost': function ()
                 {
-                    return <?=CIPOLYadostDriver::$tmpOrderDimension["PRICE"]?>;
+                    return <?=CKITYadostDriver::$tmpOrderDimension["PRICE"]?>;
                 },
 
                 //общее количество товаров в корзине
@@ -2132,7 +2132,7 @@ while ($arSite = $rsSites->Fetch()) {
                     return 1;
                 },
 
-                'assessed_value': <?=CIPOLYadostDriver::$tmpOrderDimension["PRICE"]?>,
+                'assessed_value': <?=CKITYadostDriver::$tmpOrderDimension["PRICE"]?>,
 
                 'order': {
                     //имя, фамилия, телефон, улица, дом, индекс
@@ -2162,7 +2162,7 @@ while ($arSite = $rsSites->Fetch()) {
                     },
 
                     //объявленная ценность заказа
-                    'order_assessed_value': <?=CIPOLYadostDriver::$tmpOrderDimension["PRICE"]?>,
+                    'order_assessed_value': <?=CKITYadostDriver::$tmpOrderDimension["PRICE"]?>,
                     //флаг отправки заказа через единый склад.
                     'delivery_to_yd_warehouse': (deliverySender.formElements.to_yd_warehouse.value == "Y") ? 1 : 0,
                     //товарные позиции в заказе

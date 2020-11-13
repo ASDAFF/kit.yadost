@@ -1,26 +1,30 @@
 <?
-$MESS ['IPOLyadost_DEMO_MODE_EXPIRED'] = "Настройки модуля недоступны, так как не удалось подключить функционал модуля. Проверьте не истек ли демо-режим.<br>Если модуль был активирован по купону, и настройки недоступны, то требуется деинсталировать модуль и установить повторно, тогда он будет работать в боевом режиме. Сделать это можно в<br>Админке - Marketplace - Установленные решения. После удаления модуля, он появится в таблице доступных модулей, из нее его можно установить. При повторной установке не требуется указывать настройки модуля снова, они будут сохранены.";
+/**
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ */
 
-$MESS ['IPOLyadost_OPTTAB_MSOPTIONS'] = "Настройки обмена Яндекс.Доставки";
-$MESS ['IPOLyadost_OPTTAB_SITESETTINGS'] = "Настройки сайта";
-$MESS ['IPOLyadost_OPTTAB_DIMENSIONS'] = "Габариты товаров";
-$MESS ['IPOLyadost_OPTTAB_DEFAULT_SENDERS_VAL'] = "Значения отправителя по умолчанию";
-$MESS ['IPOLyadost_OPTTAB_PROPS'] = "Свойства заказа";
-$MESS ['IPOLyadost_OPTTAB_COURIER'] = "Параметры доставки посылок на склад Яндекс.Доставки";
-$MESS ['IPOLyadost_OPTTAB_GOODS'] = "Свойства товаров";
-$MESS ['IPOLyadost_OPTTAB_DELIVS'] = "Настройки компонента";
-$MESS ['IPOLyadost_OPTTAB_PAYERS'] = "Типы плательщиков";
-$MESS ['IPOLyadost_OPTTAB_PAYSYSDEPTH'] = "Платежные системы, при которых курьер <b>не</b> берет деньги с покупателя";
+$MESS ['KITyadost_DEMO_MODE_EXPIRED'] = "Настройки модуля недоступны, так как не удалось подключить функционал модуля. Проверьте не истек ли демо-режим.<br>Если модуль был активирован по купону, и настройки недоступны, то требуется деинсталировать модуль и установить повторно, тогда он будет работать в боевом режиме. Сделать это можно в<br>Админке - Marketplace - Установленные решения. После удаления модуля, он появится в таблице доступных модулей, из нее его можно установить. При повторной установке не требуется указывать настройки модуля снова, они будут сохранены.";
 
-$MESS ['IPOLyadost_FAQ_SETUP_TITLE'] = "Настройка модуля";
-$MESS ['IPOLyadost_FAQ_SETUP_DESCR'] = "Перед началом использования модуля необходимо заполнить все настройки, руководствуясь пояснениями к пунктам. Особое внимание необходимо уделить группе настроек 'Настройки обмена Яндекс.Доставки', которые отвечают за получение доступа к АПИ Яндекс.Доставки.<br><br>После завершения настройки, активируйте модуль, нажав на кнопку 'Активировать' выше.<br><br>
+$MESS ['KITyadost_OPTTAB_MSOPTIONS'] = "Настройки обмена Яндекс.Доставки";
+$MESS ['KITyadost_OPTTAB_SITESETTINGS'] = "Настройки сайта";
+$MESS ['KITyadost_OPTTAB_DIMENSIONS'] = "Габариты товаров";
+$MESS ['KITyadost_OPTTAB_DEFAULT_SENDERS_VAL'] = "Значения отправителя по умолчанию";
+$MESS ['KITyadost_OPTTAB_PROPS'] = "Свойства заказа";
+$MESS ['KITyadost_OPTTAB_COURIER'] = "Параметры доставки посылок на склад Яндекс.Доставки";
+$MESS ['KITyadost_OPTTAB_GOODS'] = "Свойства товаров";
+$MESS ['KITyadost_OPTTAB_DELIVS'] = "Настройки компонента";
+$MESS ['KITyadost_OPTTAB_PAYERS'] = "Типы плательщиков";
+$MESS ['KITyadost_OPTTAB_PAYSYSDEPTH'] = "Платежные системы, при которых курьер <b>не</b> берет деньги с покупателя";
+
+$MESS ['KITyadost_FAQ_SETUP_TITLE'] = "Настройка модуля";
+$MESS ['KITyadost_FAQ_SETUP_DESCR'] = "Перед началом использования модуля необходимо заполнить все настройки, руководствуясь пояснениями к пунктам. Особое внимание необходимо уделить группе настроек 'Настройки обмена Яндекс.Доставки', которые отвечают за получение доступа к АПИ Яндекс.Доставки.<br><br>После завершения настройки, активируйте модуль, нажав на кнопку 'Активировать' выше.<br><br>
 Проверьте, чтобы у вас в <a href='/bitrix/admin/sale_location_admin.php'>настройках магазина</a> был создан список местоположений для доставки. Если у вас нет Местоположений, запустите импорт местоположений.<br>
 Проверьте, чтобы в <a href='/bitrix/admin/sale_order_props.php'>свойствах заказа</a> было свойство помеченное как Местоположение. Если такого свойства нет, создайте его.
 <br><br>";
-$MESS ['IPOLyadost_FAQ_ADD_TITLE'] = "Дополнительные возможности";
+$MESS ['KITyadost_FAQ_ADD_TITLE'] = "Дополнительные возможности";
 
-$MESS ['IPOLyadost_FAQ_TROUBLE_TITLE'] = "Решение проблем";
-$MESS ['IPOLyadost_FAQ_TROUBLE_DESCR'] = "
+$MESS ['KITyadost_FAQ_TROUBLE_TITLE'] = "Решение проблем";
+$MESS ['KITyadost_FAQ_TROUBLE_DESCR'] = "
 <ul><li>При выборе службы доставки слетает информация о сроке доставки<br><br>
 Эта проблема встречается в 14-й версии битрикса при использовании стандартного шаблона оформления заказа. Для ее исправления необходимо в шаблоне компонента оформления заказа (sale.order.ajax) найти файл delivery.php, в котором подключать компонент bitrix:sale.ajax.yadost.calculator в любом случае ( достаточно строку <i>if(\$arProfile[\"CHECKED\"] == \"Y\" && doubleval(\$arResult[\"DELIVERY_PRICE\"]) > 0):</i> привести к виду <i>if(\$arProfile[\"CHECKED\"] == \"Y\" && doubleval(\$arResult[\"DELIVERY_PRICE\"]) > 0 && false):</i> ).<br><br>
 </li><li>Не отображается ссылка для открытия окна выбора ПВЗ<br><br>
@@ -32,165 +36,165 @@ $MESS ['IPOLyadost_FAQ_TROUBLE_DESCR'] = "
 </ul>
 ";
 
-$MESS ['IPOLyadost_WARN_REQUIRE_OPTIONS'] = "<b style = 'color:red'>Важно!</b> Настройки \"Конфигурационный файл\", \"Код корзинного виджета\", \"Город отправления\" являются критическими для работы модуля, без их корректного заполнения работа модуля невозможна.";
-$MESS ['IPOLyadost_OPT_delivery_type_import_widthdraw'] = "Тип отгрузки по умолчанию";
-$MESS ['IPOLyadost_INPUTS_delivery_type_import'] = "Самопривоз";
-$MESS ['IPOLyadost_INPUTS_delivery_type_withdraw'] = "Забор";
-$MESS ['IPOLyadost_OPT_to_yd_warehouse'] = "Использовать склад Яндекс.Доставки";
-$MESS ['IPOLyadost_OPT_cityFrom'] = "Город отправления";
-$MESS ['IPOLyadost_OPT_default_sender'] = "ID отправителя по умолчанию";
-$MESS ['IPOLyadost_OPT_default_warehouse'] = "ID склада по умолчанию";
-$MESS ['IPOLyadost_OPT_cityFrom'] = "Город отправления";
-$MESS ['IPOLyadost_OPT_dontSendOrder'] = "Отправлять заказ в Яндекс.Доставку: ";
-$MESS ['IPOLyadost_OPTVAR_dSR_odrCrt'] = "при оформлении заказа";
-$MESS ['IPOLyadost_OPTVAR_dSR_flgRzd'] = "разрешением доставки";
-$MESS ['IPOLyadost_OPT_sides'] = "Код свойства с размерами в формате дшв";
-$MESS ['IPOLyadost_OPT_sidesUnitSprtr'] = "Символ-разделитель";
-$MESS ['IPOLyadost_OPT_MEA_SEP_L'] = "Код свойства с длиной товара";
-$MESS ['IPOLyadost_OPT_MEA_SEP_W'] = "Код свойства с шириной товара";
-$MESS ['IPOLyadost_OPT_MEA_SEP_H'] = "Код свойства с высотой товара";
-$MESS ['IPOLyadost_OPT_MEA_DEF'] = "Габариты будут взяты из стандартных параметров каталога (доступно для 14-й и выше версии Bitrix)";
-$MESS ['IPOLyadost_OPT_lengthD'] = "Длина товара, <span class='MeasLbl'>cm<span>";
-$MESS ['IPOLyadost_OPT_widthD'] = "Ширина товара, <span class='MeasLbl'>cm<span>";
-$MESS ['IPOLyadost_OPT_heightD'] = "Высота товара, <span class='MeasLbl'>cm<span>";
-$MESS ['IPOLyadost_OPT_weightD'] = "Вес заказа по умолчанию, <span class='WeightLbl'>kg<span>";
-$MESS ['IPOLyadost_OPT_assessedCost'] = "Оценочная стоимость заказа";
-$MESS ['IPOLyadost_OPT_assessedCostPercent'] = "Оценочная стоимость заказа в процентах";
-$MESS ['IPOLyadost_OPT_artnumber'] = "Код свойства товара используемого как артикул";
-$MESS ['IPOLyadost_OPT_site_selection'] = "Выберите сайт/сайты для работы с модулем";
+$MESS ['KITyadost_WARN_REQUIRE_OPTIONS'] = "<b style = 'color:red'>Важно!</b> Настройки \"Конфигурационный файл\", \"Код корзинного виджета\", \"Город отправления\" являются критическими для работы модуля, без их корректного заполнения работа модуля невозможна.";
+$MESS ['KITyadost_OPT_delivery_type_import_widthdraw'] = "Тип отгрузки по умолчанию";
+$MESS ['KITyadost_INPUTS_delivery_type_import'] = "Самопривоз";
+$MESS ['KITyadost_INPUTS_delivery_type_withdraw'] = "Забор";
+$MESS ['KITyadost_OPT_to_yd_warehouse'] = "Использовать склад Яндекс.Доставки";
+$MESS ['KITyadost_OPT_cityFrom'] = "Город отправления";
+$MESS ['KITyadost_OPT_default_sender'] = "ID отправителя по умолчанию";
+$MESS ['KITyadost_OPT_default_warehouse'] = "ID склада по умолчанию";
+$MESS ['KITyadost_OPT_cityFrom'] = "Город отправления";
+$MESS ['KITyadost_OPT_dontSendOrder'] = "Отправлять заказ в Яндекс.Доставку: ";
+$MESS ['KITyadost_OPTVAR_dSR_odrCrt'] = "при оформлении заказа";
+$MESS ['KITyadost_OPTVAR_dSR_flgRzd'] = "разрешением доставки";
+$MESS ['KITyadost_OPT_sides'] = "Код свойства с размерами в формате дшв";
+$MESS ['KITyadost_OPT_sidesUnitSprtr'] = "Символ-разделитель";
+$MESS ['KITyadost_OPT_MEA_SEP_L'] = "Код свойства с длиной товара";
+$MESS ['KITyadost_OPT_MEA_SEP_W'] = "Код свойства с шириной товара";
+$MESS ['KITyadost_OPT_MEA_SEP_H'] = "Код свойства с высотой товара";
+$MESS ['KITyadost_OPT_MEA_DEF'] = "Габариты будут взяты из стандартных параметров каталога (доступно для 14-й и выше версии Bitrix)";
+$MESS ['KITyadost_OPT_lengthD'] = "Длина товара, <span class='MeasLbl'>cm<span>";
+$MESS ['KITyadost_OPT_widthD'] = "Ширина товара, <span class='MeasLbl'>cm<span>";
+$MESS ['KITyadost_OPT_heightD'] = "Высота товара, <span class='MeasLbl'>cm<span>";
+$MESS ['KITyadost_OPT_weightD'] = "Вес заказа по умолчанию, <span class='WeightLbl'>kg<span>";
+$MESS ['KITyadost_OPT_assessedCost'] = "Оценочная стоимость заказа";
+$MESS ['KITyadost_OPT_assessedCostPercent'] = "Оценочная стоимость заказа в процентах";
+$MESS ['KITyadost_OPT_artnumber'] = "Код свойства товара используемого как артикул";
+$MESS ['KITyadost_OPT_site_selection'] = "Выберите сайт/сайты для работы с модулем";
 
-$MESS ['IPOLyadost_OPT_addressMode'] = "Поле адрес:";
-$MESS ['IPOLyadost_OPT_oldTemplate'] = "На сайте используется старый шаблон компонента sale.order.ajax <a href='#' class='PropHint' onclick='return ipol_popup_virt(\"pop-oldTemplate\",$(this));'></a>";
-$MESS ['IPOLyadost_LABEL_addressMode_one'] = "Единое поле адреса";
-$MESS ['IPOLyadost_LABEL_addressMode_sep'] = "Раздельные поля адреса";
-$MESS ['IPOLyadost_OPT_fname'] = "Имя";
-$MESS ['IPOLyadost_OPT_lname'] = "Фамилия";
-$MESS ['IPOLyadost_OPT_mname'] = "Отчество";
-$MESS ['IPOLyadost_OPT_phone'] = "Телефон";
-$MESS ['IPOLyadost_OPT_index'] = "Индекс";
-$MESS ['IPOLyadost_OPT_email'] = "Email";
-$MESS ['IPOLyadost_OPT_address'] = "Адрес <a href='#' class='PropHint' onclick='return ipol_popup_virt(\"pop-OPT_address\",$(this));'></a>";
-$MESS ['IPOLyadost_OPT_house'] = "Дом";
-$MESS ['IPOLyadost_OPT_build'] = "Корпус/блок/строение";
-$MESS ['IPOLyadost_OPT_street'] = "Улица";
-$MESS ['IPOLyadost_OPT_flat'] = "Квартира/офис";
-$MESS ['IPOLyadost_OPT_deliv_Fast'] = "Самый быстрый до двери";
-$MESS ['IPOLyadost_OPT_deliv_Cheap'] = "Самый дешёвый до двери";
-$MESS ['IPOLyadost_OPT_deliv_Balance'] = "Сбалансированный до двери";
-$MESS ['IPOLyadost_OPT_deliv_All'] = "Все доступные варианты до двери";
-$MESS ['IPOLyadost_OPT_signDeliv'] = "Выводить названия служб доставки";
-$MESS ['IPOLyadost_OPT_basketWidget'] = "Код корзинного виджета <a href='#' class='PropHint' onclick='return ipol_popup_virt(\"pop-basketWidget\",$(this));'></a>";
+$MESS ['KITyadost_OPT_addressMode'] = "Поле адрес:";
+$MESS ['KITyadost_OPT_oldTemplate'] = "На сайте используется старый шаблон компонента sale.order.ajax <a href='#' class='PropHint' onclick='return kit_popup_virt(\"pop-oldTemplate\",$(this));'></a>";
+$MESS ['KITyadost_LABEL_addressMode_one'] = "Единое поле адреса";
+$MESS ['KITyadost_LABEL_addressMode_sep'] = "Раздельные поля адреса";
+$MESS ['KITyadost_OPT_fname'] = "Имя";
+$MESS ['KITyadost_OPT_lname'] = "Фамилия";
+$MESS ['KITyadost_OPT_mname'] = "Отчество";
+$MESS ['KITyadost_OPT_phone'] = "Телефон";
+$MESS ['KITyadost_OPT_index'] = "Индекс";
+$MESS ['KITyadost_OPT_email'] = "Email";
+$MESS ['KITyadost_OPT_address'] = "Адрес <a href='#' class='PropHint' onclick='return kit_popup_virt(\"pop-OPT_address\",$(this));'></a>";
+$MESS ['KITyadost_OPT_house'] = "Дом";
+$MESS ['KITyadost_OPT_build'] = "Корпус/блок/строение";
+$MESS ['KITyadost_OPT_street'] = "Улица";
+$MESS ['KITyadost_OPT_flat'] = "Квартира/офис";
+$MESS ['KITyadost_OPT_deliv_Fast'] = "Самый быстрый до двери";
+$MESS ['KITyadost_OPT_deliv_Cheap'] = "Самый дешёвый до двери";
+$MESS ['KITyadost_OPT_deliv_Balance'] = "Сбалансированный до двери";
+$MESS ['KITyadost_OPT_deliv_All'] = "Все доступные варианты до двери";
+$MESS ['KITyadost_OPT_signDeliv'] = "Выводить названия служб доставки";
+$MESS ['KITyadost_OPT_basketWidget'] = "Код корзинного виджета <a href='#' class='PropHint' onclick='return kit_popup_virt(\"pop-basketWidget\",$(this));'></a>";
 
-$MESS["IPOLyadost_OPT_courier_name"] = "Имя курьера";
-$MESS["IPOLyadost_OPT_car_number"] = "Номер автомобиля";
-$MESS["IPOLyadost_OPT_car_model"] = "Марка автомобиля";
+$MESS["KITyadost_OPT_courier_name"] = "Имя курьера";
+$MESS["KITyadost_OPT_car_number"] = "Номер автомобиля";
+$MESS["KITyadost_OPT_car_model"] = "Марка автомобиля";
 
-$MESS["IPOLyadost_OPTTAB_STATUS"] = "Статусы заказа";
+$MESS["KITyadost_OPTTAB_STATUS"] = "Статусы заказа";
 
-$MESS ['IPOLyadost_OPT_idOfPVZ'] = "ID элемента, в который добавлять ссылку на выбор ПВЗ <a href='#' class='PropHint' onclick='return ipol_popup_virt(\"pop-idOfPVZ\",$(this));'></a>";
-$MESS ['IPOLyadost_OPT_showWidgetOnProfile'] = "Открывать корзинный виджет при клике на профиль доставки сразу <a href='#' class='PropHint' onclick='return ipol_popup_virt(\"pop-showWidgetOnProfile\",$(this));'></a>";
-$MESS ['IPOLyadost_OPT_isNewTmpl'] = "Использовать новый шаблон вывода иконок доставки <a href='#' class='PropHint' onclick='return ipol_popup_virt(\"pop-isNewTmpl\",$(this));'></a>";
+$MESS ['KITyadost_OPT_idOfPVZ'] = "ID элемента, в который добавлять ссылку на выбор ПВЗ <a href='#' class='PropHint' onclick='return kit_popup_virt(\"pop-idOfPVZ\",$(this));'></a>";
+$MESS ['KITyadost_OPT_showWidgetOnProfile'] = "Открывать корзинный виджет при клике на профиль доставки сразу <a href='#' class='PropHint' onclick='return kit_popup_virt(\"pop-showWidgetOnProfile\",$(this));'></a>";
+$MESS ['KITyadost_OPT_isNewTmpl'] = "Использовать новый шаблон вывода иконок доставки <a href='#' class='PropHint' onclick='return kit_popup_virt(\"pop-isNewTmpl\",$(this));'></a>";
 
 
-$MESS ['IPOLyadost_HELPER_basketWidget'] = "В поле необходимо вставить код корзинного виджета, который можно получить в личном кабинете на <a target='_blank' href='https://delivery.yandex.ru'>сайте Яндекс.Доставки</a> в разделе Настройки - Интеграция - Виджеты - Корзинный виджет - Установить.<br>Появится код  вида &lt;script&gt;текст&lt;/script&gt;.";
-$MESS ['IPOLyadost_HELPER_PROPS'] = "В полях необходимо выбрать <a target = '_blank' href='/bitrix/admin/sale_order_props.php'>коды свойств заказа</a>, которые будут переданы в службу доставки. Для разных типов плательщиков коды у однотипных свойств должны совпадать.<br><br>
+$MESS ['KITyadost_HELPER_basketWidget'] = "В поле необходимо вставить код корзинного виджета, который можно получить в личном кабинете на <a target='_blank' href='https://delivery.yandex.ru'>сайте Яндекс.Доставки</a> в разделе Настройки - Интеграция - Виджеты - Корзинный виджет - Установить.<br>Появится код  вида &lt;script&gt;текст&lt;/script&gt;.";
+$MESS ['KITyadost_HELPER_PROPS'] = "В полях необходимо выбрать <a target = '_blank' href='/bitrix/admin/sale_order_props.php'>коды свойств заказа</a>, которые будут переданы в службу доставки. Для разных типов плательщиков коды у однотипных свойств должны совпадать.<br><br>
 <strong>Пояснения к полям:</strong><br>
 Имя, фамилия, отчество - если на сайте эти данные заполняются в одном свойстве - укажите код во всех полях. Введенные данные будут разделены по пробелу.<br><br>
 Адрес - поле, куда будут передаваться данные о самовывозе, так же адрес ПВЗ будет записан в свойство заказ. Если на сайте поля адреса разделены, то оставьте поле пустым.<br><br>
 Для успешного функционирования вам так же необходимо иметь свойство заказа помеченное как 'Местоположение'. Если у вас отсутствует данное свойство, создайте его.<br><br>
 ";
-$MESS ['IPOLyadost_HELPER_ADD_PROPS_BUTTON'] = "Автоматическая настройка свойств заказа, проверяет наличие обязательных свойств заказа. Свойство \"Адрес\" будет разделено на отдельные поля. Для каждого из свойств будет установлена привязка к соответсвующему профилю Яндекс.Доставки.<br>";
+$MESS ['KITyadost_HELPER_ADD_PROPS_BUTTON'] = "Автоматическая настройка свойств заказа, проверяет наличие обязательных свойств заказа. Свойство \"Адрес\" будет разделено на отдельные поля. Для каждого из свойств будет установлена привязка к соответсвующему профилю Яндекс.Доставки.<br>";
 
-$MESS ['IPOLyadost_HELPER_oldTemplate'] = "Значение этой настройки влияет на работу скриптов, которые запускаются по нажатию кнопки \"Автоматически задать свойства\". В случае пропажи на странице оформления заказа свойств после автоматической настройки, попробуйте изменить данную данную настройку и повторить автоматическую настройку свойств заказа.<br>Старый и новый шаблон можно определить визуально, перейдите на страницу оформления заказа, определите шаблон по блоку доставок.
+$MESS ['KITyadost_HELPER_oldTemplate'] = "Значение этой настройки влияет на работу скриптов, которые запускаются по нажатию кнопки \"Автоматически задать свойства\". В случае пропажи на странице оформления заказа свойств после автоматической настройки, попробуйте изменить данную данную настройку и повторить автоматическую настройку свойств заказа.<br>Старый и новый шаблон можно определить визуально, перейдите на страницу оформления заказа, определите шаблон по блоку доставок.
 <div style = 'width: 100%'><b>Старый шаблон</b></div>
-<div style = 'width: 100%'><img style = 'width: 100%' src = '/bitrix/images/ipol.yadost/oldTemplate.png'></div><div style = 'clear: both;'></div>
+<div style = 'width: 100%'><img style = 'width: 100%' src = '/bitrix/images/kit.yadost/oldTemplate.png'></div><div style = 'clear: both;'></div>
 <div style = 'width: 100%'><b>Новый шаблон</b></div>
-<div style = 'width: 100%'><img style = 'width: 100%' src = '/bitrix/images/ipol.yadost/newTemplate.png'></div>";
+<div style = 'width: 100%'><img style = 'width: 100%' src = '/bitrix/images/kit.yadost/newTemplate.png'></div>";
 
-$MESS ['IPOLyadost_HELPER_dimMode_unit'] = "Если размеры товара хранятся в одном свойстве - необходимо ввести код этого свойства, а так же символ, который разделяет размеры. Например, есть свойство 'Габариты' в котором единой строкой значения хранятся в формате 10х30х50 - в таком случае символ разделитеть - это 'х'.";
-$MESS ['IPOLyadost_HELPER_sidesMeas'] = "Для передачи службе доставки информации по габаритам товаров, необходимо выбрать единицы измерения и свойство, где хранятся габариты. В случае, если габариты не будут найдены, будут переданы габариты по умолчанию, подставленные в указанных единицах измерения.";
-$MESS ['IPOLyadost_HELPER_OPT_address'] = "Если вы используете раздельное заполнение адреса (отдельно дом, улица и т.д.), оставьте данное поле пустым";
-$MESS ['IPOLyadost_HELPER_OPT_articul'] = "Необходимо указать свойства товаров, которые будут передаваться в Яндекс.Доставку";
-$MESS ['IPOLyadost_HELPER_STATUSES'] = "Укажите соответствие состяний посылки и статусов заказа на сайте. Указанные статусы будут выставлятся заказам при обмене данными с Яндекс.Доставкой, изменение статуса повлечет за собой все сопутсвующие события: отправку электронных писем, иное информирование, если оно предусмотрено.<br><br> Обмен статусами производится каждые 30 минут с помощью агента.<br><br>Если не требуется изменять статус при определенном сотсоянии, оставьте соответствие пустым.";
-$MESS ['IPOLyadost_HELPER_idOfPVZ'] = "Если на странице оформления заказа выводится ссылка 'Выбрать вариант доставки', то настройку необходимо оставить пустой.<br><br>Если шаблон модифицирован, то в нем необходимо для Яндекс.Доставки вставить тег, в который будет выводится указанная ссылка, задать ему id и указать его в настройке.";
-$MESS ['IPOLyadost_HELPER_showWidgetOnProfile'] = "Если установить эту опцию, то на странице оформления заказа, при клике на один из профилей Яндекс.Доставки, корзинный виджет будет открываться сразу без необходимости нажатия покупателем ссылки \"Выбрать вариант доставки\". При этом ссылка на открытие виджета будет сохранена и продолжит выполнять свои функции.";
-$MESS ['IPOLyadost_HELPER_assessed_limits'] = "Каждая служба доставки обладает ограничениями по оценочной стоимости заказа. Если оценочная стоимость превысит указанные пределы, то соответсвующий профиль доставки на странице оформления заказа не будет отображаться. Укажите в данной настройке в процентах оценочную стоимость заказа от суммарной стоимости корзины заказа. Ограничение для различных городов получения идентичны.<br>Пример ограничений оценочной стоимости для города Москвы:";
-$MESS ['IPOLyadost_HELPER_RightsNotAllow_SaveOption'] = "<span style = 'color: red'>Недостаточно прав!</span> Свяжитесь с администратором для возможности сохранения настроек модуля.<br>";
-$MESS ['IPOLyadost_HELPER_RightsNotAllow_AutoPropFix'] = "<span style = 'color: red'>Недостаточно прав!</span> Свяжитесь с администратором для возможности автоматической настройки свойств заказа.<br>";
+$MESS ['KITyadost_HELPER_dimMode_unit'] = "Если размеры товара хранятся в одном свойстве - необходимо ввести код этого свойства, а так же символ, который разделяет размеры. Например, есть свойство 'Габариты' в котором единой строкой значения хранятся в формате 10х30х50 - в таком случае символ разделитеть - это 'х'.";
+$MESS ['KITyadost_HELPER_sidesMeas'] = "Для передачи службе доставки информации по габаритам товаров, необходимо выбрать единицы измерения и свойство, где хранятся габариты. В случае, если габариты не будут найдены, будут переданы габариты по умолчанию, подставленные в указанных единицах измерения.";
+$MESS ['KITyadost_HELPER_OPT_address'] = "Если вы используете раздельное заполнение адреса (отдельно дом, улица и т.д.), оставьте данное поле пустым";
+$MESS ['KITyadost_HELPER_OPT_articul'] = "Необходимо указать свойства товаров, которые будут передаваться в Яндекс.Доставку";
+$MESS ['KITyadost_HELPER_STATUSES'] = "Укажите соответствие состяний посылки и статусов заказа на сайте. Указанные статусы будут выставлятся заказам при обмене данными с Яндекс.Доставкой, изменение статуса повлечет за собой все сопутсвующие события: отправку электронных писем, иное информирование, если оно предусмотрено.<br><br> Обмен статусами производится каждые 30 минут с помощью агента.<br><br>Если не требуется изменять статус при определенном сотсоянии, оставьте соответствие пустым.";
+$MESS ['KITyadost_HELPER_idOfPVZ'] = "Если на странице оформления заказа выводится ссылка 'Выбрать вариант доставки', то настройку необходимо оставить пустой.<br><br>Если шаблон модифицирован, то в нем необходимо для Яндекс.Доставки вставить тег, в который будет выводится указанная ссылка, задать ему id и указать его в настройке.";
+$MESS ['KITyadost_HELPER_showWidgetOnProfile'] = "Если установить эту опцию, то на странице оформления заказа, при клике на один из профилей Яндекс.Доставки, корзинный виджет будет открываться сразу без необходимости нажатия покупателем ссылки \"Выбрать вариант доставки\". При этом ссылка на открытие виджета будет сохранена и продолжит выполнять свои функции.";
+$MESS ['KITyadost_HELPER_assessed_limits'] = "Каждая служба доставки обладает ограничениями по оценочной стоимости заказа. Если оценочная стоимость превысит указанные пределы, то соответсвующий профиль доставки на странице оформления заказа не будет отображаться. Укажите в данной настройке в процентах оценочную стоимость заказа от суммарной стоимости корзины заказа. Ограничение для различных городов получения идентичны.<br>Пример ограничений оценочной стоимости для города Москвы:";
+$MESS ['KITyadost_HELPER_RightsNotAllow_SaveOption'] = "<span style = 'color: red'>Недостаточно прав!</span> Свяжитесь с администратором для возможности сохранения настроек модуля.<br>";
+$MESS ['KITyadost_HELPER_RightsNotAllow_AutoPropFix'] = "<span style = 'color: red'>Недостаточно прав!</span> Свяжитесь с администратором для возможности автоматической настройки свойств заказа.<br>";
 
 
-$MESS ['IPOLyadost_HEADER_MEASUREMENT'] = "Размеры товаров";
-$MESS ['IPOLyadost_HEADER_MEASUREMENT_DEF'] = "Размеры заказа по умолчанию";
-$MESS ['IPOLyadost_HEADER_WEIGHT'] = "Вес";
-$MESS ['IPOLyadost_HEADER_DELIVTYPES'] = "Отображение доставок";
-$MESS ['IPOLyadost_HEADER_DELIVSIGNS'] = "Подписи доставок";
+$MESS ['KITyadost_HEADER_MEASUREMENT'] = "Размеры товаров";
+$MESS ['KITyadost_HEADER_MEASUREMENT_DEF'] = "Размеры заказа по умолчанию";
+$MESS ['KITyadost_HEADER_WEIGHT'] = "Вес";
+$MESS ['KITyadost_HEADER_DELIVTYPES'] = "Отображение доставок";
+$MESS ['KITyadost_HEADER_DELIVSIGNS'] = "Подписи доставок";
 
-$MESS ['IPOLyadost_LABEL_dimMode_unit'] = "Одним свойством <a href='#' class='PropHint' onclick='return ipol_popup_virt(\"pop-dimMode_unit\",$(this));'></a>";
+$MESS ['KITyadost_LABEL_dimMode_unit'] = "Одним свойством <a href='#' class='PropHint' onclick='return kit_popup_virt(\"pop-dimMode_unit\",$(this));'></a>";
 
-$MESS ['IPOLyadost_LABEL_dimMode_sep'] = "Раздельными свойствами";
-$MESS ['IPOLyadost_LABEL_dimMode_def'] = "Из каталога";
-$MESS ['IPOLyadost_LABEL_sidesMeas'] = "Единицы измерения";
-$MESS ['IPOLyadost_LABEL_weiMode_cat'] = "Брать вес товара из каталога";
-$MESS ['IPOLyadost_LABEL_weiMode_prop'] = "Брать вес товара из свойства";
-$MESS ['IPOLyadost_LABEL_mm'] = "mm";
-$MESS ['IPOLyadost_LABEL_cm'] = "cm";
-$MESS ['IPOLyadost_LABEL_m'] = "m";
-$MESS ['IPOLyadost_LABEL_g'] = "g";
-$MESS ['IPOLyadost_LABEL_kg'] = "kg";
-$MESS ['IPOLyadost_LABEL_LOADCONFIG'] = "Загрузить конфигурационный файл";
-$MESS ['IPOLyadost_LABEL_HASCONFIG'] = "Конфигурационный файл загружен";
-$MESS ['IPOLyadost_LABEL_NOCONFIG'] = "Конфигурационный файл не обнаружен";
-$MESS ['IPOLyadost_LABEL_CONFIGORDER'] = "Порядок настройки";
+$MESS ['KITyadost_LABEL_dimMode_sep'] = "Раздельными свойствами";
+$MESS ['KITyadost_LABEL_dimMode_def'] = "Из каталога";
+$MESS ['KITyadost_LABEL_sidesMeas'] = "Единицы измерения";
+$MESS ['KITyadost_LABEL_weiMode_cat'] = "Брать вес товара из каталога";
+$MESS ['KITyadost_LABEL_weiMode_prop'] = "Брать вес товара из свойства";
+$MESS ['KITyadost_LABEL_mm'] = "mm";
+$MESS ['KITyadost_LABEL_cm'] = "cm";
+$MESS ['KITyadost_LABEL_m'] = "m";
+$MESS ['KITyadost_LABEL_g'] = "g";
+$MESS ['KITyadost_LABEL_kg'] = "kg";
+$MESS ['KITyadost_LABEL_LOADCONFIG'] = "Загрузить конфигурационный файл";
+$MESS ['KITyadost_LABEL_HASCONFIG'] = "Конфигурационный файл загружен";
+$MESS ['KITyadost_LABEL_NOCONFIG'] = "Конфигурационный файл не обнаружен";
+$MESS ['KITyadost_LABEL_CONFIGORDER'] = "Порядок настройки";
 
-$MESS ['IPOLyadost_BUTTON_LOAD'] = "Загрузить";
-$MESS ['IPOLyadost_BUTTON_CANSEL'] = "Отмена";
-$MESS ['IPOLyadost_BUTTON_CLEARCACHE'] = "Очистить кэш модуля";
+$MESS ['KITyadost_BUTTON_LOAD'] = "Загрузить";
+$MESS ['KITyadost_BUTTON_CANSEL'] = "Отмена";
+$MESS ['KITyadost_BUTTON_CLEARCACHE'] = "Очистить кэш модуля";
 
-$MESS ['IPOLyadost_TEXT_ABOUTCONFIG'] = "В окно необходимо вставить ключи к АПИ Яндекс.Доставки, которые можно получить в личном кабинете на <a target='_blank' href='https://delivery.yandex.ru/integration/index'>сайте Яндекс.Доставки</a> в разделе Интеграция -> API-ключи, на странице пройти по ссылке 'Получить'.<br>Открывшийся код надо скопировать в окно модуля.";
+$MESS ['KITyadost_TEXT_ABOUTCONFIG'] = "В окно необходимо вставить ключи к АПИ Яндекс.Доставки, которые можно получить в личном кабинете на <a target='_blank' href='https://delivery.yandex.ru/integration/index'>сайте Яндекс.Доставки</a> в разделе Интеграция -> API-ключи, на странице пройти по ссылке 'Получить'.<br>Открывшийся код надо скопировать в окно модуля.";
 
-$MESS ['IPOLyadost_ALERT_noConfig'] = "Вставьте конфигурацию";
-$MESS ['IPOLyadost_ALERT_configSaved'] = "Конфигурация сохранена";
-$MESS ['IPOLyadost_ALERT_configNotSaved'] = "Конфигурация не сохранена, проверьте введенный ключ";
-$MESS ['IPOLyadost_ALERT_cacheCleared'] = "Кэш модуля очищен";
-$MESS ['IPOLyadost_ALERT_cacheNotCleared'] = "Кэш уже был очищен";
+$MESS ['KITyadost_ALERT_noConfig'] = "Вставьте конфигурацию";
+$MESS ['KITyadost_ALERT_configSaved'] = "Конфигурация сохранена";
+$MESS ['KITyadost_ALERT_configNotSaved'] = "Конфигурация не сохранена, проверьте введенный ключ";
+$MESS ['KITyadost_ALERT_cacheCleared'] = "Кэш модуля очищен";
+$MESS ['KITyadost_ALERT_cacheNotCleared'] = "Кэш уже был очищен";
 
-$MESS ['IPOLyadost_cashe'] = "наличные";
+$MESS ['KITyadost_cashe'] = "наличные";
 
-$MESS['IPOLyadost_NOT_CRTD_HEADER'] = "Служба Яндекс.Доставки не найдена";
-$MESS['IPOLyadost_NOT_CRTD_TITLE'] = "Служба доставки не найдена. Необходимо добавить службу доставки: Магазин - Настройки - Службы доставки, нажать кнопку \"Добавить\", в меню выбрать \"Автоматизированная служба доставки\", во вкладке \"Настройки обработчика\" в настройке \"Служба доставки\" указать обработчик \"ipolYadost\".";
+$MESS['KITyadost_NOT_CRTD_HEADER'] = "Служба Яндекс.Доставки не найдена";
+$MESS['KITyadost_NOT_CRTD_TITLE'] = "Служба доставки не найдена. Необходимо добавить службу доставки: Магазин - Настройки - Службы доставки, нажать кнопку \"Добавить\", в меню выбрать \"Автоматизированная служба доставки\", во вкладке \"Настройки обработчика\" в настройке \"Служба доставки\" указать обработчик \"kitYadost\".";
 
-$MESS['IPOLyadost_NO_ADOST_HEADER'] = "Служба Яндекс.Доставки отключена";
-$MESS['IPOLyadost_NO_ADOST_TITLE'] = "Чтобы служба доставки отображалась на странице оформления заказа поставьте ей активность:<br>Магазин - Настройки - Службы доставки</a>.";
+$MESS['KITyadost_NO_ADOST_HEADER'] = "Служба Яндекс.Доставки отключена";
+$MESS['KITyadost_NO_ADOST_TITLE'] = "Чтобы служба доставки отображалась на странице оформления заказа поставьте ей активность:<br>Магазин - Настройки - Службы доставки</a>.";
 
-$MESS['IPOLyadost_NO_DOST_HEADER'] = "Служба Яндекс.Доставки удалена";
-$MESS['IPOLyadost_NO_DOST_TITLE'] = "Служба доставки была удалена. Чтобы вернуть ее - переустановите модуль.";
+$MESS['KITyadost_NO_DOST_HEADER'] = "Служба Яндекс.Доставки удалена";
+$MESS['KITyadost_NO_DOST_TITLE'] = "Служба доставки была удалена. Чтобы вернуть ее - переустановите модуль.";
 
 // добавление/изменение свойств кнопкой
-$MESS['IPOLyadost_propFix_Start'] = 'Автоматически задать свойства';
+$MESS['KITyadost_propFix_Start'] = 'Автоматически задать свойства';
 
-$MESS['IPOLyadost_propFix_PAYERS'] = 'Получение типов платильщиков...';
-$MESS['IPOLyadost_propFix_persone'] = 'Проверка полей CONTACT_PERSONE или FIO';
-$MESS['IPOLyadost_propFix_location'] = 'Проверка поля местоположения';
-$MESS['IPOLyadost_propFix_address'] = 'Проверка поля ADDRESS';
-$MESS['IPOLyadost_propFix_zip'] = 'Проверка поля ZIP';
+$MESS['KITyadost_propFix_PAYERS'] = 'Получение типов платильщиков...';
+$MESS['KITyadost_propFix_persone'] = 'Проверка полей CONTACT_PERSONE или FIO';
+$MESS['KITyadost_propFix_location'] = 'Проверка поля местоположения';
+$MESS['KITyadost_propFix_address'] = 'Проверка поля ADDRESS';
+$MESS['KITyadost_propFix_zip'] = 'Проверка поля ZIP';
 
-$MESS['IPOLyadost_propFix_testType'] = 'Проверка типа';
-$MESS['IPOLyadost_propFix_resFields'] = 'Добавлены/изменены следующие поля: ';
+$MESS['KITyadost_propFix_testType'] = 'Проверка типа';
+$MESS['KITyadost_propFix_resFields'] = 'Добавлены/изменены следующие поля: ';
 
-$MESS['IPOLyadost_propFix_error'] = 'Ошибка: ';
-$MESS['IPOLyadost_propFix_continue'] = 'Продолжить';
-$MESS['IPOLyadost_propFix_stop'] = 'Остановить';
-$MESS['IPOLyadost_propFix_finished'] = '--- Настройка завершена, изменения в настройках станут доступны после <a href = "#" onClick = "window.location = window.location;">перезагрузки страницы</a> ---';
+$MESS['KITyadost_propFix_error'] = 'Ошибка: ';
+$MESS['KITyadost_propFix_continue'] = 'Продолжить';
+$MESS['KITyadost_propFix_stop'] = 'Остановить';
+$MESS['KITyadost_propFix_finished'] = '--- Настройка завершена, изменения в настройках станут доступны после <a href = "#" onClick = "window.location = window.location;">перезагрузки страницы</a> ---';
 
-$MESS ['IPOLyadost_FAQ_TAB_RIGHTS'] = "Права доступа";
+$MESS ['KITyadost_FAQ_TAB_RIGHTS'] = "Права доступа";
 
 //FAQ
-$MESS ['IPOLyadost_FAQ_TAB_SETUP'] = "Помощь";
-$MESS ['IPOLyadost_FAQ_HDR_SETUP'] = "Установка";
-$MESS ['IPOLyadost_FAQ_WTF_TITLE'] = "- Для чего нужен модуль";
-$MESS ['IPOLyadost_FAQ_WTF_DESCR'] = "Модуль обеспечивает интеграцию Интернет-магазина со службой <a href = 'https://delivery.yandex.ru'>Яндекс.Доставки</a>. В модуле присутствует компонент с двумя шаблонами для подключения корзинного виджета на странице оформления заказа и возможности подключения иных виджетов в теле сайта. Модуль обеспечивает отправку заявок на доставку заказов, мониторинг статусов доставки заказов и выставление соответствующих им статусов в админке Битрикса. Предусмотрен функционал печати актов и товарных накладных для заказов.<br>";
-$MESS ['IPOLyadost_FAQ_HIW_TITLE'] = "- Как работает модуль";
-$MESS ['IPOLyadost_FAQ_HIW_DESCR'] = "Состав модуля:
+$MESS ['KITyadost_FAQ_TAB_SETUP'] = "Помощь";
+$MESS ['KITyadost_FAQ_HDR_SETUP'] = "Установка";
+$MESS ['KITyadost_FAQ_WTF_TITLE'] = "- Для чего нужен модуль";
+$MESS ['KITyadost_FAQ_WTF_DESCR'] = "Модуль обеспечивает интеграцию Интернет-магазина со службой <a href = 'https://delivery.yandex.ru'>Яндекс.Доставки</a>. В модуле присутствует компонент с двумя шаблонами для подключения корзинного виджета на странице оформления заказа и возможности подключения иных виджетов в теле сайта. Модуль обеспечивает отправку заявок на доставку заказов, мониторинг статусов доставки заказов и выставление соответствующих им статусов в админке Битрикса. Предусмотрен функционал печати актов и товарных накладных для заказов.<br>";
+$MESS ['KITyadost_FAQ_HIW_TITLE'] = "- Как работает модуль";
+$MESS ['KITyadost_FAQ_HIW_DESCR'] = "Состав модуля:
 <ul>
 	<li>функционал автоматизированной службы доставки;</li>
 	<li>функционал расчета габаритов заказа;</li>
@@ -205,13 +209,13 @@ $MESS ['IPOLyadost_FAQ_HIW_DESCR'] = "Состав модуля:
 <p>Модуль устанавливает компонент \"Пункты самовывоза delivery\", который отображает детальные сведения о пунктах, и может использоваться в качестве наглядной информации о доставке.</p>";
 
 // FAQ: Начало работы
-$MESS ['IPOLyadost_FAQ_HDR_ABOUT'] = "Начало работы";
+$MESS ['KITyadost_FAQ_HDR_ABOUT'] = "Начало работы";
 
-$MESS ['IPOLyadost_FAQ_TURNON_TITLE'] = "- Включение функционала";
-$MESS ['IPOLyadost_FAQ_TURNON_DESCR'] = "<p>1. Необходимо проверить работает ли на сервере сайта библиотека CURL и обратиться к администратору с просьбой о включении.</p><p>2. Проверить создана ли служба Яндекс.Доставки тут:<br>Админка - Магазин - Настройки - Службы доставки<br>Если служба отсутствует, ее необходимо добавить, в качестве обработчика службы выбрать \"Яндекс.Доставка [yadost]\".</p><p>3. В настройках модуля <b>обязательно</b> задайте код корзинного виджета и конфигурационный файл, получить их можно в личном кабинете Яндекс.Доставки:<br> Настройки - Интеграция.<br>Также укажите где модулю брать габариты товаров. Если они не заданы хоть для одного товара в корзине заказа, то применятся габариты по умолчанию для всего заказа. Вышесказанное касается и веса товаров и посылки.</p>";
+$MESS ['KITyadost_FAQ_TURNON_TITLE'] = "- Включение функционала";
+$MESS ['KITyadost_FAQ_TURNON_DESCR'] = "<p>1. Необходимо проверить работает ли на сервере сайта библиотека CURL и обратиться к администратору с просьбой о включении.</p><p>2. Проверить создана ли служба Яндекс.Доставки тут:<br>Админка - Магазин - Настройки - Службы доставки<br>Если служба отсутствует, ее необходимо добавить, в качестве обработчика службы выбрать \"Яндекс.Доставка [yadost]\".</p><p>3. В настройках модуля <b>обязательно</b> задайте код корзинного виджета и конфигурационный файл, получить их можно в личном кабинете Яндекс.Доставки:<br> Настройки - Интеграция.<br>Также укажите где модулю брать габариты товаров. Если они не заданы хоть для одного товара в корзине заказа, то применятся габариты по умолчанию для всего заказа. Вышесказанное касается и веса товаров и посылки.</p>";
 
-$MESS['IPOLyadost_FAQ_DELSYS_TITLE'] = "- Настройка службы доставки";
-$MESS['IPOLyadost_FAQ_DELSYS_DESCR'] = "
+$MESS['KITyadost_FAQ_DELSYS_TITLE'] = "- Настройка службы доставки";
+$MESS['KITyadost_FAQ_DELSYS_DESCR'] = "
 <p>
 	<strong>1. Управление службами доставки</strong><br> Админка - Магазин - Настройки - Службы доставки - Автоматизированные<br> Здесь можно настроить: <ul><li>Активность службы доставки и ее профилей</li><li>Название и описание службе доставки и ее профилям</li><li>Привязку профилей к платежным системам</li><li>Ограничения по габаритам и стоимости заказа</li></ul>
 </p>
@@ -236,14 +240,14 @@ $MESS['IPOLyadost_FAQ_DELSYS_DESCR'] = "
 </p>
 ";
 
-$MESS['IPOLyadost_FAQ_SEND_TITLE'] = "- Оформление и отправка заявки";
-$MESS['IPOLyadost_FAQ_SEND_DESCR'] = "<p>Для отправки заявок модуль добавляет в детальную карточку заказа кнопку \"Яндекс.Доставка\". По ее нажатию отображается форма редактирования данных заявки. Необходимо задать значения полям формы. Если необходимо оставить поле пустым, то поставьте в него пробел или -.<br> По нажатию кнопки создания черновика заявка будет выгружена в Яндекс.Доставку со всеми данными заказа и его корзине. Чтобы создать отгрузку для заказа, необходимо нажать кнопку \"Выгрузить в СД\", после этого черновик будет переведен в отгрузку в личном кабинете ЯД. Дальнейшие манипуляции с отгрузками пока не предусмотрены в модуле и производятся в личном кабинете ЯД.</p>";
+$MESS['KITyadost_FAQ_SEND_TITLE'] = "- Оформление и отправка заявки";
+$MESS['KITyadost_FAQ_SEND_DESCR'] = "<p>Для отправки заявок модуль добавляет в детальную карточку заказа кнопку \"Яндекс.Доставка\". По ее нажатию отображается форма редактирования данных заявки. Необходимо задать значения полям формы. Если необходимо оставить поле пустым, то поставьте в него пробел или -.<br> По нажатию кнопки создания черновика заявка будет выгружена в Яндекс.Доставку со всеми данными заказа и его корзине. Чтобы создать отгрузку для заказа, необходимо нажать кнопку \"Выгрузить в СД\", после этого черновик будет переведен в отгрузку в личном кабинете ЯД. Дальнейшие манипуляции с отгрузками пока не предусмотрены в модуле и производятся в личном кабинете ЯД.</p>";
 
 	// FAQ: Дополнительные возможности
-$MESS['IPOLyadost_FAQ_HDR_WORK'] = "Дополнительные возможности";
+$MESS['KITyadost_FAQ_HDR_WORK'] = "Дополнительные возможности";
 
-$MESS['IPOLyadost_FAQ_PELENG_TITLE'] = "- Отслеживание состояний";
-$MESS['IPOLyadost_FAQ_PELENG_DESCR'] = "<p><strong>1. Статусы заказов.</strong><br>
+$MESS['KITyadost_FAQ_PELENG_TITLE'] = "- Отслеживание состояний";
+$MESS['KITyadost_FAQ_PELENG_DESCR'] = "<p><strong>1. Статусы заказов.</strong><br>
 	Опрос статусов заказов происходит каждые 30 минут для всех заказов, статусы которых не финальные(например: завершен). Если статус заказа изменился, то он обновится на сайте, если в настройках модуля ему выставлено соответствие статуса на сайте, то он будет обновлен, что повлечет за собой все события изменения статуса(например: отправку письма об измении статуса).
 </p>
 <p>
@@ -251,13 +255,13 @@ $MESS['IPOLyadost_FAQ_PELENG_DESCR'] = "<p><strong>1. Статусы заказ�
 	В форме отправки заявки предусмотрена печать документов заказа. Она возможна после выгрузки заявки непосредственно в службу доставки, то есть после подтверждения отгрузки в личном кабинете ЯД.
 </p>";
 
-$MESS['IPOLyadost_FAQ_COMPONENT_TITLE'] = "- Компонент \"Пункты Самовывоза delivery\"";
-$MESS['IPOLyadost_FAQ_COMPONEMT_DESCR'] = "Компонент используются в первую очередь на странице оформления заказа, так же его можно использовать на странице доставки, чтобы вывести информацию о самовывозах, стоимости и сроках доставки для всех профилей. <strong>На странице оформления заказа компонент подключать не нужно!</strong> Он подключится автоматически.<br>Компонент предназначен для вывода карты с отображением на ней пунктов самовывоза и информации о них, а так же проведения различных манипуляций вроде выбора пункта для доставки. Функционал выбора пункта самовывоза на странице оформления заказа реализован с помощью этого компонента. Его так же можно использовать, чтобы отображать информацию о пунктах самовывоза в разделе \"Доставка\".<br>
-Вставить компонент на страницу можно с помощью визуального редактора. Расположен он по пути \"Магазин\" -> \"Компоненты ipol\". Если после установки модуля компонент в визуальном редакторе не появился - попробуйте <a href='/bitrix/admin/cache.php' target='_blank'>очистить файлы кэша</a> Битрикса.<br>
-<img src=\"/bitrix/images/ipol.yadost/componentAdd.png\"><br>
+$MESS['KITyadost_FAQ_COMPONENT_TITLE'] = "- Компонент \"Пункты Самовывоза delivery\"";
+$MESS['KITyadost_FAQ_COMPONEMT_DESCR'] = "Компонент используются в первую очередь на странице оформления заказа, так же его можно использовать на странице доставки, чтобы вывести информацию о самовывозах, стоимости и сроках доставки для всех профилей. <strong>На странице оформления заказа компонент подключать не нужно!</strong> Он подключится автоматически.<br>Компонент предназначен для вывода карты с отображением на ней пунктов самовывоза и информации о них, а так же проведения различных манипуляций вроде выбора пункта для доставки. Функционал выбора пункта самовывоза на странице оформления заказа реализован с помощью этого компонента. Его так же можно использовать, чтобы отображать информацию о пунктах самовывоза в разделе \"Доставка\".<br>
+Вставить компонент на страницу можно с помощью визуального редактора. Расположен он по пути \"Магазин\" -> \"Компоненты kit\". Если после установки модуля компонент в визуальном редакторе не появился - попробуйте <a href='/bitrix/admin/cache.php' target='_blank'>очистить файлы кэша</a> Битрикса.<br>
+<img src=\"/bitrix/images/kit.yadost/componentAdd.png\"><br>
 Компонент так же можно вставить php-кодом:<br>
 <div style='color:#AC12B1'>
-&lt;?\$GLOBALS['APPLICATION']->IncludeComponent(\"ipol:ipol.yadostPickup\",\".default\",array(),false);?&gt;
+&lt;?\$GLOBALS['APPLICATION']->IncludeComponent(\"kit:kit.yadostPickup\",\".default\",array(),false);?&gt;
 </div>
 Компонент имеет следующие настройки:<br>
 <ul>
@@ -275,11 +279,11 @@ $MESS['IPOLyadost_FAQ_COMPONEMT_DESCR'] = "Компонент использую
 Крайне не рекомендуется модифицировать эти шаблоны, в особенности - их скрипт. При необходимости вынесете их в отдельное пространство имен, иначе корректная работа модуля (в особенности - при оформлении заказа) не гарантируется.
 ";
 
-$MESS['IPOLyadost_FAQ_WIDGET_INCLUDE_TITLE'] = "- Включение виджетов(гео, карточный) на сайт";
-$MESS['IPOLyadost_FAQ_WIDGET_INCLUDE'] = "<p>Для установки на сайт виджетов Яндекс.Доставки предусмотрен шаблон компонента модуля ipol:deliveryPickup, название шаблона info.</p><p>Для получения кода включения компонента необходимо авторизоваться на сайте под админом. Перейти на главную страницу сайта. В панели админа создать новую тестовую страницу.</p><img src = '/bitrix/images/ipol.yadost/Widget1.png'/><p>Укажите параметры для страницы и нажмите \"Готово\"</p><img src = '/bitrix/images/ipol.yadost/Widget2.png'/><p>Откроется визуальный редактор страницы test.php, в нем необходимо на странице разместить компонент модуля Яндекс.Доставки</p><img src = '/bitrix/images/ipol.yadost/Widget3.png'/><p>После размещения компонента откроется окно редактирования его параметров, укажите шаблон info, скопируйте из личного кабинета Яндекс.Доставки код виджета, задайте город по умолчанию. Настройка \"Использовать склад Яндекс\" проставляется автоматически из настроек модуля. Для расчета доставки компонент использует текущую корзину клиента на сайте.</p><img src = '/bitrix/images/ipol.yadost/Widget4.png'/><p>Если подключается карточный виджет, необходимо указать какой товар передавать в виджет для расчета, отметьте настройку \"Использовать для расчета товар, а не корзину\", в появившихся полях задайте id товара и количество. По умолчанию для шаблона карточки товара id товара для расчета выглядит так:<br> Если в карточке товара используются торговые предложения: ={\$arResult[\"OFFERS\"][0][\"ID\"]}<br>если нет: ={\$arResult[\"ID\"]}</p><img src = '/bitrix/images/ipol.yadost/Widget5.png'/><p>Сохраните изменения и перейдите к редактированию страницы в режиме php</p><img src = '/bitrix/images/ipol.yadost/Widget6.png'/><p>Скопируйте выделенный код подключения компонента и вставьте его в шаблон сайта, где необходимо отображать виджет</p><img src = '/bitrix/images/ipol.yadost/Widget7.png'/><p></p>";
+$MESS['KITyadost_FAQ_WIDGET_INCLUDE_TITLE'] = "- Включение виджетов(гео, карточный) на сайт";
+$MESS['KITyadost_FAQ_WIDGET_INCLUDE'] = "<p>Для установки на сайт виджетов Яндекс.Доставки предусмотрен шаблон компонента модуля kit:deliveryPickup, название шаблона info.</p><p>Для получения кода включения компонента необходимо авторизоваться на сайте под админом. Перейти на главную страницу сайта. В панели админа создать новую тестовую страницу.</p><img src = '/bitrix/images/kit.yadost/Widget1.png'/><p>Укажите параметры для страницы и нажмите \"Готово\"</p><img src = '/bitrix/images/kit.yadost/Widget2.png'/><p>Откроется визуальный редактор страницы test.php, в нем необходимо на странице разместить компонент модуля Яндекс.Доставки</p><img src = '/bitrix/images/kit.yadost/Widget3.png'/><p>После размещения компонента откроется окно редактирования его параметров, укажите шаблон info, скопируйте из личного кабинета Яндекс.Доставки код виджета, задайте город по умолчанию. Настройка \"Использовать склад Яндекс\" проставляется автоматически из настроек модуля. Для расчета доставки компонент использует текущую корзину клиента на сайте.</p><img src = '/bitrix/images/kit.yadost/Widget4.png'/><p>Если подключается карточный виджет, необходимо указать какой товар передавать в виджет для расчета, отметьте настройку \"Использовать для расчета товар, а не корзину\", в появившихся полях задайте id товара и количество. По умолчанию для шаблона карточки товара id товара для расчета выглядит так:<br> Если в карточке товара используются торговые предложения: ={\$arResult[\"OFFERS\"][0][\"ID\"]}<br>если нет: ={\$arResult[\"ID\"]}</p><img src = '/bitrix/images/kit.yadost/Widget5.png'/><p>Сохраните изменения и перейдите к редактированию страницы в режиме php</p><img src = '/bitrix/images/kit.yadost/Widget6.png'/><p>Скопируйте выделенный код подключения компонента и вставьте его в шаблон сайта, где необходимо отображать виджет</p><img src = '/bitrix/images/kit.yadost/Widget7.png'/><p></p>";
 
-$MESS['IPOLyadost_FAQ_DELIVERYPRICE_TITLE'] = "- Модификация результатов расчетов (для программистов)";
-$MESS['IPOLyadost_FAQ_DELIVERYPRICE'] = "<p>Функционал модуля содержит в себе механизм событий. Работа с событиями описана в документации Битрикс и соответсвующих форумах. Не рекомендуется использовать описаный в разделе функционал, если Вы не уверены, что понимаете написанное в нем.</p>".
+$MESS['KITyadost_FAQ_DELIVERYPRICE_TITLE'] = "- Модификация результатов расчетов (для программистов)";
+$MESS['KITyadost_FAQ_DELIVERYPRICE'] = "<p>Функционал модуля содержит в себе механизм событий. Работа с событиями описана в документации Битрикс и соответсвующих форумах. Не рекомендуется использовать описаный в разделе функционал, если Вы не уверены, что понимаете написанное в нем.</p>".
 "<p>Набор событий модуля:<ul>".
 "<li><b>onGetOrderData</b> - выполняется после получения данных заказа.<br>Параметры \$arOrder - массив данных заказа.</li>".
 "<li><b>onGetOrderProps</b> - выполняется после получения значенией свойств заказа.<br>Параметры \$arOrderProps - массив значений свойств заказа.</li>".
@@ -288,21 +292,21 @@ $MESS['IPOLyadost_FAQ_DELIVERYPRICE'] = "<p>Функционал модуля с
 "</ul></p>".
 "<p>При необходимости добавления событий для кастомизации работы модуля, необходимо обратится в службу поддержки модуля.</p>";
 
-$MESS['IPOLyadost_DEFAULT_FAKE_CITY_TO_CALC'] = "Москва";
-$MESS['IPOLyadost_PROFILE_TODOOR'] = "Курьер";
-$MESS['IPOLyadost_PROFILE_POST'] = "Почта";
-$MESS['IPOLyadost_PROFILE_PICKUP'] = "Самовывоз";
+$MESS['KITyadost_DEFAULT_FAKE_CITY_TO_CALC'] = "Москва";
+$MESS['KITyadost_PROFILE_TODOOR'] = "Курьер";
+$MESS['KITyadost_PROFILE_POST'] = "Почта";
+$MESS['KITyadost_PROFILE_PICKUP'] = "Самовывоз";
 
-$MESS['IPOLyadost_LIMITS_TABLE_deliveryName'] = "Доставка";
-$MESS['IPOLyadost_LIMITS_TABLE_tariffName'] = "Тариф";
-$MESS['IPOLyadost_LIMITS_TABLE_tress'] = "Ограничение, руб.";
+$MESS['KITyadost_LIMITS_TABLE_deliveryName'] = "Доставка";
+$MESS['KITyadost_LIMITS_TABLE_tariffName'] = "Тариф";
+$MESS['KITyadost_LIMITS_TABLE_tress'] = "Ограничение, руб.";
 
-$MESS ['IPOLyadost_NOCURL_TEXT'] = "<span style='color:red'>Внимание! Не включена php библиотека CURL, необходимая для работы модуля. Для корректной его работы, необходимо подключить эту библиотеку. Обратитесь за помощью к техподдержке сервера.</span>";
+$MESS ['KITyadost_NOCURL_TEXT'] = "<span style='color:red'>Внимание! Не включена php библиотека CURL, необходимая для работы модуля. Для корректной его работы, необходимо подключить эту библиотеку. Обратитесь за помощью к техподдержке сервера.</span>";
 
-$MESS['IPOLyadost_FAQ_WIDGET_ENCODING_TITLE'] = "- Если кодировка виджета (гео, карточного) отображается некорректно";
-$MESS['IPOLyadost_FAQ_WIDGET_ENCODING'] = "<p>Если после установки виджета наблюдаются проблемы с кодировкой дат, необходимо выполнить следующие действия:</p>
+$MESS['KITyadost_FAQ_WIDGET_ENCODING_TITLE'] = "- Если кодировка виджета (гео, карточного) отображается некорректно";
+$MESS['KITyadost_FAQ_WIDGET_ENCODING'] = "<p>Если после установки виджета наблюдаются проблемы с кодировкой дат, необходимо выполнить следующие действия:</p>
 
-<img src = '/bitrix/images/ipol.yadost/Encoding_1.png'/>
+<img src = '/bitrix/images/kit.yadost/Encoding_1.png'/>
 
 <ul>
 	<li>Скопируйте код скрипта, размещенного по ссылке, указанной при подключении виджета, и добавьте его в новый созданный файл, например, widgetJsLoader.js.</li>
@@ -345,8 +349,8 @@ $MESS['IPOLyadost_FAQ_WIDGET_ENCODING'] = "<p>Если после установ
 
 <p>Виджет будет выглядеть следующим образом:</p>
 
-<img src = '/bitrix/images/ipol.yadost/Encoding_done_1.png'/>
+<img src = '/bitrix/images/kit.yadost/Encoding_done_1.png'/>
 <br />
-<img src = '/bitrix/images/ipol.yadost/Encoding_done_2.png'/>
+<img src = '/bitrix/images/kit.yadost/Encoding_done_2.png'/>
 
 ";

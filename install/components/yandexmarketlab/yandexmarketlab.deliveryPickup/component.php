@@ -1,7 +1,11 @@
 <?
+/**
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ */
+
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
-if(!cmodule::includeModule('ipol.yadost'))
+if(!cmodule::includeModule('kit.yadost'))
 	return false;
 if(!cmodule::includeModule('sale'))
 	return false;
@@ -27,8 +31,8 @@ else
 }
 
 // ORDER_PROPS
-CIPOLYadostDriver::getModuleSetups();
-$arAdrFields = CIPOLYadostDriver::$options["ADDRESS"];
+CKITYadostDriver::getModuleSetups();
+$arAdrFields = CKITYadostDriver::$options["ADDRESS"];
 
 $arProps = CSaleOrderProps::GetList(
 	array(),
@@ -52,7 +56,7 @@ else
 {
 	if ($arParams["CITY_ID"])
 	{
-		$arCity = CIPOLYadostHelper::getCityNameByID($arParams["CITY_ID"]);
+		$arCity = CKITYadostHelper::getCityNameByID($arParams["CITY_ID"]);
 		$arResult["CITY_NAME"] = $arCity["NAME"];
 	}
 	else
@@ -64,18 +68,18 @@ $basketFilter = false;
 if ("Y" == $arParams["USE_ITEM"])
 	$basketFilter = array("PRODUCT_ID" => $arParams["ITEM_ID"], "PRODUCT_QUANTITY" => $arParams["ITEM_QUANTITY"]);
 
-CIPOLYadostDriver::getOrderBasket($basketFilter);
+CKITYadostDriver::getOrderBasket($basketFilter);
 
 $arResult["ORDER_DIMENSIONS"] = array(
-	"WIDTH" => CIPOLYadostDriver::$tmpOrderDimension["WIDTH"],
-	"HEIGHT" => CIPOLYadostDriver::$tmpOrderDimension["HEIGHT"],
-	"LENGTH" => CIPOLYadostDriver::$tmpOrderDimension["LENGTH"]
+	"WIDTH" => CKITYadostDriver::$tmpOrderDimension["WIDTH"],
+	"HEIGHT" => CKITYadostDriver::$tmpOrderDimension["HEIGHT"],
+	"LENGTH" => CKITYadostDriver::$tmpOrderDimension["LENGTH"]
 );
 
-$arResult["TOTAL_PRICE"] = CIPOLYadostDriver::$tmpOrderDimension["PRICE"];
-$arResult["TOTAL_WEIGHT"] = CIPOLYadostDriver::$tmpOrderDimension["WEIGHT"];
-$arResult["TOTAL_QUANTITY"] = CIPOLYadostDriver::$tmpOrderDimension["QUANTITY"];
+$arResult["TOTAL_PRICE"] = CKITYadostDriver::$tmpOrderDimension["PRICE"];
+$arResult["TOTAL_WEIGHT"] = CKITYadostDriver::$tmpOrderDimension["WEIGHT"];
+$arResult["TOTAL_QUANTITY"] = CKITYadostDriver::$tmpOrderDimension["QUANTITY"];
 
-CIPOLYadostDriver::clearOrderData();
+CKITYadostDriver::clearOrderData();
 $this->IncludeComponentTemplate();
 ?>

@@ -1,6 +1,6 @@
 <?
 /**
- * Copyright (c) 24/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
@@ -8,7 +8,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.ph
 // error_reporting(E_ALL);
 // ini_set('display_errors', '1');
 
-$module_id = "ipol.yadost";
+$module_id = "kit.yadost";
 //CModule::IncludeModule($module_id);
 $moduleMode = CModule::IncludeModuleEx($module_id);
 
@@ -27,29 +27,29 @@ if ($moduleMode == 3)
 if ($moduleMode == 0)
 	die();
 
-CIPOLYadostHelper::checkLogParams($_GET);
+CKITYadostHelper::checkLogParams($_GET);
 
 if (!check_bitrix_sessid())
 	die();
 
 // if (!$GLOBALS["USER"]->IsAdmin())
 	// die("Access denied!");
-if (!CIPOLYadostHelper::isAdmin("R"))
+if (!CKITYadostHelper::isAdmin("R"))
 	die("Access denied");
 
 try{
 	if($_REQUEST['action'] == "propFixer")
-		$data = CIPOLYadostProps::Start($_REQUEST);
+		$data = CKITYadostProps::Start($_REQUEST);
 	else
 	{
 		// классы модуля с доступными методами ajax-обработчиками
 		$moduleClasses = array(
-			'CIPOLYadostHelper' => array(
+			'CKITYadostHelper' => array(
 				"clearNoticeFile", // очистка файла с флагом изменения заказа
 				"deleteOrderFromChange", // убирает признак изменения заказа
 				"clearCache", // очистка кеша
 			),
-			'CIPOLYadostDriver' => array(
+			'CKITYadostDriver' => array(
 				"saveFormData", // сохранение данных формы
 				"sendOrder", // отправка заказа
 				"getOrderDocuments", // получение документов и ярлыков
@@ -69,7 +69,7 @@ try{
 				"cancelOrder", // отмена заказа
 				"setConfig", // сохранение конфига
 			),
-			'CIPOLYadost' => array(
+			'CKITYadost' => array(
 				"calculateOrder" // пересчет стоимости заказа на ФОЗ
 			)
 		);
@@ -91,7 +91,7 @@ try{
 				}
 		
 		if (!$methodFind)
-			CIPOLYadostHelper::throwException("Unknown action!", array(
+			CKITYadostHelper::throwException("Unknown action!", array(
 				"request" => $_REQUEST
 			));
 	}
@@ -100,17 +100,17 @@ try{
 }
 catch (Exception $e)
 {
-	CIPOLYadostHelper::errorLog(CIPOLYadostDriver::$debug);
+	CKITYadostHelper::errorLog(CKITYadostDriver::$debug);
 	$success = false;
-	$data = CIPOLYadostHelper::convertFromUTF(CIPOLYadostHelper::$exceptionData);
+	$data = CKITYadostHelper::convertFromUTF(CKITYadostHelper::$exceptionData);
 }
 
-CIPOLYadostHelper::errorLog(CIPOLYadostDriver::$debug);
+CKITYadostHelper::errorLog(CKITYadostDriver::$debug);
 
 if ("N" != $_POST["echoAJAX"])
 {
 	$GLOBALS["APPLICATION"]->RestartBuffer();
-	echo json_encode(array("success" => $success, "data" => CIPOLYadostHelper::convertToUTF($data)));
+	echo json_encode(array("success" => $success, "data" => CKITYadostHelper::convertToUTF($data)));
 	die();
 }
 ?>

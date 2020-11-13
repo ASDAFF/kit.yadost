@@ -1,16 +1,16 @@
 <?php
 /**
- * Copyright (c) 25/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
 IncludeModuleLangFile(__FILE__);
-if (class_exists("ipol_yadost"))
+if (class_exists("kit_yadost"))
     return;
 
 
-Class ipol_yadost extends CModule
+Class kit_yadost extends CModule
 {
-    var $MODULE_ID = "ipol.yadost";
+    var $MODULE_ID = "kit.yadost";
     var $MODULE_NAME;
     var $MODULE_VERSION;
     var $MODULE_VERSION_DATE;
@@ -19,7 +19,7 @@ Class ipol_yadost extends CModule
     var $MODULE_GROUP_RIGHTS = "N";
     var $errors;
 
-    function ipol_yadost()
+    function kit_yadost()
     {
         $arModuleVersion = array();
         $path = str_replace("\\", "/", __FILE__);
@@ -27,17 +27,17 @@ Class ipol_yadost extends CModule
         include($path . "/version.php");
         $this->MODULE_VERSION = $arModuleVersion['VERSION'];
         $this->MODULE_VERSION_DATE = $arModuleVersion['VERSION_DATE'];
-        $this->MODULE_NAME = GetMessage('IPOLyadost_INSTALL_NAME');
-        $this->MODULE_DESCRIPTION = GetMessage('IPOLyadost_INSTALL_DESCRIPTION');
-        $this->PARTNER_NAME = "ipol";
-        $this->PARTNER_URI = "https://ipolh.com";
+        $this->MODULE_NAME = GetMessage('KITyadost_INSTALL_NAME');
+        $this->MODULE_DESCRIPTION = GetMessage('KITyadost_INSTALL_DESCRIPTION');
+        $this->PARTNER_NAME = "ASDAFF";
+        $this->PARTNER_URI = "https://asdaff.github.io";
     }
 
     function InstallDB()
     {
         global $DB, $DBType, $APPLICATION;
         $this->errors = false;
-        if (!$DB->Query("SELECT 'x' FROM ipol_yadost", true))
+        if (!$DB->Query("SELECT 'x' FROM kit_yadost", true))
             $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/" . $this->MODULE_ID . "/install/db/mysql/install.sql");
 
         if ($this->errors !== false) {
@@ -64,47 +64,47 @@ Class ipol_yadost extends CModule
 
     function InstallEvents()
     {
-        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepPersonType", $this->MODULE_ID, "CIPOLYadost", "setLocationFromCookie");
-        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepOrderProps", $this->MODULE_ID, "CIPOLYadost", "loadComponent");
-        RegisterModuleDependences("main", "OnEndBufferContent", $this->MODULE_ID, "CIPOLYadost", "onBufferContent");
-        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepComplete", $this->MODULE_ID, "CIPOLYadost", "orderCreate");
-        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepDelivery", $this->MODULE_ID, "CIPOLYadost", "pickupLoader");
-        RegisterModuleDependences("main", "OnEpilog", $this->MODULE_ID, "CIPOLYadost", "onEpilog");
-        RegisterModuleDependences("sale", "OnBeforeOrderUpdate", $this->MODULE_ID, "CIPOLYadostHelper", "OnBeforeOrderUpdateHandler");
-        RegisterModuleDependences("sale", "OnOrderUpdate", $this->MODULE_ID, "CIPOLYadostHelper", "OnOrderUpdateHandler");
-        RegisterModuleDependences("sale", "OnOrderAdd", $this->MODULE_ID, "CIPOLYadostHelper", "OnOrderAddHandler");
-        RegisterModuleDependences("sale", "OnBeforeBasketUpdate", $this->MODULE_ID, "CIPOLYadostHelper", "OnBeforeBasketUpdateHandler");
-        RegisterModuleDependences("sale", "OnBasketUpdate", $this->MODULE_ID, "CIPOLYadostHelper", "OnBasketUpdateHandler");
-        RegisterModuleDependences("sale", "OnBasketAdd", $this->MODULE_ID, "CIPOLYadostHelper", "OnBasketAddHandler");
-        RegisterModuleDependences("sale", "OnBeforeBasketDelete", $this->MODULE_ID, "CIPOLYadostHelper", "OnBeforeBasketDeleteHandler");
-        RegisterModuleDependences("sale", "OnSalePropertyValueSetField", $this->MODULE_ID, "CIPOLYadostHelper", "OnSalePropertyValueSetFieldHandler");
-        RegisterModuleDependences("sale", "OnSaleShipmentSetField", $this->MODULE_ID, "CIPOLYadostHelper", "OnSaleShipmentSetFieldHandler");
-        RegisterModuleDependences("sale", "OnSaleBasketItemSetField", $this->MODULE_ID, "CIPOLYadostHelper", "OnSaleBasketItemSetFieldHandler");
-        RegisterModuleDependences("sale", "OnSaleOrderCanceled", $this->MODULE_ID, "CIPOLYadostHelper", "OnSaleOrderCanceledHandler");
-        RegisterModuleDependences("main", "OnModuleUpdate", $this->MODULE_ID, "CIPOLYadostHelper", "OnModuleUpdateHandler");
+        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepPersonType", $this->MODULE_ID, "CKITYadost", "setLocationFromCookie");
+        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepOrderProps", $this->MODULE_ID, "CKITYadost", "loadComponent");
+        RegisterModuleDependences("main", "OnEndBufferContent", $this->MODULE_ID, "CKITYadost", "onBufferContent");
+        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepComplete", $this->MODULE_ID, "CKITYadost", "orderCreate");
+        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepDelivery", $this->MODULE_ID, "CKITYadost", "pickupLoader");
+        RegisterModuleDependences("main", "OnEpilog", $this->MODULE_ID, "CKITYadost", "onEpilog");
+        RegisterModuleDependences("sale", "OnBeforeOrderUpdate", $this->MODULE_ID, "CKITYadostHelper", "OnBeforeOrderUpdateHandler");
+        RegisterModuleDependences("sale", "OnOrderUpdate", $this->MODULE_ID, "CKITYadostHelper", "OnOrderUpdateHandler");
+        RegisterModuleDependences("sale", "OnOrderAdd", $this->MODULE_ID, "CKITYadostHelper", "OnOrderAddHandler");
+        RegisterModuleDependences("sale", "OnBeforeBasketUpdate", $this->MODULE_ID, "CKITYadostHelper", "OnBeforeBasketUpdateHandler");
+        RegisterModuleDependences("sale", "OnBasketUpdate", $this->MODULE_ID, "CKITYadostHelper", "OnBasketUpdateHandler");
+        RegisterModuleDependences("sale", "OnBasketAdd", $this->MODULE_ID, "CKITYadostHelper", "OnBasketAddHandler");
+        RegisterModuleDependences("sale", "OnBeforeBasketDelete", $this->MODULE_ID, "CKITYadostHelper", "OnBeforeBasketDeleteHandler");
+        RegisterModuleDependences("sale", "OnSalePropertyValueSetField", $this->MODULE_ID, "CKITYadostHelper", "OnSalePropertyValueSetFieldHandler");
+        RegisterModuleDependences("sale", "OnSaleShipmentSetField", $this->MODULE_ID, "CKITYadostHelper", "OnSaleShipmentSetFieldHandler");
+        RegisterModuleDependences("sale", "OnSaleBasketItemSetField", $this->MODULE_ID, "CKITYadostHelper", "OnSaleBasketItemSetFieldHandler");
+        RegisterModuleDependences("sale", "OnSaleOrderCanceled", $this->MODULE_ID, "CKITYadostHelper", "OnSaleOrderCanceledHandler");
+        RegisterModuleDependences("main", "OnModuleUpdate", $this->MODULE_ID, "CKITYadostHelper", "OnModuleUpdateHandler");
         return true;
     }
 
     function UnInstallEvents()
     {
-        UnRegisterModuleDependences("sale", "OnSaleComponentOrderOneStepPersonType", $this->MODULE_ID, "CIPOLYadost", "setLocationFromCookie");
-        UnRegisterModuleDependences("sale", "OnSaleComponentOrderOneStepOrderProps", $this->MODULE_ID, "CIPOLYadost", "loadComponent");
-        UnRegisterModuleDependences("main", "OnEndBufferContent", $this->MODULE_ID, "CIPOLYadost", "onBufferContent");
-        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepComplete", $this->MODULE_ID, "CIPOLYadost", "orderCreate");
-        UnRegisterModuleDependences("sale", "OnSaleComponentOrderOneStepDelivery", $this->MODULE_ID, "CIPOLYadost", "pickupLoader");
-        UnRegisterModuleDependences("main", "OnEpilog", $this->MODULE_ID, "CIPOLYadost", "onEpilog");
-        UnRegisterModuleDependences("sale", "OnBeforeOrderUpdate", $this->MODULE_ID, "CIPOLYadostHelper", "OnBeforeOrderUpdateHandler");
-        UnRegisterModuleDependences("sale", "OnOrderUpdate", $this->MODULE_ID, "CIPOLYadostHelper", "OnOrderUpdateHandler");
-        UnRegisterModuleDependences("sale", "OnOrderAdd", $this->MODULE_ID, "CIPOLYadostHelper", "OnOrderAddHandler");
-        UnRegisterModuleDependences("sale", "OnBeforeBasketUpdate", $this->MODULE_ID, "CIPOLYadostHelper", "OnBeforeBasketUpdateHandler");
-        UnRegisterModuleDependences("sale", "OnBasketUpdate", $this->MODULE_ID, "CIPOLYadostHelper", "OnBasketUpdateHandler");
-        UnRegisterModuleDependences("sale", "OnBasketAdd", $this->MODULE_ID, "CIPOLYadostHelper", "OnBasketAddHandler");
-        UnRegisterModuleDependences("sale", "OnBeforeBasketDelete", $this->MODULE_ID, "CIPOLYadostHelper", "OnBeforeBasketDeleteHandler");
-        UnRegisterModuleDependences("sale", "OnSalePropertyValueSetField", $this->MODULE_ID, "CIPOLYadostHelper", "OnSalePropertyValueSetFieldHandler");
-        UnRegisterModuleDependences("sale", "OnSaleShipmentSetField", $this->MODULE_ID, "CIPOLYadostHelper", "OnSaleShipmentSetFieldHandler");
-        UnRegisterModuleDependences("sale", "OnSaleBasketItemSetField", $this->MODULE_ID, "CIPOLYadostHelper", "OnSaleBasketItemSetFieldHandler");
-        UnRegisterModuleDependences("sale", "OnSaleOrderCanceled", $this->MODULE_ID, "CIPOLYadostHelper", "OnSaleOrderCanceledHandler");
-        UnRegisterModuleDependences("main", "OnModuleUpdate", $this->MODULE_ID, "CIPOLYadostHelper", "OnModuleUpdateHandler");
+        UnRegisterModuleDependences("sale", "OnSaleComponentOrderOneStepPersonType", $this->MODULE_ID, "CKITYadost", "setLocationFromCookie");
+        UnRegisterModuleDependences("sale", "OnSaleComponentOrderOneStepOrderProps", $this->MODULE_ID, "CKITYadost", "loadComponent");
+        UnRegisterModuleDependences("main", "OnEndBufferContent", $this->MODULE_ID, "CKITYadost", "onBufferContent");
+        RegisterModuleDependences("sale", "OnSaleComponentOrderOneStepComplete", $this->MODULE_ID, "CKITYadost", "orderCreate");
+        UnRegisterModuleDependences("sale", "OnSaleComponentOrderOneStepDelivery", $this->MODULE_ID, "CKITYadost", "pickupLoader");
+        UnRegisterModuleDependences("main", "OnEpilog", $this->MODULE_ID, "CKITYadost", "onEpilog");
+        UnRegisterModuleDependences("sale", "OnBeforeOrderUpdate", $this->MODULE_ID, "CKITYadostHelper", "OnBeforeOrderUpdateHandler");
+        UnRegisterModuleDependences("sale", "OnOrderUpdate", $this->MODULE_ID, "CKITYadostHelper", "OnOrderUpdateHandler");
+        UnRegisterModuleDependences("sale", "OnOrderAdd", $this->MODULE_ID, "CKITYadostHelper", "OnOrderAddHandler");
+        UnRegisterModuleDependences("sale", "OnBeforeBasketUpdate", $this->MODULE_ID, "CKITYadostHelper", "OnBeforeBasketUpdateHandler");
+        UnRegisterModuleDependences("sale", "OnBasketUpdate", $this->MODULE_ID, "CKITYadostHelper", "OnBasketUpdateHandler");
+        UnRegisterModuleDependences("sale", "OnBasketAdd", $this->MODULE_ID, "CKITYadostHelper", "OnBasketAddHandler");
+        UnRegisterModuleDependences("sale", "OnBeforeBasketDelete", $this->MODULE_ID, "CKITYadostHelper", "OnBeforeBasketDeleteHandler");
+        UnRegisterModuleDependences("sale", "OnSalePropertyValueSetField", $this->MODULE_ID, "CKITYadostHelper", "OnSalePropertyValueSetFieldHandler");
+        UnRegisterModuleDependences("sale", "OnSaleShipmentSetField", $this->MODULE_ID, "CKITYadostHelper", "OnSaleShipmentSetFieldHandler");
+        UnRegisterModuleDependences("sale", "OnSaleBasketItemSetField", $this->MODULE_ID, "CKITYadostHelper", "OnSaleBasketItemSetFieldHandler");
+        UnRegisterModuleDependences("sale", "OnSaleOrderCanceled", $this->MODULE_ID, "CKITYadostHelper", "OnSaleOrderCanceledHandler");
+        UnRegisterModuleDependences("main", "OnModuleUpdate", $this->MODULE_ID, "CKITYadostHelper", "OnModuleUpdateHandler");
         CAgent::RemoveModuleAgents($this->MODULE_ID);
         return true;
     }
@@ -123,7 +123,7 @@ Class ipol_yadost extends CModule
         DeleteDirFilesEx("/bitrix/js/" . $this->MODULE_ID);
         DeleteDirFilesEx("/bitrix/components/" . $this->MODULE_ID);
         DeleteDirFilesEx("/bitrix/images/" . $this->MODULE_ID);
-        DeleteDirFilesEx("/bitrix/php_interface/include/sale_delivery/ipol_yadost.php");
+        DeleteDirFilesEx("/bitrix/php_interface/include/sale_delivery/kit_yadost.php");
         return true;
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 24/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
 IncludeModuleLangFile(__FILE__);
@@ -10,25 +10,25 @@ class deliveryPropsFixer
 	// запускает процесс правки свойств
 	public static function Start($data)
 	{
-		if (!CIPOLYadostHelper::isAdmin())
+		if (!CKITYadostHelper::isAdmin())
 			self::throwException("Access denied");
 		
 		if (!CModule::IncludeModule("sale"))
-			CIPOLYadostHelper::throwException("Module sale not found");
+			CKITYadostHelper::throwException("Module sale not found");
 		
 		if (!isset($data['personeTypeId'])) {
 			$result = array_values(deliveryPropsFixer::getPersonTypes());
 		} else {
 			if (!isset($data['step'])) {
-				CIPOLYadostHelper::throwException(GetMessage("IPOLyadost_propfix_stepNotFound"));
+				CKITYadostHelper::throwException(GetMessage("KITyadost_propfix_stepNotFound"));
 			}
 			
-			self::$oldTemplate = COption::GetOptionString(CIPOLYadostDriver::$MODULE_ID, "oldTemplate", "Y")=="Y"?true:false;
+			self::$oldTemplate = COption::GetOptionString(CKITYadostDriver::$MODULE_ID, "oldTemplate", "Y")=="Y"?true:false;
 			$personeTypeId = $data['personeTypeId'];
 			$method = 'fixProp'. ucfirst($data['step']);
 
 			if (!method_exists('deliveryPropsFixer', $method)) {
-				CIPOLYadostHelper::throwException(GetMessage("IPOLyadost_propfix_stepNotFound"));
+				CKITYadostHelper::throwException(GetMessage("KITyadost_propfix_stepNotFound"));
 			}
 
 			$result = call_user_func(array('deliveryPropsFixer', $method), $personeTypeId);
@@ -45,7 +45,7 @@ class deliveryPropsFixer
 	 */
 	public static function DELIVERY_COURIER_ID()
 	{
-		$arDelivery = CIPOLYadostHelper::getDeliveryIDs();
+		$arDelivery = CKITYadostHelper::getDeliveryIDs();
 		return $arDelivery["yadost:courier"];
 	}
 
@@ -54,7 +54,7 @@ class deliveryPropsFixer
 	 */
 	public static function DELIVERY_POST_ID()
 	{
-		$arDelivery = CIPOLYadostHelper::getDeliveryIDs();
+		$arDelivery = CKITYadostHelper::getDeliveryIDs();
 		return $arDelivery["yadost:post"];
 	}
 
@@ -63,7 +63,7 @@ class deliveryPropsFixer
 	 */
 	public static function DELIVERY_PICKUP_ID()
 	{
-		$arDelivery = CIPOLYadostHelper::getDeliveryIDs();
+		$arDelivery = CKITYadostHelper::getDeliveryIDs();
 		return $arDelivery["yadost:pickup"];
 	}
 
@@ -106,7 +106,7 @@ class deliveryPropsFixer
 		}
 
 		if (!array_key_exists($personeTypeId, self::getPersonTypes())) {
-			CIPOLYadostHelper::throwException(GetMessage("IPOLyadost_propfix_persTypeNotFound"));
+			CKITYadostHelper::throwException(GetMessage("KITyadost_propfix_persTypeNotFound"));
 		}
 
 		$rsItems = CSaleOrderProps::GetList(
@@ -155,7 +155,7 @@ class deliveryPropsFixer
 			$findProp = $arProps['FIO'];
 		} else {
 			// $arPersones = self::getPersonTypes();
-			// deliveryHelper::throwException(GetMessage("IPOLyadost_propfix_ERR_FIO",
+			// deliveryHelper::throwException(GetMessage("KITyadost_propfix_ERR_FIO",
 				// array("PERSON_TYPE" => $arPersones[$personeTypeId]['NAME'])
 			// ));
 			
@@ -164,7 +164,7 @@ class deliveryPropsFixer
 			
 			$findProp = array(
 				'PERSON_TYPE_ID' => $personeTypeId,
-				'NAME' => GetMessage("IPOLyadost_propfix_PROP_FIO"),
+				'NAME' => GetMessage("KITyadost_propfix_PROP_FIO"),
 				'TYPE' => 'TEXT',
 				'REQUIED' => 'Y',
 				'USER_PROPS' => 'Y',
@@ -178,17 +178,17 @@ class deliveryPropsFixer
 			$arAddedFields[] = $propName;
 		}
 
-		if ($findProp['NAME'] != GetMessage("IPOLyadost_propfix_PROP_FIO")) {
-			self::updateOrderProp(array_merge($findProp, array('NAME' => GetMessage("IPOLyadost_propfix_PROP_FIO"), "CODE" => "FIO")));
+		if ($findProp['NAME'] != GetMessage("KITyadost_propfix_PROP_FIO")) {
+			self::updateOrderProp(array_merge($findProp, array('NAME' => GetMessage("KITyadost_propfix_PROP_FIO"), "CODE" => "FIO")));
 		}
 		
-		COption::SetOptionString(CIPOLYadostDriver::$MODULE_ID, "fname", "FIO");
+		COption::SetOptionString(CKITYadostDriver::$MODULE_ID, "fname", "FIO");
 
 		$propName = self::getPropName('LAST_NAME');
 		if (!isset($arProps[$propName])) {
 			self::updateOrderProp(array(
 				'PERSON_TYPE_ID' => $personeTypeId,
-				'NAME' => GetMessage("IPOLyadost_propfix_PROP_LAST_NAME"),
+				'NAME' => GetMessage("KITyadost_propfix_PROP_LAST_NAME"),
 				'TYPE' => 'TEXT',
 				'REQUIED' => 'Y',
 				'USER_PROPS' => 'Y',
@@ -201,13 +201,13 @@ class deliveryPropsFixer
 			$arAddedFields[] = $propName;
 		}
 		
-		COption::SetOptionString(CIPOLYadostDriver::$MODULE_ID, "lname", $propName);
+		COption::SetOptionString(CKITYadostDriver::$MODULE_ID, "lname", $propName);
 
 		$propName = self::getPropName('SECOND_NAME');
 		if (!isset($arProps[$propName])) {
 			self::updateOrderProp(array(
 				'PERSON_TYPE_ID' => $personeTypeId,
-				'NAME' => GetMessage("IPOLyadost_propfix_PROP_SECOND_NAME"),
+				'NAME' => GetMessage("KITyadost_propfix_PROP_SECOND_NAME"),
 				'TYPE' => 'TEXT',
 				'REQUIED' => 'N',
 				'USER_PROPS' => 'Y',
@@ -220,7 +220,7 @@ class deliveryPropsFixer
 			$arAddedFields[] = $propName;
 		}
 		
-		COption::SetOptionString(CIPOLYadostDriver::$MODULE_ID, "mname", $propName);
+		COption::SetOptionString(CKITYadostDriver::$MODULE_ID, "mname", $propName);
 
 		// return array(self::getPropName('LAST_NAME'), self::getPropName('SECOND_NAME'));
 		return $arAddedFields;
@@ -247,7 +247,7 @@ class deliveryPropsFixer
 		
 		$findProp = array(
 			'PERSON_TYPE_ID' => $personeTypeId,
-			'NAME' => GetMessage("IPOLyadost_propfix_PROP_LOCATION"),
+			'NAME' => GetMessage("KITyadost_propfix_PROP_LOCATION"),
 			'TYPE' => 'LOCATION',
 			'REQUIED' => 'Y',
 			'USER_PROPS' => 'Y',
@@ -262,7 +262,7 @@ class deliveryPropsFixer
 		return array($propName);
 
 		// $arPersones = self::getPersonTypes();
-		// deliveryHelper::throwException(GetMessage("IPOLyadost_propfix_ERR_LOCATION",
+		// deliveryHelper::throwException(GetMessage("KITyadost_propfix_ERR_LOCATION",
 			// array("PERSON_TYPE" => $arPersones[$personeTypeId]['NAME'])
 		// ));
 	}
@@ -277,7 +277,7 @@ class deliveryPropsFixer
 		$arProps = self::getOrderProps($personeTypeId);
 		if (!isset($arProps['ADDRESS'])) {
 			// $arPersones = self::getPersonTypes();
-			// deliveryHelper::throwException(GetMessage("IPOLyadost_propfix_ERR_ADDRESS",
+			// deliveryHelper::throwException(GetMessage("KITyadost_propfix_ERR_ADDRESS",
 				// array("PERSON_TYPE" => $arPersones[$personeTypeId]['NAME'])
 			// ));
 			$propName = self::getPropName('ADDRESS');
@@ -285,7 +285,7 @@ class deliveryPropsFixer
 			
 			$arProps['ADDRESS'] = array(
 				'PERSON_TYPE_ID' => $personeTypeId,
-				'NAME' => GetMessage("IPOLyadost_propfix_PROP_ADDRESS"),
+				'NAME' => GetMessage("KITyadost_propfix_PROP_ADDRESS"),
 				'TYPE' => 'TEXTAREA',
 				'REQUIED' => 'N',
 				'USER_PROPS' => 'Y',
@@ -304,13 +304,13 @@ class deliveryPropsFixer
 			}
 		}
 		
-		COption::SetOptionString(CIPOLYadostDriver::$MODULE_ID, "address", "");
+		COption::SetOptionString(CKITYadostDriver::$MODULE_ID, "address", "");
 
 		$propsToCreate = array(
-			self::getPropName('STREET')     => array('NAME' => GetMessage("IPOLyadost_propfix_PROP_STREET"), 'REQUIED' => self::$oldTemplate?'N':'Y'),
-			self::getPropName('HOUSE')      => array('NAME' => GetMessage("IPOLyadost_propfix_PROP_HOUSE"), 'REQUIED' => self::$oldTemplate?'N':'Y'),
-			self::getPropName('BUILD')      => array('NAME' => GetMessage("IPOLyadost_propfix_PROP_BUILD"), 'REQUIED' => 'N'),
-			self::getPropName('APARTAMENT') => array('NAME' => GetMessage("IPOLyadost_propfix_PROP_APARTAMENT"), 'REQUIED' => self::$oldTemplate?'N':'Y'),
+			self::getPropName('STREET')     => array('NAME' => GetMessage("KITyadost_propfix_PROP_STREET"), 'REQUIED' => self::$oldTemplate?'N':'Y'),
+			self::getPropName('HOUSE')      => array('NAME' => GetMessage("KITyadost_propfix_PROP_HOUSE"), 'REQUIED' => self::$oldTemplate?'N':'Y'),
+			self::getPropName('BUILD')      => array('NAME' => GetMessage("KITyadost_propfix_PROP_BUILD"), 'REQUIED' => 'N'),
+			self::getPropName('APARTAMENT') => array('NAME' => GetMessage("KITyadost_propfix_PROP_APARTAMENT"), 'REQUIED' => self::$oldTemplate?'N':'Y'),
 		);
 		
 		$propsSuggest = array(
@@ -339,12 +339,12 @@ class deliveryPropsFixer
 			}
 			$arProp['ID'] = self::updateOrderProp($arProp);
 			
-			COption::SetOptionString(CIPOLYadostDriver::$MODULE_ID, $propsSuggest[$code], $code);
+			COption::SetOptionString(CKITYadostDriver::$MODULE_ID, $propsSuggest[$code], $code);
 
 			self::fixDeliveryTies($arProps['ADDRESS']['ID'], $arProp['ID']);
 		}
 		
-		COption::SetOptionString(CIPOLYadostDriver::$MODULE_ID, "addressMode", "sep");
+		COption::SetOptionString(CKITYadostDriver::$MODULE_ID, "addressMode", "sep");
 
 		return array_keys($propsToCreate);
 	}
@@ -360,7 +360,7 @@ class deliveryPropsFixer
 		if (!isset($arProps['ZIP'])) {
 			$propId = self::updateOrderProp(array(
 				'CODE'           => 'ZIP',
-				'NAME'           => GetMessage("IPOLyadost_propfix_PROP_ZIP"),
+				'NAME'           => GetMessage("KITyadost_propfix_PROP_ZIP"),
 				'PERSON_TYPE_ID' => $personeTypeId,
 				'PROPS_GROUP_ID' => $arProps['ADDRESS']['PROPS_GROUP_ID'],
 				'TYPE'           => 'TEXT',
@@ -371,7 +371,7 @@ class deliveryPropsFixer
 			$propId = $arProps['ZIP']['ID'];
 		}
 		
-		COption::SetOptionString(CIPOLYadostDriver::$MODULE_ID, "index", "ZIP");
+		COption::SetOptionString(CKITYadostDriver::$MODULE_ID, "index", "ZIP");
 
 		self::fixDeliveryTies($propId, $propId);
 
@@ -387,7 +387,7 @@ class deliveryPropsFixer
 	 */
 	public static function fixDeliveryTies($fromPropId, $toPropId)
 	{
-		if (!CIPOLYadostHelper::isConverted() || self::$oldTemplate)
+		if (!CKITYadostHelper::isConverted() || self::$oldTemplate)
 			return;
 		
 		$rsTies = CSaleOrderProps::GetOrderPropsRelations(array('PROPERTY_ID' => $fromPropId));
@@ -437,7 +437,7 @@ class deliveryPropsFixer
 		$ret = CSaleOrderProps::UpdateOrderPropsRelations($toPropId, $curDeliveryTies, 'D');
 		
 		if (!$ret) {
-			CIPOLYadostHelper::throwException(GetMessage("IPOLyadost_propfix_ERR_PROP"). $toPropId);
+			CKITYadostHelper::throwException(GetMessage("KITyadost_propfix_ERR_PROP"). $toPropId);
 		}
 	}
 
@@ -453,12 +453,12 @@ class deliveryPropsFixer
 		}
 
 		if (!$ret) {
-			$operation = $arFields['ID'] ? GetMessage("IPOLyadost_propfix_UPDATE"):GetMessage("IPOLyadost_propfix_ADDING");
+			$operation = $arFields['ID'] ? GetMessage("KITyadost_propfix_UPDATE"):GetMessage("KITyadost_propfix_ADDING");
 			
 			if($ex = $GLOBALS["APPLICATION"]->GetException())
 				$strError = $ex->GetString();
 			
-			CIPOLYadostHelper::throwException(GetMessage("IPOLyadost_propfix_ERR_UPDATE",
+			CKITYadostHelper::throwException(GetMessage("KITyadost_propfix_ERR_UPDATE",
 				array("OPERATION" => $operation, "PROP_CODE" => $arFields['CODE'])
 			)." ".$strError);
 		}

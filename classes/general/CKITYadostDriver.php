@@ -1,11 +1,11 @@
 <?
 /**
- * Copyright (c) 24/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
 IncludeModuleLangFile(__FILE__);
 
-class CIPOLYadostDriver
+class CKITYadostDriver
 {
 	const CACHE_TIME = 86400;// сутки храним кеш
 	private static $agentCall = false;
@@ -13,7 +13,7 @@ class CIPOLYadostDriver
 	/////////////////////////////////////////////////////////////////////////////
 	// Агент обновления статусов
 	/////////////////////////////////////////////////////////////////////////////
-	static $MODULE_ID = 'ipol.yadost';
+	static $MODULE_ID = 'kit.yadost';
 	static $tmpDeliveryStatus;// признак вызова из агента
 	static $formData;
 	
@@ -84,7 +84,7 @@ class CIPOLYadostDriver
 	
 	static public function agentOrderStates()
 	{
-		$returnVal = 'CIPOLYadostDriver::agentOrderStates();';
+		$returnVal = 'CKITYadostDriver::agentOrderStates();';
 		
 		if (!CModule::IncludeModule("sale"))
 			return $returnVal;
@@ -93,7 +93,7 @@ class CIPOLYadostDriver
 		$arEndStatus = self::getEndStatus();
 		
 		// забираем выгруженные заказы не в финальном статусе за последние 2 месяца
-		$dbOrders = CIPOLYadostSqlOrders::getList(array(
+		$dbOrders = CKITYadostSqlOrders::getList(array(
 			"filter" => array(
 				"!STATUS" => $arEndStatus,
 				"!delivery_ID" => false
@@ -195,7 +195,7 @@ class CIPOLYadostDriver
 				$updateSqlStatus = true;
 			
 			if ($updateSqlStatus)
-				CIPOLYadostSqlOrders::updateCustom(
+				CKITYadostSqlOrders::updateCustom(
 					array("ORDER_ID" => $orderID),
 					array("STATUS" => $ydStatus)
 				);
@@ -210,7 +210,7 @@ class CIPOLYadostDriver
 					"orderID" => $orderID
 				);
 				
-				CIPOLYadostHelper::updateNoticeFileData($change);
+				CKITYadostHelper::updateNoticeFileData($change);
 			}
 			
 			
@@ -292,29 +292,29 @@ class CIPOLYadostDriver
 	
 	static public function saveFormData(&$params)
 	{
-		if (!CIPOLYadostHelper::isAdmin())
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin())
+			CKITYadostHelper::throwException("Access denied");
 		
 		$orderID = $params["ORDER_ID"];
 		
 		if (empty($orderID))
-			CIPOLYadostHelper::throwException("Order ID empty", $params);
+			CKITYadostHelper::throwException("Order ID empty", $params);
 		
 		// сохраняем данные формы, виджета
 		if (!empty($params["data"]["widgetDataJSON"]) && !empty($params["data"]["formDataJSON"]))
 		{
-			$dbRes = CIPOLYadostSqlOrders::updateCustom(
+			$dbRes = CKITYadostSqlOrders::updateCustom(
 				array(
 					"ORDER_ID" => $orderID
 				),
 				array(
-					"PARAMS" => CIPOLYadostHelper::convertFromUTF($params["data"]["widgetDataJSON"]),
-					"MESSAGE" => CIPOLYadostHelper::convertFromUTF($params["data"]["formDataJSON"])
+					"PARAMS" => CKITYadostHelper::convertFromUTF($params["data"]["widgetDataJSON"]),
+					"MESSAGE" => CKITYadostHelper::convertFromUTF($params["data"]["formDataJSON"])
 				)
 			);
 			
 			if (!$dbRes)
-				CIPOLYadostHelper::throwException("Cant update DB", array(CIPOLYadostSqlOrders::getErrorMessagesCustom(), $params));
+				CKITYadostHelper::throwException("Cant update DB", array(CKITYadostSqlOrders::getErrorMessagesCustom(), $params));
 		}
 		
 		// если отмечена опция обновления стоимости доставки в заказе
@@ -332,7 +332,7 @@ class CIPOLYadostDriver
 				$tmpOrderData = self::$tmpOrder;
 				$tmpOrderProps = self::$tmpOrderProps;
 				
-				if (CIPOLYadostHelper::isConverted())
+				if (CKITYadostHelper::isConverted())
 					$arFields = array(
 						"PRICE_DELIVERY" => self::$tmpOrder["PRICE_DELIVERY"]
 					);
@@ -352,7 +352,7 @@ class CIPOLYadostDriver
 		// если самовывоз, пересохраняем в свойство полный адрес доставки
 		if ("PICKUP" == $params["data"]["formData"]["profile_name"])
 		{
-			CIPOLYadostHelper::updateAddressProp($orderID, CIPOLYadostHelper::convertFromUTF($params["data"]["formData"]["address"]));
+			CKITYadostHelper::updateAddressProp($orderID, CKITYadostHelper::convertFromUTF($params["data"]["formData"]["address"]));
 		}
 		
 		return array("saveFormData" => true);
@@ -362,20 +362,20 @@ class CIPOLYadostDriver
 	
 	static public function sendOrder($params)
 	{
-		if (!CIPOLYadostHelper::isAdmin())
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin())
+			CKITYadostHelper::throwException("Access denied");
 		
 		$orderID = $params["ORDER_ID"];
 		
 		if (empty($orderID))
-			CIPOLYadostHelper::throwException("Order ID empty", $params);
+			CKITYadostHelper::throwException("Order ID empty", $params);
 		
 		$arDeliveryTypes = array("import", "withdraw");
 		if (!in_array($params["data"]["formData"]["delivery_type"], $arDeliveryTypes))
-			CIPOLYadostHelper::throwException("Invalid delivery_type", $params);
+			CKITYadostHelper::throwException("Invalid delivery_type", $params);
 		
-		self::$formData = CIPOLYadostHelper::convertFromUTF($params["data"]["formData"]);
-		self::$tmpOrderConfirm = CIPOLYadostHelper::convertFromUTF($params["data"]);
+		self::$formData = CKITYadostHelper::convertFromUTF($params["data"]["formData"]);
+		self::$tmpOrderConfirm = CKITYadostHelper::convertFromUTF($params["data"]);
 		
 		self::saveFormData($params);
 		
@@ -391,7 +391,7 @@ class CIPOLYadostDriver
 		if (isset($params["data"]["formData"]["assessedCostPercent"]))
 			self::$assessedCostPercent = FloatVal($params["data"]["formData"]["assessedCostPercent"]);
 		if (self::$assessedCostPercent === null)
-			self::$assessedCostPercent = FloatVal(COption::GetOptionString(CIPOLYadostDriver::$MODULE_ID, 'assessedCostPercent', '100'));
+			self::$assessedCostPercent = FloatVal(COption::GetOptionString(CKITYadostDriver::$MODULE_ID, 'assessedCostPercent', '100'));
 		
 		$arResult["sendDraft"] = self::sendOrderDraft($orderID);
 		
@@ -430,15 +430,15 @@ class CIPOLYadostDriver
 	
 	static public function getOrderDocuments($params)
 	{
-		if (!CIPOLYadostHelper::isAdmin("R"))
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin("R"))
+			CKITYadostHelper::throwException("Access denied");
 		
 		self::delOrderDocuments(); //удаляем старые файлы
 		
 		$orderID = $params["ORDER_ID"];
 		
 		if (empty($orderID))
-			CIPOLYadostHelper::throwException("Order ID empty", $params);
+			CKITYadostHelper::throwException("Order ID empty", $params);
 		
 		$filePath = $_SERVER['DOCUMENT_ROOT'] . "/upload/" . self::$MODULE_ID;
 		
@@ -470,7 +470,7 @@ class CIPOLYadostDriver
 				$arDocs["labels"] = base64_decode($labelRes["data"]);
 			
 			if (empty($arDocs))
-				CIPOLYadostHelper::throwException("error", $errors);
+				CKITYadostHelper::throwException("error", $errors);
 			
 			
 			if (!file_exists($filePath))
@@ -479,7 +479,7 @@ class CIPOLYadostDriver
 			$arReturn = array();
 			foreach ($arDocs as $docType => $docVal)
 				if (false === file_put_contents($fileNames[$docType], $arDocs[$docType]))
-					CIPOLYadostHelper::throwException("Can't write file", array("filePath" => $fileNames[$docType]));
+					CKITYadostHelper::throwException("Can't write file", array("filePath" => $fileNames[$docType]));
 				else
 					$arReturn[$docType] = "/upload/" . self::$MODULE_ID . "/" . self::getOrderDocsNumber($docType, $orderID) . ".pdf";
 			
@@ -509,16 +509,16 @@ class CIPOLYadostDriver
 	
 	static public function getOrderDocs($orderID)
 	{
-		if (!CIPOLYadostHelper::isAdmin("R"))
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin("R"))
+			CKITYadostHelper::throwException("Access denied");
 		
 		if (empty($orderID))
-			CIPOLYadostHelper::throwException("Empty order ID");
+			CKITYadostHelper::throwException("Empty order ID");
 		
 		self::getOrderConfirm($orderID);
 		
 		if (empty(self::$tmpOrderConfirm["savedParams"]["parcel_ID"]))
-			CIPOLYadostHelper::throwException("Order not confirm in yandex");
+			CKITYadostHelper::throwException("Order not confirm in yandex");
 		
 		$arSend = array(
 			"parcel_id" => self::$tmpOrderConfirm["savedParams"]["parcel_ID"],
@@ -533,16 +533,16 @@ class CIPOLYadostDriver
 	// отмена заказа
 	static public function getOrderLabels($orderID)
 	{
-		if (!CIPOLYadostHelper::isAdmin("R"))
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin("R"))
+			CKITYadostHelper::throwException("Access denied");
 		
 		if (empty($orderID))
-			CIPOLYadostHelper::throwException("Empty order ID");
+			CKITYadostHelper::throwException("Empty order ID");
 		
 		self::getOrderConfirm($orderID);
 		
 		if (empty(self::$tmpOrderConfirm["savedParams"]["delivery_ID"]))
-			CIPOLYadostHelper::throwException("Order not found in yandex");
+			CKITYadostHelper::throwException("Order not found in yandex");
 		
 		$arSend = array(
 			"order_id" => self::$tmpOrderConfirm["savedParams"]["delivery_ID"],
@@ -562,7 +562,7 @@ class CIPOLYadostDriver
 		$error = array("error" => true);
 		
 		if (!self::$agentCall)
-			if (!CIPOLYadostHelper::isAdmin("R"))
+			if (!CKITYadostHelper::isAdmin("R"))
 			{
 				$error["msg"] = "Access denied";
 				
@@ -607,11 +607,11 @@ class CIPOLYadostDriver
 	
 	static public function sendOrderDraft($orderID)
 	{
-		if (!CIPOLYadostHelper::isAdmin())
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin())
+			CKITYadostHelper::throwException("Access denied");
 		
 		if (empty($orderID))
-			CIPOLYadostHelper::throwException("Empty order ID");
+			CKITYadostHelper::throwException("Empty order ID");
 		
 		// получаем данные о заказе
 		self::fillOrderData($orderID);
@@ -704,10 +704,10 @@ class CIPOLYadostDriver
 		
 		foreach ($arGabs as $gab)
 		{
-			$tmpGab = self::$tmpOrderDimension[CIPOLYadostHelper::toUpper($gab)];
+			$tmpGab = self::$tmpOrderDimension[CKITYadostHelper::toUpper($gab)];
 			
-			if (self::$formData[CIPOLYadostHelper::toUpper($gab)])
-				$tmpGab = self::$formData[CIPOLYadostHelper::toUpper($gab)];
+			if (self::$formData[CKITYadostHelper::toUpper($gab)])
+				$tmpGab = self::$formData[CKITYadostHelper::toUpper($gab)];
 			
 			$arSend["order_" . $gab] = $tmpGab;
 		}
@@ -735,31 +735,31 @@ class CIPOLYadostDriver
 		// надо запомнить номер заказа в яндекс
 		if ($res["status"] == "ok" && $res["data"]["order"]["id"])
 		{
-			$dbRes = CIPOLYadostSqlOrders::updateCustom(
+			$dbRes = CKITYadostSqlOrders::updateCustom(
 				array("ORDER_ID" => $orderID),
 				array("delivery_ID" => $res["data"]["order"]["id"])
 			);
 			if (!$dbRes)
-				CIPOLYadostHelper::throwException(CIPOLYadostSqlOrders::getErrorMessagesCustom(), array("method" => $method, "request" => $arSend, "result" => $res));
+				CKITYadostHelper::throwException(CKITYadostSqlOrders::getErrorMessagesCustom(), array("method" => $method, "request" => $arSend, "result" => $res));
 		}
 		else
-			CIPOLYadostHelper::throwException("Draft order error", array("method" => $method, "request" => $arSend, "result" => $res));
+			CKITYadostHelper::throwException("Draft order error", array("method" => $method, "request" => $arSend, "result" => $res));
 		
 		return $res;
 	}
 	
 	static public function getOrderInfo($orderID)
 	{
-		//		if (!CIPOLYadostHelper::isAdmin())
-		//			CIPOLYadostHelper::throwException("Access denied");
+		//		if (!CKITYadostHelper::isAdmin())
+		//			CKITYadostHelper::throwException("Access denied");
 		
 		if (empty($orderID))
-			CIPOLYadostHelper::throwException("Empty order ID");
+			CKITYadostHelper::throwException("Empty order ID");
 		
 		self::getOrderConfirm($orderID);
 		
 		if (empty(self::$tmpOrderConfirm["savedParams"]["delivery_ID"]))
-			CIPOLYadostHelper::throwException("Order not found in yandex");
+			CKITYadostHelper::throwException("Order not found in yandex");
 		
 		$arSend = array(
 			"order_id" => self::$tmpOrderConfirm["savedParams"]["delivery_ID"]
@@ -773,11 +773,11 @@ class CIPOLYadostDriver
 	
 	static public function getWarehouseInfo($warehouseID)
 	{
-		if (!CIPOLYadostHelper::isAdmin("R"))
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin("R"))
+			CKITYadostHelper::throwException("Access denied");
 		
 		if (empty($warehouseID))
-			CIPOLYadostHelper::throwException("Empty warehouseID");
+			CKITYadostHelper::throwException("Empty warehouseID");
 		
 		$arSend = array(
 			"warehouse_id" => $warehouseID
@@ -791,11 +791,11 @@ class CIPOLYadostDriver
 	
 	static public function getSenderInfo($senderID)
 	{
-		if (!CIPOLYadostHelper::isAdmin("R"))
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin("R"))
+			CKITYadostHelper::throwException("Access denied");
 		
 		if (empty($senderID))
-			CIPOLYadostHelper::throwException("Empty senderID");
+			CKITYadostHelper::throwException("Empty senderID");
 		
 		$arSend = array();
 		
@@ -811,8 +811,8 @@ class CIPOLYadostDriver
 	
 	public static function getRequisiteInfo()
 	{
-		//		if (!CIPOLYadostHelper::isAdmin("R"))
-		//			CIPOLYadostHelper::throwException("Access denied");
+		//		if (!CKITYadostHelper::isAdmin("R"))
+		//			CKITYadostHelper::throwException("Access denied");
 		
 		self::getRequestConfig();
 		$requisiteID = self::$requestConfig["requisite_id"][0];
@@ -835,14 +835,14 @@ class CIPOLYadostDriver
 	
 	static public function confirmOrder($orderID, $deliveryType, $shipmentDate = false)
 	{
-		if (!CIPOLYadostHelper::isAdmin())
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin())
+			CKITYadostHelper::throwException("Access denied");
 		
 		if (empty($orderID))
-			CIPOLYadostHelper::throwException("Empty order ID");
+			CKITYadostHelper::throwException("Empty order ID");
 		
 		if (empty($deliveryType))
-			CIPOLYadostHelper::throwException("Empty deliveryType");
+			CKITYadostHelper::throwException("Empty deliveryType");
 		
 		self::getOrderConfirm($orderID);
 		
@@ -850,7 +850,7 @@ class CIPOLYadostDriver
 			$shipmentDate = self::getShipmentDate();//== завтра\
 		
 		if (empty(self::$tmpOrderConfirm["savedParams"]["delivery_ID"]))
-			CIPOLYadostHelper::throwException("Order not found in yandex", array("data" => self::$tmpOrderConfirm));
+			CKITYadostHelper::throwException("Order not found in yandex", array("data" => self::$tmpOrderConfirm));
 		
 		$arSend = array(
 			"order_ids" => self::$tmpOrderConfirm["savedParams"]["delivery_ID"],
@@ -867,7 +867,7 @@ class CIPOLYadostDriver
 			foreach ($res["data"]["result"]["success"] as $parcel)
 				if (!empty($parcel["parcel_id"]) && !empty($parcel["orders"]))
 				{
-					$dbRes = CIPOLYadostSqlOrders::updateCustom(
+					$dbRes = CKITYadostSqlOrders::updateCustom(
 						array(
 							"ORDER_ID" => $orderID
 						),
@@ -877,11 +877,11 @@ class CIPOLYadostDriver
 					);
 					
 					if (!$dbRes)
-						CIPOLYadostHelper::throwException(CIPOLYadostSqlOrders::getErrorMessagesCustom(), array("method" => $method, "request" => $arSend, "result" => $res));
+						CKITYadostHelper::throwException(CKITYadostSqlOrders::getErrorMessagesCustom(), array("method" => $method, "request" => $arSend, "result" => $res));
 				}
 		}
 		else
-			CIPOLYadostHelper::throwException("Confirm order error", array("method" => $method, "request" => $arSend, "result" => $res));
+			CKITYadostHelper::throwException("Confirm order error", array("method" => $method, "request" => $arSend, "result" => $res));
 		
 		return $res;
 	}
@@ -890,17 +890,17 @@ class CIPOLYadostDriver
 	
 	static public function createDeliveryOrder($orderID, $deliveryType, $importType)
 	{
-		if (!CIPOLYadostHelper::isAdmin())
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin())
+			CKITYadostHelper::throwException("Access denied");
 		
 		if (empty($orderID))
-			CIPOLYadostHelper::throwException("Empty order ID");
+			CKITYadostHelper::throwException("Empty order ID");
 		
 		if (empty($deliveryType))
-			CIPOLYadostHelper::throwException("Empty deliveryType");
+			CKITYadostHelper::throwException("Empty deliveryType");
 		
 		if (empty($importType))
-			CIPOLYadostHelper::throwException("Empty importType");
+			CKITYadostHelper::throwException("Empty importType");
 		
 		self::getOrderConfirm($orderID);
 		self::getModuleSetups();
@@ -908,7 +908,7 @@ class CIPOLYadostDriver
 		self::getOrderBasket(array("ORDER_ID" => $orderID));
 		
 		if (empty(self::$tmpOrderConfirm["savedParams"]["delivery_ID"]))
-			CIPOLYadostHelper::throwException("Order not found in yandex");
+			CKITYadostHelper::throwException("Order not found in yandex");
 		
 		// объем посылки, габариты в сантиметрах(уже переведены), объем в куб.м
 		$volume = self::$tmpOrderDimension["LENGTH"] * self::$tmpOrderDimension["LENGTH"] * self::$tmpOrderDimension["LENGTH"] / 1000000;
@@ -953,7 +953,7 @@ class CIPOLYadostDriver
 		}
 		
 		if (!$method)
-			CIPOLYadostHelper::throwException("Cant't detect delivery method createWithdraw or createImport");
+			CKITYadostHelper::throwException("Cant't detect delivery method createWithdraw or createImport");
 		
 		// $arSend["order_ids"] = array(self::$tmpOrderConfirm["savedParams"]["delivery_ID"]);
 		$arSend["order_ids"] = self::$tmpOrderConfirm["savedParams"]["delivery_ID"];
@@ -963,7 +963,7 @@ class CIPOLYadostDriver
 		if ($res["status"] == "ok")
 			return $res;
 		else
-			CIPOLYadostHelper::throwException("createDeliveryOrder error", array("method" => $method, "request" => $arSend, "result" => $res));
+			CKITYadostHelper::throwException("createDeliveryOrder error", array("method" => $method, "request" => $arSend, "result" => $res));
 		
 		return false;
 	}
@@ -972,11 +972,11 @@ class CIPOLYadostDriver
 	
 	static public function confirmParcel($parcel_id)
 	{
-		if (!CIPOLYadostHelper::isAdmin())
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin())
+			CKITYadostHelper::throwException("Access denied");
 		
 		if (empty($parcel_id))
-			CIPOLYadostHelper::throwException("confirmParcel error parcel_id empty");
+			CKITYadostHelper::throwException("confirmParcel error parcel_id empty");
 		
 		$arSend = array(
 			"parcel_ids" => $parcel_id
@@ -988,7 +988,7 @@ class CIPOLYadostDriver
 		if ($res["status"] == "ok" && empty($res["data"]["result"]["error"]))
 			return $res["data"]["result"];
 		else
-			CIPOLYadostHelper::throwException("confirmSenderParcels error", array("method" => $method, "request" => $arSend, "result" => $res));
+			CKITYadostHelper::throwException("confirmSenderParcels error", array("method" => $method, "request" => $arSend, "result" => $res));
 		
 		return false;
 	}
@@ -997,11 +997,11 @@ class CIPOLYadostDriver
 	
 	static public function getFormIntervalWarehouse($params)
 	{
-		if (!CIPOLYadostHelper::isAdmin("R"))
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin("R"))
+			CKITYadostHelper::throwException("Access denied");
 		
 		if (empty($params))
-			CIPOLYadostHelper::throwException("Empty params");
+			CKITYadostHelper::throwException("Empty params");
 		
 		$arResult = array();
 		
@@ -1015,20 +1015,20 @@ class CIPOLYadostDriver
 	
 	static public function getInterval($deliveryName, $deliveryType)
 	{
-		if (!CIPOLYadostHelper::isAdmin("R"))
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin("R"))
+			CKITYadostHelper::throwException("Access denied");
 		
 		if (empty($deliveryName))
-			CIPOLYadostHelper::throwException("Empty deliveryName");
+			CKITYadostHelper::throwException("Empty deliveryName");
 		
 		if (empty($deliveryType))
-			CIPOLYadostHelper::throwException("Empty deliveryType");
+			CKITYadostHelper::throwException("Empty deliveryType");
 		
 		$obCache = new CPHPCache();
 		
-		$cachename = "IPOLyadostIntervals|" . $deliveryName . "|" . $deliveryType;
+		$cachename = "KITyadostIntervals|" . $deliveryName . "|" . $deliveryType;
 		
-		if ($obCache->InitCache(self::CACHE_TIME, $cachename, "/IPOLyadost/"))
+		if ($obCache->InitCache(self::CACHE_TIME, $cachename, "/KITyadost/"))
 			return $obCache->GetVars();
 		else
 		{
@@ -1044,14 +1044,14 @@ class CIPOLYadostDriver
 			// надо запомнить номер отгрузки
 			if ($res["status"] == "ok" && !empty($res["data"]["schedules"][0]))
 			{
-				$arReturn = CIPOLYadostHelper::convertFromUTF($res["data"]["schedules"]);
+				$arReturn = CKITYadostHelper::convertFromUTF($res["data"]["schedules"]);
 				$obCache->StartDataCache();
 				$obCache->EndDataCache($arReturn);
 				
 				return $arReturn;
 			}
 			else
-				CIPOLYadostHelper::throwException("getInterval error", array("method" => $method, "request" => $arSend, "result" => $res));
+				CKITYadostHelper::throwException("getInterval error", array("method" => $method, "request" => $arSend, "result" => $res));
 		}
 		
 		return false;
@@ -1061,13 +1061,13 @@ class CIPOLYadostDriver
 	
 	static public function getDeliveries()
 	{
-		if (!CIPOLYadostHelper::isAdmin("R"))
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin("R"))
+			CKITYadostHelper::throwException("Access denied");
 		
 		$obCache = new CPHPCache();
-		$cachename = "IPOLyadost";
+		$cachename = "KITyadost";
 		
-		if ($obCache->InitCache(self::CACHE_TIME, $cachename, "/IPOLyadost/"))
+		if ($obCache->InitCache(self::CACHE_TIME, $cachename, "/KITyadost/"))
 			return $obCache->GetVars();
 		else
 		{
@@ -1079,7 +1079,7 @@ class CIPOLYadostDriver
 			// надо запомнить номер отгрузки
 			if ($res["status"] == "ok" && !empty($res["data"]["deliveries"]))
 			{
-				$arReturn = CIPOLYadostHelper::convertFromUTF($res["data"]["deliveries"]);
+				$arReturn = CKITYadostHelper::convertFromUTF($res["data"]["deliveries"]);
 				
 				$arReturn["selectedDeliveries"] = COption::GetOptionString(self::$MODULE_ID, "deliveries", "");
 				
@@ -1089,7 +1089,7 @@ class CIPOLYadostDriver
 				return $arReturn;
 			}
 			else
-				CIPOLYadostHelper::throwException("getDeliveries error", array("method" => $method, "request" => $arSend, "result" => $res));
+				CKITYadostHelper::throwException("getDeliveries error", array("method" => $method, "request" => $arSend, "result" => $res));
 		}
 		
 		return false;
@@ -1099,15 +1099,15 @@ class CIPOLYadostDriver
 	
 	static public function cancelOrder($params)
 	{
-		if (!CIPOLYadostHelper::isAdmin())
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin())
+			CKITYadostHelper::throwException("Access denied");
 		
 		if (empty($params["ORDER_ID"]))
-			CIPOLYadostHelper::throwException("Empty order ID");
+			CKITYadostHelper::throwException("Empty order ID");
 		
 		$orderID = $params["ORDER_ID"];
 		
-		$orderInfo = CIPOLYadostSqlOrders::getList(array(
+		$orderInfo = CKITYadostSqlOrders::getList(array(
 			"filter" => array("ORDER_ID" => $orderID)
 		))->Fetch();
 		
@@ -1124,7 +1124,7 @@ class CIPOLYadostDriver
 			
 			if ($status == "CANCELED")
 			{
-				$dbRes = CIPOLYadostSqlOrders::updateCustom(
+				$dbRes = CKITYadostSqlOrders::updateCustom(
 					array(
 						"ORDER_ID" => $orderID
 					),
@@ -1135,7 +1135,7 @@ class CIPOLYadostDriver
 				);
 				
 				if (!$dbRes)
-					CIPOLYadostHelper::throwException(CIPOLYadostSqlOrders::getErrorMessagesCustom(), array("method" => $method, "request" => $arSend, "result" => $res));
+					CKITYadostHelper::throwException(CKITYadostSqlOrders::getErrorMessagesCustom(), array("method" => $method, "request" => $arSend, "result" => $res));
 				
 				self::updateOrderStatus(array($orderID => "NEW"));
 			}
@@ -1181,7 +1181,7 @@ class CIPOLYadostDriver
 		$info = CModule::CreateModuleObject('main');
 		$mainVersion = $info->MODULE_VERSION;
 		
-		$info = CModule::CreateModuleObject('ipol.yadost');
+		$info = CModule::CreateModuleObject('kit.yadost');
 		$moduleVersion = $info->MODULE_VERSION;
 		
 		$arSend = array(
@@ -1194,7 +1194,7 @@ class CIPOLYadostDriver
 			// "time" => date(DateTime::ISO8601),
 			"time" => date("Y-m-d\TH:i:sP"),
 			"domain" => $_SERVER["HTTP_HOST"],
-			"settings" => array_merge(self::$options, array("DELIVERY_ACTIVE" => CIPOLYadostHelper::isActive())),
+			"settings" => array_merge(self::$options, array("DELIVERY_ACTIVE" => CKITYadostHelper::isActive())),
 			"unique_key" => COption::GetOptionString(self::$MODULE_ID, "unique_num")
 		);
 		
@@ -1239,7 +1239,7 @@ class CIPOLYadostDriver
 		if (empty(self::$tmpOrder))
 		{
 			if (!CModule::IncludeModule("sale"))
-				CIPOLYadostHelper::throwException("Module sale not found");
+				CKITYadostHelper::throwException("Module sale not found");
 			
 			$arOrder = CSaleOrder::GetList(
 				array(),
@@ -1247,7 +1247,7 @@ class CIPOLYadostDriver
 			)->Fetch();
 			
 			if (empty($arOrder))
-				CIPOLYadostHelper::throwException("Order not found", array("ORDER_ID" => $orderID));
+				CKITYadostHelper::throwException("Order not found", array("ORDER_ID" => $orderID));
 			
 			self::$tmpOrder = $arOrder;
 			
@@ -1264,7 +1264,7 @@ class CIPOLYadostDriver
 		if (empty(self::$tmpOrderProps))
 		{
 			if (!CModule::IncludeModule("sale"))
-				CIPOLYadostHelper::throwException("Module sale not found");
+				CKITYadostHelper::throwException("Module sale not found");
 			
 			$dbOrderProps = CSaleOrderPropsValue::GetList(
 				array(),
@@ -1326,16 +1326,16 @@ class CIPOLYadostDriver
 		self::getModuleSetups();
 		if (empty(self::$tmpOrderConfirm))
 		{
-			$sqlOrder = CIPOLYadostSqlOrders::getList(array(
+			$sqlOrder = CKITYadostSqlOrders::getList(array(
 				"filter" => array("ORDER_ID" => $orderID)
 			))->Fetch();
 			
 			if (!$sqlOrder)
 				return false;
 			
-			self::$tmpOrderConfirm["widgetData"] = CIPOLYadostHelper::convertFromUTF(json_decode(CIPOLYadostHelper::convertToUTF($sqlOrder["PARAMS"]), true));
+			self::$tmpOrderConfirm["widgetData"] = CKITYadostHelper::convertFromUTF(json_decode(CKITYadostHelper::convertToUTF($sqlOrder["PARAMS"]), true));
 			
-			self::$tmpOrderConfirm["formData"] = CIPOLYadostHelper::convertFromUTF(json_decode(CIPOLYadostHelper::convertToUTF($sqlOrder["MESSAGE"]), true));
+			self::$tmpOrderConfirm["formData"] = CKITYadostHelper::convertFromUTF(json_decode(CKITYadostHelper::convertToUTF($sqlOrder["MESSAGE"]), true));
 			
 			unset($sqlOrder["PARAMS"]);
 			unset($sqlOrder["MESSAGE"]);
@@ -1376,12 +1376,12 @@ class CIPOLYadostDriver
 			self::$tmpOrderID = null;
 			
 			if (!CModule::IncludeModule("sale"))
-				CIPOLYadostHelper::throwException("Module sale not found");
+				CKITYadostHelper::throwException("Module sale not found");
 			
 			if ($params["PRODUCT_ID"])
 			{
 				if (!CModule::IncludeModule("catalog"))
-					CIPOLYadostHelper::throwException("Module catalog not found");
+					CKITYadostHelper::throwException("Module catalog not found");
 				
 				$arProduct = CCatalogProduct::GetList(
 					array(),
@@ -1431,7 +1431,7 @@ class CIPOLYadostDriver
 					);
 				}
 				
-				$vatID = CIPOLYadostHelper::getVatIDDefault();
+				$vatID = CKITYadostHelper::getVatIDDefault();
 				if ($arProduct["VAT_ID"])
 				{
 					$arVat = CCatalogVat::getListEx(
@@ -1446,7 +1446,7 @@ class CIPOLYadostDriver
 					
 					if ($arVat)
 					{
-						$vatID = CIPOLYadostHelper::getVatID((int) $arVat["RATE"]);
+						$vatID = CKITYadostHelper::getVatID((int) $arVat["RATE"]);
 					}
 				}
 				
@@ -1486,7 +1486,7 @@ class CIPOLYadostDriver
 					$arBasket["DIMENSIONS"] = unserialize($arBasket["DIMENSIONS"]);
 					$orderBasket[$arBasket["PRODUCT_ID"]] = $arBasket;
 					
-					$orderBasket[$arBasket["PRODUCT_ID"]]["VAT_YD_ID"] = CIPOLYadostHelper::getVatID($arBasket["VAT_RATE"]);
+					$orderBasket[$arBasket["PRODUCT_ID"]]["VAT_YD_ID"] = CKITYadostHelper::getVatID($arBasket["VAT_RATE"]);
 				}
 				
 				if (!is_null($arOrderItems))
@@ -1516,7 +1516,7 @@ class CIPOLYadostDriver
 							),
 							"QUANTITY" => $item["QUANTITY"],
 							"PRICE" => $item["PRICE"],
-							"VAT_YD_ID" => CIPOLYadostHelper::getVatIDDefault()
+							"VAT_YD_ID" => CKITYadostHelper::getVatIDDefault()
 						);
 				}
 				else
@@ -1534,7 +1534,7 @@ class CIPOLYadostDriver
 							),
 							"QUANTITY" => 1,
 							"PRICE" => 1000,
-							"VAT_YD_ID" => CIPOLYadostHelper::getVatIDDefault()
+							"VAT_YD_ID" => CKITYadostHelper::getVatIDDefault()
 						)
 					);
 				}
@@ -1557,7 +1557,7 @@ class CIPOLYadostDriver
 				if ($artnumberCode || $sideMode != "def" || $weightMode != "CATALOG_WEIGHT")
 				{
 					if (!CModule::IncludeModule("iblock"))
-						CIPOLYadostHelper::throwException("Module iblock not found");
+						CKITYadostHelper::throwException("Module iblock not found");
 					
 					$productIDs = array();
 					// собираем id товаров в корзине
@@ -1605,12 +1605,12 @@ class CIPOLYadostDriver
 								if ($artnumberCode == "ID")
 									$orderBasket[$arElem["ID"]]["artnumber"] = $arElem["ID"];
 								else
-									$orderBasket[$arElem["ID"]]["artnumber"] = $arElem["PROPERTY_" . CIPOLYadostHelper::toUpper($artnumberCode) . "_VALUE"];
+									$orderBasket[$arElem["ID"]]["artnumber"] = $arElem["PROPERTY_" . CKITYadostHelper::toUpper($artnumberCode) . "_VALUE"];
 							
 							// габариты
 							if ($sideMode == "unit")
 							{
-								$arDims = explode(self::$options["sidesUnitSprtr"], $arElem['PROPERTY_' . CIPOLYadostHelper::toUpper(self::$options["sidesUnit"]) . '_VALUE']);
+								$arDims = explode(self::$options["sidesUnitSprtr"], $arElem['PROPERTY_' . CKITYadostHelper::toUpper(self::$options["sidesUnit"]) . '_VALUE']);
 								$orderBasket[$arElem["ID"]]["DIMENSIONS"] = array(
 									"WIDTH" => $arDims[0],
 									"HEIGHT" => $arDims[1],
@@ -1619,14 +1619,14 @@ class CIPOLYadostDriver
 							}
 							elseif ($sideMode == "sep")
 								$orderBasket[$arElem["ID"]]["DIMENSIONS"] = array(
-									"WIDTH" => $arElem['PROPERTY_' . CIPOLYadostHelper::toUpper(self::$options["sidesSep"]['W']) . '_VALUE'],
-									"HEIGHT" => $arElem['PROPERTY_' . CIPOLYadostHelper::toUpper(self::$options["sidesSep"]['H']) . '_VALUE'],
-									"LENGTH" => $arElem['PROPERTY_' . CIPOLYadostHelper::toUpper(self::$options["sidesSep"]['L']) . '_VALUE']
+									"WIDTH" => $arElem['PROPERTY_' . CKITYadostHelper::toUpper(self::$options["sidesSep"]['W']) . '_VALUE'],
+									"HEIGHT" => $arElem['PROPERTY_' . CKITYadostHelper::toUpper(self::$options["sidesSep"]['H']) . '_VALUE'],
+									"LENGTH" => $arElem['PROPERTY_' . CKITYadostHelper::toUpper(self::$options["sidesSep"]['L']) . '_VALUE']
 								);
 							
 							// вес
 							if ($weightMode != "CATALOG_WEIGHT")
-								$orderBasket[$arElem["ID"]]["WEIGHT"] = $arElem["PROPERTY_" . CIPOLYadostHelper::toUpper(self::$options["weightPr"]) . "_VALUE"];
+								$orderBasket[$arElem["ID"]]["WEIGHT"] = $arElem["PROPERTY_" . CKITYadostHelper::toUpper(self::$options["weightPr"]) . "_VALUE"];
 						}
 					}
 				}
@@ -1828,11 +1828,11 @@ class CIPOLYadostDriver
 		{
 			self::$options = array(
 				// "assessedCost" => COption::GetOptionString(self::$MODULE_ID, "assessedCost", 0),
-				"assessedCostPercent" => FloatVal(COption::GetOptionString(CIPOLYadostDriver::$MODULE_ID, 'assessedCostPercent', '100')),
+				"assessedCostPercent" => FloatVal(COption::GetOptionString(CKITYadostDriver::$MODULE_ID, 'assessedCostPercent', '100')),
 				"artnumber" => COption::GetOptionString(self::$MODULE_ID, "artnumber", ""),
 				"cityFrom" => COption::GetOptionString(self::$MODULE_ID, "cityFrom", "MOSCOW"),
 				"to_yd_warehouse" => COption::GetOptionString(self::$MODULE_ID, "to_yd_warehouse", ""),
-				"defaultWarehouse" => COption::GetOptionString(CIPOLYadostDriver::$MODULE_ID, 'defaultWarehouse', '0'),
+				"defaultWarehouse" => COption::GetOptionString(CKITYadostDriver::$MODULE_ID, 'defaultWarehouse', '0'),
 				
 				"ADDRESS" => array(
 					"fname" => COption::GetOptionString(self::$MODULE_ID, "fname", "FIO"),
@@ -1871,7 +1871,7 @@ class CIPOLYadostDriver
 				)
 			);
 			
-			$arStatuses = CIPOLYadostHelper::getDeliveryStatuses();
+			$arStatuses = CKITYadostHelper::getDeliveryStatuses();
 			
 			foreach ($arStatuses as $status => $descr)
 			{
@@ -1943,7 +1943,7 @@ class CIPOLYadostDriver
 			$configFilePath = $_SERVER['DOCUMENT_ROOT'] . "/bitrix/js/" . self::$MODULE_ID . "/private/";
 			
 			// время последнего изменения файла
-			$lastConfigFileTime = COption::GetOptionString(CIPOLYadostDriver::$MODULE_ID, "lastConfigFileTime", 0);
+			$lastConfigFileTime = COption::GetOptionString(CKITYadostDriver::$MODULE_ID, "lastConfigFileTime", 0);
 			$fileName = md5(CMain::GetServerUniqID() . $lastConfigFileTime);
 			if (!file_exists($configFilePath . $fileName . ".conf"))
 				$fileName = md5($lastConfigFileTime);
@@ -1965,7 +1965,7 @@ class CIPOLYadostDriver
 					$newFileName = md5(CMain::GetServerUniqID() . $curTime);
 					
 					if (file_put_contents($configFilePath . $newFileName . ".conf", $fileContent))
-						if (COption::SetOptionString(CIPOLYadostDriver::$MODULE_ID, "lastConfigFileTime", $curTime))
+						if (COption::SetOptionString(CKITYadostDriver::$MODULE_ID, "lastConfigFileTime", $curTime))
 						{
 							unlink($configFilePath . $fileName . ".conf");
 							$fileName = $newFileName;
@@ -2042,12 +2042,12 @@ class CIPOLYadostDriver
 	public static function MakeRequest($method, $arSend)
 	{
 		if (!function_exists('curl_init'))
-			CIPOLYadostHelper::throwException("curl not found");
+			CKITYadostHelper::throwException("curl not found");
 		
 		self::$requestSend = $arSend;
 		
 		// Подписываем запрос
-		self::$requestSend = CIPOLYadostHelper::convertToUTF(self::$requestSend);
+		self::$requestSend = CKITYadostHelper::convertToUTF(self::$requestSend);
 		self::sign($method);
 		
 		$request = http_build_query(self::$requestSend);
@@ -2114,13 +2114,13 @@ class CIPOLYadostDriver
 //			"res" => $logRes
 //		), "calculate");
 		
-		CIPOLYadostHelper::errorLog(self::$debug);
+		CKITYadostHelper::errorLog(self::$debug);
 		
 		if ($code != 200)
 		{
 			return "request error";
 		}
-		//			CIPOLYadostHelper::throwException("request error");
+		//			CKITYadostHelper::throwException("request error");
 		
 		return $arResult;
 	}
@@ -2129,8 +2129,8 @@ class CIPOLYadostDriver
 	
 	public static function setConfig($params)
 	{
-		if (!CIPOLYadostHelper::isAdmin())
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin())
+			CKITYadostHelper::throwException("Access denied");
 		
 		$oldFormat = false;
 		
@@ -2149,7 +2149,7 @@ class CIPOLYadostDriver
 		}
 		
 		if (empty($clientParams))
-			CIPOLYadostHelper::throwException("Client params error", array("decode_error" => self::json_last_error_msg(), "config2" => $params["config2"]));
+			CKITYadostHelper::throwException("Client params error", array("decode_error" => self::json_last_error_msg(), "config2" => $params["config2"]));
 		
 		$keys = $params["config1"];
 		$keys = json_decode($keys, true);
@@ -2168,7 +2168,7 @@ class CIPOLYadostDriver
 		}
 		
 		if (empty($keys))
-			CIPOLYadostHelper::throwException("API-keys error", array("decode_error" => self::json_last_error_msg(), "config1" => $params["config1"]));
+			CKITYadostHelper::throwException("API-keys error", array("decode_error" => self::json_last_error_msg(), "config1" => $params["config1"]));
 		
 		$arReplacer = array(
 			"sender_ids" => "sender_id",
@@ -2259,7 +2259,7 @@ class CIPOLYadostDriver
 			
 			if (self::$tmpOrderID)
 			{
-				$dbOrders = CIPOLYadostSqlOrders::getList(array(
+				$dbOrders = CKITYadostSqlOrders::getList(array(
 					"filter" => array("ORDER_ID" => self::$tmpOrderID)
 				))->Fetch();
 				
@@ -2272,7 +2272,7 @@ class CIPOLYadostDriver
 						"LENGTH"
 					);
 					
-					$formData = CIPOLYadostHelper::convertFromUTF(json_decode(CIPOLYadostHelper::convertToUTF($dbOrders["MESSAGE"]), true));
+					$formData = CKITYadostHelper::convertFromUTF(json_decode(CKITYadostHelper::convertToUTF($dbOrders["MESSAGE"]), true));
 					
 					// проверяем наличие сохраненных габаритов
 					$returnFormData = true;

@@ -31,8 +31,8 @@ $MESS["KITyadost_YD_STATUS_UNEXPECTED"] = "Статус уточняется";
 $MESS["KITyadost_YD_STATUS_CANCELED"] = "Отменён";
 
 // свойства
-$MESS["KITyadost_prop_name_kitAdelivery_PVZ_ADDRESS"] = "Адрес ПВЗ Яндекс.Доставки";
-$MESS["KITyadost_prop_descr_kitAdelivery_PVZ_ADDRESS"] = "Свойство содержит полный адрес пункта вывоза заказа Яндекс.Доставкой";
+$MESS["KITyadost_prop_name_kit_yadost_PVZ_ADDRESS"] = "Адрес ПВЗ Яндекс.Доставки";
+$MESS["KITyadost_prop_descr_kit_yadost_PVZ_ADDRESS"] = "Свойство содержит полный адрес пункта вывоза заказа Яндекс.Доставкой";
 
 // окно сообщений
 $MESS["KITyadost_NOTICE_WINDOW_HEADER"] = "Предупреждение";
@@ -43,4 +43,3 @@ $MESS["KITyadost_NOTICE_WINDOW_MSG_ERROR_STATUS_ORDER"] = "Произошла о
 // города отправления
 $MESS["KITyadost_CityFrom_MOSCOW"] = "Москва";
 $MESS["KITyadost_CityFrom_PITER"] = "Санкт-Петербург";
-?>

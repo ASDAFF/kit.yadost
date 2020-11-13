@@ -1,6 +1,6 @@
 <?
 /**
- * Copyright (c) 24/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
 if (CModule::IncludeModule("iblock") && CModule::IncludeModule("catalog"))
@@ -42,7 +42,7 @@ if (CModule::IncludeModule("sale"))
 }
 
 // получение html select для вывода на форме
-function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false)
+function KITyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false)
 {
 	ob_start();
 	?>
@@ -77,11 +77,11 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
     <script type='text/javascript'>
         $(document).ready(function ()
         {
-            IPOLyadost_measRadio(<?=CUtil::PHPToJSObject($sideMode)?>);
-            IPOLyadost_addressRadio(<?=CUtil::PHPToJSObject($addressMode)?>);
-            IPOLyadost_weiRadio('<?echo ($IPOLyadost_weight == "CATALOG_WEIGHT") ? "cat" : "prop"?>');
+            KITyadost_measRadio(<?=CUtil::PHPToJSObject($sideMode)?>);
+            KITyadost_addressRadio(<?=CUtil::PHPToJSObject($addressMode)?>);
+            KITyadost_weiRadio('<?echo ($KITyadost_weight == "CATALOG_WEIGHT") ? "cat" : "prop"?>');
 
-            $('input[name^="deliv_"]').on('change', IPOLyadost_delivClick);
+            $('input[name^="deliv_"]').on('change', KITyadost_delivClick);
 
             var sideMeas = $('#sidesMeas').val();
             $('.MeasLbl').html(sideMeas);
@@ -91,7 +91,7 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
             $addressMode.closest('td').siblings().css('border-top', '1px solid #BCC2C4');
         });
 
-        function IPOLyadost_delivClick(wat)
+        function KITyadost_delivClick(wat)
         {
             wat = $(wat.currentTarget);
 
@@ -108,7 +108,7 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
             }
         }
 
-        function IPOLyadost_clearCache()
+        function KITyadost_clearCache()
         {
             $.ajax({
                 url: '/bitrix/js/<?=$module_id?>/ajax.php',
@@ -117,14 +117,14 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
                 success: function (data)
                 {
                     if (data === 'Y')
-                        alert('<?=GetMessage("IPOLyadost_ALERT_cacheCleared")?>');
+                        alert('<?=GetMessage("KITyadost_ALERT_cacheCleared")?>');
                     else
-                        alert('<?=GetMessage("IPOLyadost_ALERT_cacheNotCleared")?>');
+                        alert('<?=GetMessage("KITyadost_ALERT_cacheNotCleared")?>');
                 }
             })
         }
 
-        function ipol_popup_virt(code, info)
+        function kit_popup_virt(code, info)
         {
             console.log([code, info, info.position()]);
 
@@ -147,7 +147,7 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
             return false;
         }
 
-        function IPOLyadost_measRadio(wat)
+        function KITyadost_measRadio(wat)
         {
             if (wat === 'def')
             {
@@ -161,13 +161,13 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
                 $('#sidesMeas_fix').hide();
             }
 
-            $('.IPOLyadost_mea').css('display', 'none');
-            $('tr[id^="IPOLyadost_mea_' + wat + '"]').css('display', '');
+            $('.KITyadost_mea').css('display', 'none');
+            $('tr[id^="KITyadost_mea_' + wat + '"]').css('display', '');
 
-            $('#IPOLyadost_meaMode_' + wat).prop('checked', 'true');
+            $('#KITyadost_meaMode_' + wat).prop('checked', 'true');
         }
 
-        function IPOLyadost_weiRadio(wat)
+        function KITyadost_weiRadio(wat)
         {
             if (wat === 'cat')
             {
@@ -194,36 +194,36 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
                 $handler.css('display', 'none');
                 $handler.val('CATALOG_WEIGHT');
             }
-            $('#IPOLyadost_weiMode_' + wat).prop('checked', 'true');
+            $('#KITyadost_weiMode_' + wat).prop('checked', 'true');
         }
 
-        var IPOLyadost_CONFIG_wnd = false;
-        function IPOLyadost_CONFIG_openWnd()
+        var KITyadost_CONFIG_wnd = false;
+        function KITyadost_CONFIG_openWnd()
         {
-            if (!IPOLyadost_CONFIG_wnd)
+            if (!KITyadost_CONFIG_wnd)
             {
-                IPOLyadost_CONFIG_wnd = new BX.CDialog({
-                    title: "<?=GetMessage('IPOLyadost_LABEL_LOADCONFIG')?>",
-                    content: "<a href='javascript:void(0)' onclick='$(this).siblings(\"div\").toggle()'><?=GetMessage('IPOLyadost_LABEL_CONFIGORDER')?></a><div style='display:none'><?=GetMessage('IPOLyadost_TEXT_ABOUTCONFIG')?></div><br><textarea style='width:650px;height:450px;' id='IPOLyadost_loadConfig_area1'></textarea><br><br><textarea style='width:650px;height:150px;' id='IPOLyadost_loadConfig_area2'></textarea>",
+                KITyadost_CONFIG_wnd = new BX.CDialog({
+                    title: "<?=GetMessage('KITyadost_LABEL_LOADCONFIG')?>",
+                    content: "<a href='javascript:void(0)' onclick='$(this).siblings(\"div\").toggle()'><?=GetMessage('KITyadost_LABEL_CONFIGORDER')?></a><div style='display:none'><?=GetMessage('KITyadost_TEXT_ABOUTCONFIG')?></div><br><textarea style='width:650px;height:450px;' id='KITyadost_loadConfig_area1'></textarea><br><br><textarea style='width:650px;height:150px;' id='KITyadost_loadConfig_area2'></textarea>",
                     icon: 'head-block',
                     resizable: true,
                     draggable: true,
                     height: '502',
                     width: '692',
-                    buttons: ['<input type="button" <?if (!CIPOLYadostHelper::isAdmin())
+                    buttons: ['<input type="button" <?if (!CKITYadostHelper::isAdmin())
 					{
 						echo "disabled";
-					}?> value="<?=GetMessage('IPOLyadost_BUTTON_LOAD')?>" onclick="IPOLyadost_CONFIG_LOAD()"/><input type="button" value="<?=GetMessage('IPOLyadost_BUTTON_CANSEL')?>" onclick="IPOLyadost_CONFIG_wnd.Close()"/>']
+					}?> value="<?=GetMessage('KITyadost_BUTTON_LOAD')?>" onclick="KITyadost_CONFIG_LOAD()"/><input type="button" value="<?=GetMessage('KITyadost_BUTTON_CANSEL')?>" onclick="KITyadost_CONFIG_wnd.Close()"/>']
                 });
             }
 
-            IPOLyadost_CONFIG_wnd.Show();
+            KITyadost_CONFIG_wnd.Show();
         }
 
-        function IPOLyadost_CONFIG_LOAD()
+        function KITyadost_CONFIG_LOAD()
         {
-            var txt = $('#IPOLyadost_loadConfig_area1').val(),
-                ids = $('#IPOLyadost_loadConfig_area2').val();
+            var txt = $('#KITyadost_loadConfig_area1').val(),
+                ids = $('#KITyadost_loadConfig_area2').val();
 
             if (txt && ids)
             {
@@ -236,13 +236,13 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
                     {
                         if (respond.success)
                         {
-                            $('#IPOLyadost_confRed').hide();
-                            $('#IPOLyadost_confGreen').show();
-                            IPOLyadost_CONFIG_wnd.Close();
+                            $('#KITyadost_confRed').hide();
+                            $('#KITyadost_confGreen').show();
+                            KITyadost_CONFIG_wnd.Close();
                         }
                         else
                         {
-                            alert('<?=GetMessage("IPOLyadost_ALERT_configNotSaved")?>');
+                            alert('<?=GetMessage("KITyadost_ALERT_configNotSaved")?>');
                             console.log(respond);
                         }
                     },
@@ -254,16 +254,16 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
                 })
             }
             else
-                alert('<?=GetMessage("IPOLyadost_ALERT_noConfig")?>');
+                alert('<?=GetMessage("KITyadost_ALERT_noConfig")?>');
 
         }
 
-        function IPOLyadost_propFixerRun(wrap)
+        function KITyadost_propFixerRun(wrap)
         {
             var $wrap = $('#' + wrap).empty();
             var personeTypes = [];
 
-            $wrap.append('<?=GetMessage("IPOLyadost_propFix_PAYERS")?>');
+            $wrap.append('<?=GetMessage("KITyadost_propFix_PAYERS")?>');
             $.get('/bitrix/js/<?=$module_id?>/ajax.php', {
                 action: "propFixer",
                 "sessid": BX.bitrix_sessid()
@@ -292,15 +292,15 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
 
                 if (typeIndex + 1 > personeTypes.length)
                 {
-                    IPOLyadost_finish();
+                    KITyadost_finish();
                     return;
                 }
 
                 var steps = [
-                    {name: 'persone', 'text': '<?=GetMessage("IPOLyadost_propFix_persone")?>'},
-                    {name: 'location', 'text': '<?=GetMessage("IPOLyadost_propFix_location")?>'},
-                    {name: 'address', 'text': '<?=GetMessage("IPOLyadost_propFix_address")?>'},
-                    {name: 'zip', 'text': '<?=GetMessage("IPOLyadost_propFix_zip")?>'}
+                    {name: 'persone', 'text': '<?=GetMessage("KITyadost_propFix_persone")?>'},
+                    {name: 'location', 'text': '<?=GetMessage("KITyadost_propFix_location")?>'},
+                    {name: 'address', 'text': '<?=GetMessage("KITyadost_propFix_address")?>'},
+                    {name: 'zip', 'text': '<?=GetMessage("KITyadost_propFix_zip")?>'}
                 ];
 
                 if (stepIndex + 1 > steps.length)
@@ -310,7 +310,7 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
 
                 if (stepIndex === 0)
                 {
-                    $wrap.append('<br><?=GetMessage("IPOLyadost_propFix_testType")?> "' + personeTypes[typeIndex].NAME + '"<br>');
+                    $wrap.append('<br><?=GetMessage("KITyadost_propFix_testType")?> "' + personeTypes[typeIndex].NAME + '"<br>');
                 }
 
                 $wrap.append(steps[stepIndex].text + '...');
@@ -327,7 +327,7 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
                     {
                         if (typeof data.data === 'object')
                         {
-                            $wrap.append('<br><?=GetMessage("IPOLyadost_propFix_resFields")?> ' + data.data.join(', ') + '<br>');
+                            $wrap.append('<br><?=GetMessage("KITyadost_propFix_resFields")?> ' + data.data.join(', ') + '<br>');
                         } else
                         {
                             $wrap.append('OK<br>');
@@ -337,9 +337,9 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
                         return true;
                     } else
                     {
-                        $wrap.append('<br><?=GetMessage("IPOLyadost_propFix_error")?>' + data.data.code + '<br>');
+                        $wrap.append('<br><?=GetMessage("KITyadost_propFix_error")?>' + data.data.code + '<br>');
 
-                        var btnContinue = $('<a href="#"><?=GetMessage("IPOLyadost_propFix_continue")?></a>')
+                        var btnContinue = $('<a href="#"><?=GetMessage("KITyadost_propFix_continue")?></a>')
                             .click(function ()
                             {
                                 // process(typeIndex + 1, 0);
@@ -347,10 +347,10 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
                                 return false;
                             });
 
-                        var btnBreak = $('<a href="#"><?=GetMessage("IPOLyadost_propFix_stop")?></a>')
+                        var btnBreak = $('<a href="#"><?=GetMessage("KITyadost_propFix_stop")?></a>')
                             .click(function ()
                             {
-                                IPOLyadost_finish();
+                                KITyadost_finish();
                                 return false;
                             });
 
@@ -365,15 +365,15 @@ function IPOLyadost_getSelect(&$arOptions, $selected, $blockName, $empty = false
                 }, 'json');
             }
 
-            function IPOLyadost_finish()
+            function KITyadost_finish()
             {
-                $wrap.append('<br><?=GetMessage("IPOLyadost_propFix_finished")?>');
+                $wrap.append('<br><?=GetMessage("KITyadost_propFix_finished")?>');
             }
         }
 
-        function IPOLyadost_addressRadio(mode)
+        function KITyadost_addressRadio(mode)
         {
-            $('#IPOLyadost_addressMode_' + mode).prop('checked', 'true');
+            $('#KITyadost_addressMode_' + mode).prop('checked', 'true');
 
             var Fields = {
                 "sep": ["street", "house", "build", "flat"],
@@ -430,7 +430,7 @@ foreach ($arPopups as $pop)
 		$addStyle = "width: 60%";
 	?>
     <div id="pop-<?= $pop ?>" class="b-popup" style="display: none; <?= $addStyle ?>">
-        <div class="pop-text"><?= GetMessage("IPOLyadost_HELPER_" . $pop) ?></div>
+        <div class="pop-text"><?= GetMessage("KITyadost_HELPER_" . $pop) ?></div>
         <div class="close" onclick="$(this).closest('.b-popup').hide();"></div>
     </div>
 	<?
@@ -438,7 +438,7 @@ foreach ($arPopups as $pop)
 ?>
 
 <?
-$dost = CIPOLYadostHelper::getDelivery();
+$dost = CKITYadostHelper::getDelivery();
 if ($dost)
 {
 	if ($dost['ACTIVE'] != 'Y')
@@ -448,8 +448,8 @@ if ($dost)
             <td colspan='2'>
                 <div class="adm-info-message-wrap adm-info-message-red">
                     <div class="adm-info-message">
-                        <div class="adm-info-message-title"><?= GetMessage('IPOLyadost_NO_ADOST_HEADER') ?></div>
-						<?= GetMessage('IPOLyadost_NO_ADOST_TITLE') ?>
+                        <div class="adm-info-message-title"><?= GetMessage('KITyadost_NO_ADOST_HEADER') ?></div>
+						<?= GetMessage('KITyadost_NO_ADOST_TITLE') ?>
                         <div class="adm-info-message-icon"></div>
                     </div>
                 </div>
@@ -468,14 +468,14 @@ else
 					<? if ($converted)
 					{
 						?>
-                        <div class="adm-info-message-title"><?= GetMessage('IPOLyadost_NOT_CRTD_HEADER') ?></div>
-						<?= GetMessage('IPOLyadost_NOT_CRTD_TITLE') ?>
+                        <div class="adm-info-message-title"><?= GetMessage('KITyadost_NOT_CRTD_HEADER') ?></div>
+						<?= GetMessage('KITyadost_NOT_CRTD_TITLE') ?>
 					<? }
 					else
 					{
 						?>
-                        <div class="adm-info-message-title"><?= GetMessage('IPOLyadost_NO_DOST_HEADER') ?></div>
-						<?= GetMessage('IPOLyadost_NO_DOST_TITLE') ?>
+                        <div class="adm-info-message-title"><?= GetMessage('KITyadost_NO_DOST_HEADER') ?></div>
+						<?= GetMessage('KITyadost_NO_DOST_TITLE') ?>
 					<? } ?>
                     <div class="adm-info-message-icon"></div>
                 </div>
@@ -486,7 +486,7 @@ else
 	<? if ($converted)
 {/*?>
 		<tr><td>
-			<input type="button" onclick="IPOLyadost_addConvertedDelivery()" value="<?=GetMessage("IPOLyadost_NOT_CRTD_TITLE_BUTTON")?>">
+			<input type="button" onclick="KITyadost_addConvertedDelivery()" value="<?=GetMessage("KITyadost_NOT_CRTD_TITLE_BUTTON")?>">
 		</td></tr>
 	<?*/
 } ?>
@@ -495,11 +495,11 @@ else
 
     <tr class="heading"><? //Настройки обмена delivery?>
         <td colspan="2" valign="top" align="center"
-            onclick="$('#to_ms_warehouse').closest('tr').show();"><?= GetMessage('IPOLyadost_OPTTAB_MSOPTIONS') ?></td>
+            onclick="$('#to_ms_warehouse').closest('tr').show();"><?= GetMessage('KITyadost_OPTTAB_MSOPTIONS') ?></td>
     </tr>
     <tr>
         <td colspan="2">
-			<?= GetMessage("IPOLyadost_WARN_REQUIRE_OPTIONS") ?>
+			<?= GetMessage("KITyadost_WARN_REQUIRE_OPTIONS") ?>
         </td>
     <tr>
     <tr>
@@ -511,20 +511,20 @@ else
 			else
 				$arConfStyles[1] = '';
 			?>
-            <span id='IPOLyadost_confGreen'
-                  style='color:green;<?= $arConfStyles[0] ?>'><?= GetMessage('IPOLyadost_LABEL_HASCONFIG') ?></span>
-            <span id='IPOLyadost_confRed'
-                  style='color:red;<?= $arConfStyles[1] ?>'><?= GetMessage('IPOLyadost_LABEL_NOCONFIG') ?></span>
+            <span id='KITyadost_confGreen'
+                  style='color:green;<?= $arConfStyles[0] ?>'><?= GetMessage('KITyadost_LABEL_HASCONFIG') ?></span>
+            <span id='KITyadost_confRed'
+                  style='color:red;<?= $arConfStyles[1] ?>'><?= GetMessage('KITyadost_LABEL_NOCONFIG') ?></span>
         </td>
         <td valign="top" align="left">
             <a href='javascript:void(0)'
-               onclick='IPOLyadost_CONFIG_openWnd()'><?= GetMessage('IPOLyadost_LABEL_LOADCONFIG') ?></a>
+               onclick='KITyadost_CONFIG_openWnd()'><?= GetMessage('KITyadost_LABEL_LOADCONFIG') ?></a>
         </td>
     </tr>
 <? ShowParamsHTMLByArray($arAllOptions["msOptions"]); ?>
 
     <tr class="heading"><? // == Значения из конфига по умолчанию == ?>
-        <td colspan="2" valign="top" align="center"><?= GetMessage('IPOLyadost_OPTTAB_DEFAULT_SENDERS_VAL') ?></td>
+        <td colspan="2" valign="top" align="center"><?= GetMessage('KITyadost_OPTTAB_DEFAULT_SENDERS_VAL') ?></td>
     </tr>
 <? if ($arRequestConfig)
 {
@@ -535,7 +535,7 @@ else
 	{
 		if (!empty($warehouse))
 		{
-			$warehouseInfo = CIPOLYadostHelper::convertFromUTF(CIPOLYadostDriver::getWarehouseInfo($warehouse));
+			$warehouseInfo = CKITYadostHelper::convertFromUTF(CKITYadostDriver::getWarehouseInfo($warehouse));
 			if ($warehouseInfo["warehouseInfo"]["data"]["field_name"])
 				$arWarehouses[$num] .= " " . $warehouseInfo["warehouseInfo"]["data"]["field_name"];
 		}
@@ -545,27 +545,27 @@ else
 	{
 		if (!empty($sender))
 		{
-			$senderInfo = CIPOLYadostHelper::convertFromUTF(CIPOLYadostDriver::getSenderInfo($sender));
+			$senderInfo = CKITYadostHelper::convertFromUTF(CKITYadostDriver::getSenderInfo($sender));
 			if ($senderInfo["clientInfo"]["data"]["field_name"])
 				$arSenders[$num] .= " " . $senderInfo["clientInfo"]["data"]["field_name"];
 		}
 	}
 	?>
     <tr>
-        <td><?= GetMessage("IPOLyadost_OPT_default_sender") ?></td>
-        <td><? echo IPOLyadost_getSelect($arSenders, COption::GetOptionString($module_id, 'defaultSender', '0'), "defaultSender"); ?></td>
+        <td><?= GetMessage("KITyadost_OPT_default_sender") ?></td>
+        <td><? echo KITyadost_getSelect($arSenders, COption::GetOptionString($module_id, 'defaultSender', '0'), "defaultSender"); ?></td>
     </tr>
     <tr>
-        <td><?= GetMessage("IPOLyadost_OPT_default_warehouse") ?></td>
-        <td><? echo IPOLyadost_getSelect($arWarehouses, COption::GetOptionString($module_id, 'defaultWarehouse', '0'), "defaultWarehouse"); ?></td>
+        <td><?= GetMessage("KITyadost_OPT_default_warehouse") ?></td>
+        <td><? echo KITyadost_getSelect($arWarehouses, COption::GetOptionString($module_id, 'defaultWarehouse', '0'), "defaultWarehouse"); ?></td>
     </tr>
 <? } ?>
 <?
 // делаем запрос на расчет доставки, чтобы получить ограничения на оценочную стоимость
-CIPOLYadost::$clearOrderData = false;
-CIPOLYadost::$cityTo = GetMessage("IPOLyadost_DEFAULT_FAKE_CITY_TO_CALC");
-CIPOLYadost::getDeliveryProfiles(null, null);
-$arRes = (array)CIPOLYadost::$calculateRequestResult;
+CKITYadost::$clearOrderData = false;
+CKITYadost::$cityTo = GetMessage("KITyadost_DEFAULT_FAKE_CITY_TO_CALC");
+CKITYadost::getDeliveryProfiles(null, null);
+$arRes = (array)CKITYadost::$calculateRequestResult;
 
 $arAssessedLimits = array();
 if (!empty($arRes))
@@ -594,15 +594,15 @@ ob_start();
     <table class="assessed_limits" style="">
         <thead>
         <tr>
-            <td><?= GetMessage("IPOLyadost_LIMITS_TABLE_deliveryName") ?></td>
-            <td><?= GetMessage("IPOLyadost_LIMITS_TABLE_tariffName") ?></td>
-            <td><?= GetMessage("IPOLyadost_LIMITS_TABLE_tress") ?></td>
+            <td><?= GetMessage("KITyadost_LIMITS_TABLE_deliveryName") ?></td>
+            <td><?= GetMessage("KITyadost_LIMITS_TABLE_tariffName") ?></td>
+            <td><?= GetMessage("KITyadost_LIMITS_TABLE_tress") ?></td>
         </tr>
         </thead>
 		<? foreach ($arAssessedLimits as $delivType => $limit)
 		{ ?>
             <tr>
-                <td colspan=3 style="text-align: center;"><?= GetMessage("IPOLyadost_PROFILE_" . $delivType) ?></td>
+                <td colspan=3 style="text-align: center;"><?= GetMessage("KITyadost_PROFILE_" . $delivType) ?></td>
             </tr>
 			<? foreach ($limit as $tariffID => $tariff)
 		{ ?>
@@ -621,8 +621,8 @@ ob_end_clean();
 ?>
 
     <tr>
-        <td><?= GetMessage("IPOLyadost_OPT_assessedCostPercent") ?><a href='#' class='PropHint'
-                                                                      onclick='return ipol_popup_virt("pop-assessed_limits",$(this));'></a>
+        <td><?= GetMessage("KITyadost_OPT_assessedCostPercent") ?><a href='#' class='PropHint'
+                                                                      onclick='return kit_popup_virt("pop-assessed_limits",$(this));'></a>
         </td>
         <td><input type="text" size="" maxlength="255"
                    value="<?= FloatVal(COption::getOptionString($module_id, 'assessedCostPercent', '100')) ?>"
@@ -632,118 +632,118 @@ ob_end_clean();
 
     <tr class="heading"><? // == Габариты товаров == ?>
         <td colspan="2" valign="top" align="center"
-            onclick="$('.measHide').show();"><?= GetMessage('IPOLyadost_OPTTAB_DIMENSIONS') ?></td>
+            onclick="$('.measHide').show();"><?= GetMessage('KITyadost_OPTTAB_DIMENSIONS') ?></td>
     </tr>
 
 <? // == Единицы измерения ?>
     <tr>
-        <td colspan="2" valign="top" align="center"><strong><?= GetMessage('IPOLyadost_HEADER_MEASUREMENT') ?></strong>
+        <td colspan="2" valign="top" align="center"><strong><?= GetMessage('KITyadost_HEADER_MEASUREMENT') ?></strong>
         </td>
     </tr>
     <tr class="measHide">
-        <td><?= GetMessage('IPOLyadost_LABEL_sidesMeas') ?></td>
+        <td><?= GetMessage('KITyadost_LABEL_sidesMeas') ?></td>
         <td>
-			<? $IPOLyadost_wD = COption::GetOptionString($module_id, 'sidesMeas', 'mm'); ?>
+			<? $KITyadost_wD = COption::GetOptionString($module_id, 'sidesMeas', 'mm'); ?>
             <select name='sidesMeas' id='sidesMeas' onchange="$('.MeasLbl').html( $(this).val() );">
-                <option value='mm' id="sidesMeas_mm" <? if ($IPOLyadost_wD == 'mm')
-					echo 'selected'; ?>><?= GetMessage('IPOLyadost_LABEL_mm') ?></option>
-                <option value='cm' <? if ($IPOLyadost_wD == 'cm')
-					echo 'selected'; ?>><?= GetMessage('IPOLyadost_LABEL_cm') ?></option>
-                <option value='m' <? if ($IPOLyadost_wD == 'm')
-					echo 'selected'; ?>><?= GetMessage('IPOLyadost_LABEL_m') ?></option>
+                <option value='mm' id="sidesMeas_mm" <? if ($KITyadost_wD == 'mm')
+					echo 'selected'; ?>><?= GetMessage('KITyadost_LABEL_mm') ?></option>
+                <option value='cm' <? if ($KITyadost_wD == 'cm')
+					echo 'selected'; ?>><?= GetMessage('KITyadost_LABEL_cm') ?></option>
+                <option value='m' <? if ($KITyadost_wD == 'm')
+					echo 'selected'; ?>><?= GetMessage('KITyadost_LABEL_m') ?></option>
             </select>
-            <span id="sidesMeas_fix" style="display:none"><?= GetMessage('IPOLyadost_LABEL_mm') ?></span>
+            <span id="sidesMeas_fix" style="display:none"><?= GetMessage('KITyadost_LABEL_mm') ?></span>
         </td>
     </tr>
 <? // == Тип указания свойств ?>
     <tr>
         <td colspan="2" valign="top" align="center">
-            <input type='radio' name='sideMode' id='IPOLyadost_meaMode_unit' value='unit'
-                   onclick='IPOLyadost_measRadio("unit")'><label
-                    for='IPOLyadost_meaMode_unit'><?= GetMessage('IPOLyadost_LABEL_dimMode_unit') ?></label>&nbsp;
-            <input type='radio' name='sideMode' id='IPOLyadost_meaMode_sep' value='sep'
-                   onclick='IPOLyadost_measRadio("sep")'><label
-                    for='IPOLyadost_meaMode_sep'><?= GetMessage('IPOLyadost_LABEL_dimMode_sep') ?></label>
-            <input type='radio' name='sideMode' id='IPOLyadost_meaMode_def' value='def'
-                   onclick='IPOLyadost_measRadio("def")'><label
-                    for='IPOLyadost_meaMode_def'><?= GetMessage('IPOLyadost_LABEL_dimMode_def') ?></label>
+            <input type='radio' name='sideMode' id='KITyadost_meaMode_unit' value='unit'
+                   onclick='KITyadost_measRadio("unit")'><label
+                    for='KITyadost_meaMode_unit'><?= GetMessage('KITyadost_LABEL_dimMode_unit') ?></label>&nbsp;
+            <input type='radio' name='sideMode' id='KITyadost_meaMode_sep' value='sep'
+                   onclick='KITyadost_measRadio("sep")'><label
+                    for='KITyadost_meaMode_sep'><?= GetMessage('KITyadost_LABEL_dimMode_sep') ?></label>
+            <input type='radio' name='sideMode' id='KITyadost_meaMode_def' value='def'
+                   onclick='KITyadost_measRadio("def")'><label
+                    for='KITyadost_meaMode_def'><?= GetMessage('KITyadost_LABEL_dimMode_def') ?></label>
         </td>
     </tr>
 <? // == ДШВ ?>
-    <tr id='IPOLyadost_mea_unit_prop' class="IPOLyadost_mea">
-        <td><?= GetMessage('IPOLyadost_OPT_sides') ?></td>
-        <td><? echo IPOLyadost_getSelect($arIblockProps, COption::GetOptionString($module_id, 'sidesUnit', 'DIMESIONS'), "sidesUnit"); ?></td>
+    <tr id='KITyadost_mea_unit_prop' class="KITyadost_mea">
+        <td><?= GetMessage('KITyadost_OPT_sides') ?></td>
+        <td><? echo KITyadost_getSelect($arIblockProps, COption::GetOptionString($module_id, 'sidesUnit', 'DIMESIONS'), "sidesUnit"); ?></td>
     </tr>
-    <tr id='IPOLyadost_mea_unit' class="IPOLyadost_mea">
-        <td><?= GetMessage('IPOLyadost_OPT_sidesUnitSprtr') ?></td>
+    <tr id='KITyadost_mea_unit' class="KITyadost_mea">
+        <td><?= GetMessage('KITyadost_OPT_sidesUnitSprtr') ?></td>
         <td><input type='text' name='sidesUnitSprtr'
                    value='<?= COption::GetOptionString($module_id, 'sidesUnitSprtr', 'x') ?>'></td>
     </tr>
 <? // == 3 свойства ?>
-    <tr id='IPOLyadost_mea_sep_l' class="IPOLyadost_mea">
-        <td><?= GetMessage('IPOLyadost_OPT_MEA_SEP_L') ?></td>
-        <td><? /*<input type='text' name='IPOLyadost_MEA_SEP_L' value='<?=$sides['L']?>'>*/ ?><? echo IPOLyadost_getSelect($arIblockProps, $sides['L'], "IPOLyadost_MEA_SEP_L"); ?></td>
+    <tr id='KITyadost_mea_sep_l' class="KITyadost_mea">
+        <td><?= GetMessage('KITyadost_OPT_MEA_SEP_L') ?></td>
+        <td><? /*<input type='text' name='KITyadost_MEA_SEP_L' value='<?=$sides['L']?>'>*/ ?><? echo KITyadost_getSelect($arIblockProps, $sides['L'], "KITyadost_MEA_SEP_L"); ?></td>
     </tr>
-    <tr id='IPOLyadost_mea_sep_w' class="IPOLyadost_mea">
-        <td><?= GetMessage('IPOLyadost_OPT_MEA_SEP_W') ?></td>
-        <td><? /*<input type='text' name='IPOLyadost_MEA_SEP_W' value='<?=$sides['W']?>'>*/ ?><? echo IPOLyadost_getSelect($arIblockProps, $sides['W'], "IPOLyadost_MEA_SEP_W"); ?></td>
+    <tr id='KITyadost_mea_sep_w' class="KITyadost_mea">
+        <td><?= GetMessage('KITyadost_OPT_MEA_SEP_W') ?></td>
+        <td><? /*<input type='text' name='KITyadost_MEA_SEP_W' value='<?=$sides['W']?>'>*/ ?><? echo KITyadost_getSelect($arIblockProps, $sides['W'], "KITyadost_MEA_SEP_W"); ?></td>
     </tr>
-    <tr id='IPOLyadost_mea_sep_h' class="IPOLyadost_mea">
-        <td><?= GetMessage('IPOLyadost_OPT_MEA_SEP_H') ?></td>
-        <td><? /*<input type='text' name='IPOLyadost_MEA_SEP_H' value='<?=$sides['H']?>'>*/ ?><? echo IPOLyadost_getSelect($arIblockProps, $sides['H'], "IPOLyadost_MEA_SEP_H"); ?></td>
+    <tr id='KITyadost_mea_sep_h' class="KITyadost_mea">
+        <td><?= GetMessage('KITyadost_OPT_MEA_SEP_H') ?></td>
+        <td><? /*<input type='text' name='KITyadost_MEA_SEP_H' value='<?=$sides['H']?>'>*/ ?><? echo KITyadost_getSelect($arIblockProps, $sides['H'], "KITyadost_MEA_SEP_H"); ?></td>
     </tr>
 
 <? // == По умолчанию значения ?>
-    <tr id='IPOLyadost_mea_def' class="IPOLyadost_mea">
-        <td colspan="2" style="text-align:center; padding:5px"><?= GetMessage('IPOLyadost_OPT_MEA_DEF') ?></td>
+    <tr id='KITyadost_mea_def' class="KITyadost_mea">
+        <td colspan="2" style="text-align:center; padding:5px"><?= GetMessage('KITyadost_OPT_MEA_DEF') ?></td>
     </tr>
     <tr>
         <td colspan="2" valign="top" align="center">
-            <strong><?= GetMessage('IPOLyadost_HEADER_MEASUREMENT_DEF') ?></strong></td>
+            <strong><?= GetMessage('KITyadost_HEADER_MEASUREMENT_DEF') ?></strong></td>
     </tr>
 <? ShowParamsHTMLByArray($arAllOptions["sidesDefaut"]); ?>
 
 <? // -- ВЕС ?>
     <tr>
-        <td colspan="2" valign="top" align="center"><strong><?= GetMessage('IPOLyadost_HEADER_WEIGHT') ?></strong></td>
+        <td colspan="2" valign="top" align="center"><strong><?= GetMessage('KITyadost_HEADER_WEIGHT') ?></strong></td>
     </tr>
     <tr class="measHide">
-        <td><?= GetMessage('IPOLyadost_LABEL_sidesMeas') ?></td>
+        <td><?= GetMessage('KITyadost_LABEL_sidesMeas') ?></td>
         <td>
-			<? $IPOLyadost_wD = COption::GetOptionString($module_id, 'weightMeas', 'g'); ?>
+			<? $KITyadost_wD = COption::GetOptionString($module_id, 'weightMeas', 'g'); ?>
             <select name='weightMeas' id="weightMeas" onchange="$('.WeightLbl').html( $(this).val() );">
-                <option value='g' id="weightMeas_g" <? if ($IPOLyadost_wD == 'g')
-					echo 'selected'; ?>><?= GetMessage('IPOLyadost_LABEL_g') ?></option>
-                <option value='kg' <? if ($IPOLyadost_wD == 'kg')
-					echo 'selected'; ?>><?= GetMessage('IPOLyadost_LABEL_kg') ?></option>
+                <option value='g' id="weightMeas_g" <? if ($KITyadost_wD == 'g')
+					echo 'selected'; ?>><?= GetMessage('KITyadost_LABEL_g') ?></option>
+                <option value='kg' <? if ($KITyadost_wD == 'kg')
+					echo 'selected'; ?>><?= GetMessage('KITyadost_LABEL_kg') ?></option>
             </select>
-            <span id="weightMeas_fix" style="display:none"><?= GetMessage('IPOLyadost_LABEL_g') ?></span>
+            <span id="weightMeas_fix" style="display:none"><?= GetMessage('KITyadost_LABEL_g') ?></span>
         </td>
     </tr>
     <tr>
         <td>
-            <input type='radio' name='weiMode' id='IPOLyadost_weiMode_cat' value='cat'
-                   onclick='IPOLyadost_weiRadio("cat")'><label
-                    for='IPOLyadost_weiMode_cat'><?= GetMessage('IPOLyadost_LABEL_weiMode_cat') ?></label><br>
-            <input type='radio' name='weiMode' id='IPOLyadost_weiMode_prop' value='prop'
-                   onclick='IPOLyadost_weiRadio("prop")'><label
-                    for='IPOLyadost_weiMode_prop'><?= GetMessage('IPOLyadost_LABEL_weiMode_prop') ?></label>
+            <input type='radio' name='weiMode' id='KITyadost_weiMode_cat' value='cat'
+                   onclick='KITyadost_weiRadio("cat")'><label
+                    for='KITyadost_weiMode_cat'><?= GetMessage('KITyadost_LABEL_weiMode_cat') ?></label><br>
+            <input type='radio' name='weiMode' id='KITyadost_weiMode_prop' value='prop'
+                   onclick='KITyadost_weiRadio("prop")'><label
+                    for='KITyadost_weiMode_prop'><?= GetMessage('KITyadost_LABEL_weiMode_prop') ?></label>
         </td>
         <td>
-			<?= IPOLyadost_getSelect($arIblockProps, $IPOLyadost_weight, "weightPr"); ?>
+			<?= KITyadost_getSelect($arIblockProps, $KITyadost_weight, "weightPr"); ?>
         </td>
     </tr>
 <? ShowParamsHTMLByArray($arAllOptions["weightDefault"]); ?>
 
 <? /*<tr class="heading"><?// Параметры курьера?>
-	<td colspan="2" valign="top" align="center"><?=GetMessage('IPOLyadost_OPTTAB_COURIER')?> <a href='#' class='PropHint' onclick='return ipol_popup_virt("pop-PROPS",$(this));'></a></td>
+	<td colspan="2" valign="top" align="center"><?=GetMessage('KITyadost_OPTTAB_COURIER')?> <a href='#' class='PropHint' onclick='return kit_popup_virt("pop-PROPS",$(this));'></a></td>
 </tr>
 <?ShowParamsHTMLByArray($arAllOptions["courier"]);?>*/ ?>
 
     <tr class="heading"><? //Свойства заказа?>
-        <td colspan="2" valign="top" align="center"><?= GetMessage('IPOLyadost_OPTTAB_PROPS') ?> <a href='#'
+        <td colspan="2" valign="top" align="center"><?= GetMessage('KITyadost_OPTTAB_PROPS') ?> <a href='#'
                                                                                                     class='PropHint'
-                                                                                                    onclick='return ipol_popup_virt("pop-PROPS",$(this));'></a>
+                                                                                                    onclick='return kit_popup_virt("pop-PROPS",$(this));'></a>
         </td>
     </tr>
 
@@ -757,13 +757,13 @@ foreach ($arAllOptions["orderProps"] as $optValue)
 	?>
     <tr>
         <td colspan="2" valign="top" align="center" style="padding: 5px 0 15px;">
-            <br><strong><?= GetMessage("IPOLyadost_OPT_addressMode") ?></strong><br>
-            <input type='radio' name='addressMode' id='IPOLyadost_addressMode_one' value='one'
-                   onclick='IPOLyadost_addressRadio("one")'><label
-                    for='IPOLyadost_addressMode_one'><?= GetMessage('IPOLyadost_LABEL_addressMode_one') ?></label>&nbsp;
-            <input type='radio' name='addressMode' id='IPOLyadost_addressMode_sep' value='sep'
-                   onclick='IPOLyadost_addressRadio("sep")'><label
-                    for='IPOLyadost_addressMode_sep'><?= GetMessage('IPOLyadost_LABEL_addressMode_sep') ?></label>
+            <br><strong><?= GetMessage("KITyadost_OPT_addressMode") ?></strong><br>
+            <input type='radio' name='addressMode' id='KITyadost_addressMode_one' value='one'
+                   onclick='KITyadost_addressRadio("one")'><label
+                    for='KITyadost_addressMode_one'><?= GetMessage('KITyadost_LABEL_addressMode_one') ?></label>&nbsp;
+            <input type='radio' name='addressMode' id='KITyadost_addressMode_sep' value='sep'
+                   onclick='KITyadost_addressRadio("sep")'><label
+                    for='KITyadost_addressMode_sep'><?= GetMessage('KITyadost_LABEL_addressMode_sep') ?></label>
         </td>
     </tr>
 	
@@ -773,19 +773,19 @@ foreach ($arAllOptions["orderProps"] as $optValue)
 	<? ShowParamsHTMLByArray($arAllOptions["templateOptions"]); ?>
     <tr>
         <td style="padding:0 0 20px;" colspan="2" align="center">
-			<? if (!CIPOLYadostHelper::isAdmin())
+			<? if (!CKITYadostHelper::isAdmin())
 			{
-				echo GetMessage("IPOLyadost_HELPER_RightsNotAllow_AutoPropFix");
+				echo GetMessage("KITyadost_HELPER_RightsNotAllow_AutoPropFix");
 			} ?>
-            <input <? if (!CIPOLYadostHelper::isAdmin())
+            <input <? if (!CKITYadostHelper::isAdmin())
 			{
 				echo "disabled";
 			} ?> type="button" class="adm-btn"
-                 onclick="IPOLyadost_propFixerRun('IPOLyadost_propfix_result')"
-                 value="<?= GetMessage("IPOLyadost_propFix_Start") ?>"
-            /> <a href='#' class='PropHint' onclick='return ipol_popup_virt("pop-ADD_PROPS_BUTTON",$(this));'></a>
+                 onclick="KITyadost_propFixerRun('KITyadost_propfix_result')"
+                 value="<?= GetMessage("KITyadost_propFix_Start") ?>"
+            /> <a href='#' class='PropHint' onclick='return kit_popup_virt("pop-ADD_PROPS_BUTTON",$(this));'></a>
 
-            <div id="IPOLyadost_propfix_result"></div>
+            <div id="KITyadost_propfix_result"></div>
         </td>
     <tr>
 
@@ -798,7 +798,7 @@ else
 
     <tr>
         <td><?= $optValue[1] ?></td>
-        <td><? echo IPOLyadost_getSelect($arOrderProps, COption::GetOptionString($module_id, $optValue[0], $optValue[2]), $optValue[0], true); ?></td>
+        <td><? echo KITyadost_getSelect($arOrderProps, COption::GetOptionString($module_id, $optValue[0], $optValue[2]), $optValue[0], true); ?></td>
     </tr>
 <? } ?>
 <? } ?>
@@ -807,32 +807,32 @@ else
 <? //ShowParamsHTMLByArray($arAllOptions["orderProps"]);?>
 
     <tr class="heading"><? //Статусы заказа?>
-        <td colspan="2" valign="top" align="center"><?= GetMessage('IPOLyadost_OPTTAB_STATUS') ?> <a href='#'
+        <td colspan="2" valign="top" align="center"><?= GetMessage('KITyadost_OPTTAB_STATUS') ?> <a href='#'
                                                                                                      class='PropHint'
-                                                                                                     onclick='return ipol_popup_virt("pop-STATUSES",$(this));'></a>
+                                                                                                     onclick='return kit_popup_virt("pop-STATUSES",$(this));'></a>
         </td>
     </tr>
 <? ShowParamsHTMLByArray($arAllOptions["arStatus"]); ?>
 
     <tr class="heading"><? //Свойства товара?>
-        <td colspan="2" valign="top" align="center"><?= GetMessage('IPOLyadost_OPTTAB_GOODS') ?> <a href='#'
+        <td colspan="2" valign="top" align="center"><?= GetMessage('KITyadost_OPTTAB_GOODS') ?> <a href='#'
                                                                                                     class='PropHint'
-                                                                                                    onclick='return ipol_popup_virt("pop-OPT_articul",$(this));'></a>
+                                                                                                    onclick='return kit_popup_virt("pop-OPT_articul",$(this));'></a>
         </td>
     </tr>
     <tr>
-        <td><?= GetMessage("IPOLyadost_OPT_artnumber") ?></td>
+        <td><?= GetMessage("KITyadost_OPT_artnumber") ?></td>
         <td>
-			<? echo IPOLyadost_getSelect(array_merge(array("ID" => "ID"), $arIblockProps), COption::GetOptionString($module_id, 'artnumber', 'ARTNUMBER'), "artnumber"); ?>
+			<? echo KITyadost_getSelect(array_merge(array("ID" => "ID"), $arIblockProps), COption::GetOptionString($module_id, 'artnumber', 'ARTNUMBER'), "artnumber"); ?>
         </td>
     </tr>
 <? //ShowParamsHTMLByArray($arAllOptions["propsDefault"]);?>
 
 
     <tr class="heading"><? //Свойства компонента?>
-        <td colspan="2" valign="top" align="center"><?= GetMessage('IPOLyadost_OPTTAB_DELIVS') ?> <a href='#'
+        <td colspan="2" valign="top" align="center"><?= GetMessage('KITyadost_OPTTAB_DELIVS') ?> <a href='#'
                                                                                                      class='PropHint'
-                                                                                                     onclick='return ipol_popup_virt("pop-idOfPVZ",$(this));'></a>
+                                                                                                     onclick='return kit_popup_virt("pop-idOfPVZ",$(this));'></a>
         </td>
     </tr>
 <? ShowParamsHTMLByArray($arAllOptions["delivSigns"]); ?>

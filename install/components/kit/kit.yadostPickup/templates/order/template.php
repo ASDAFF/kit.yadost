@@ -1,6 +1,6 @@
 <?
 /**
- * Copyright (c) 24/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
@@ -18,16 +18,16 @@ if (empty($arResult["ERRORS"]))
 	$htmlIDs = array();
 	$deliveryIDs = array();
 
-	if (CIPOLYadostHelper::isConverted())
+	if (CKITYadostHelper::isConverted())
 	{
 		$dTS = Bitrix\Sale\Delivery\Services\Table::getList(array(
 			'order' => array('SORT' => 'ASC', 'NAME' => 'ASC'),
-			'filter' => array('CODE' => 'ipolYadost:%')
+			'filter' => array('CODE' => 'kitYadost:%')
 		));
 
 		while ($dataShip = $dTS->Fetch())
 		{
-			$profileName = preg_replace("/ipolYadost:/", "", $dataShip["CODE"]);
+			$profileName = preg_replace("/kitYadost:/", "", $dataShip["CODE"]);
 			$htmlIDs[$profileName] = 'ID_DELIVERY_ID_' . $dataShip['ID'];
 			$deliveryIDs[$profileName] = $dataShip['ID'];
 		}
@@ -35,14 +35,14 @@ if (empty($arResult["ERRORS"]))
 	else
 	{
 		$htmlIDs = array(
-			"pickup" => 'ID_DELIVERY_ipolYadost_pickup',
-			"courier" => 'ID_DELIVERY_ipolYadost_courier',
-			"post" => 'ID_DELIVERY_ipolYadost_post'
+			"pickup" => 'ID_DELIVERY_kitYadost_pickup',
+			"courier" => 'ID_DELIVERY_kitYadost_courier',
+			"post" => 'ID_DELIVERY_kitYadost_post'
 		);
 		$deliveryIDs = array(
-			"pickup" => "ipolYadost:pickup",
-			"courier" => "ipolYadost:courier",
-			"post" => "ipolYadost:post"
+			"pickup" => "kitYadost:pickup",
+			"courier" => "kitYadost:courier",
+			"post" => "kitYadost:post"
 		);
 	}
 
@@ -60,10 +60,10 @@ if (empty($arResult["ERRORS"]))
 		foreach ($arAdr as $propName => $propID)
 			$arAddressInputs[$personType][$propName] = $propID;
 
-	$widgetCode = COption::GetOptionString("ipol.yadost", "basketWidget");
+	$widgetCode = COption::GetOptionString("kit.yadost", "basketWidget");
 
-	$GLOBALS['APPLICATION']->AddHeadString(COption::GetOptionString("ipol.yadost", "basketWidget"));
-	$showWidgetOnProfileClick = ("Y" == COption::GetOptionString("ipol.yadost", "showWidgetOnProfile", "N")) ? true : false;
+	$GLOBALS['APPLICATION']->AddHeadString(COption::GetOptionString("kit.yadost", "basketWidget"));
+	$showWidgetOnProfileClick = ("Y" == COption::GetOptionString("kit.yadost", "showWidgetOnProfile", "N")) ? true : false;
 	?>
 
     <!--suppress ALL, JSUnresolvedVariable, JSUnresolvedVariable -->
@@ -75,105 +75,105 @@ if (empty($arResult["ERRORS"]))
                 yd$('body').prepend('<div id="ydwidget" class="yd-widget-modal"></div>');
 
                 // выполняется при первой загрузке виджета
-                ydwidget.ipol_onLoad = function ()
+                ydwidget.kit_onLoad = function ()
                 {
                     if (typeof BX.Sale.OrderAjaxComponent !== "undefined") {
                         BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax');
                     }
-                    ydwidget.ipol_pvzAddressFull = "";
-                    ydwidget.ipol_orderForm = "#ORDER_FORM";
-                    ydwidget.ipol_oldTemplate = false;
-                    ydwidget.ipol_startHTML = false;
+                    ydwidget.kit_pvzAddressFull = "";
+                    ydwidget.kit_orderForm = "#ORDER_FORM";
+                    ydwidget.kit_oldTemplate = false;
+                    ydwidget.kit_startHTML = false;
 
 
-                    ydwidget.ipol_addressInputs = <?=CUtil::PHPToJSObject($arAddressInputs)?>;
+                    ydwidget.kit_addressInputs = <?=CUtil::PHPToJSObject($arAddressInputs)?>;
 
-                    ydwidget.ipol_showWidgetOnClick = <?=CUtil::PHPToJSObject($showWidgetOnProfileClick)?>;
+                    ydwidget.kit_showWidgetOnClick = <?=CUtil::PHPToJSObject($showWidgetOnProfileClick)?>;
 
-                    ydwidget.ipol_htmlIDs = <?=CUtil::PHPToJSObject($htmlIDs)?>;
-                    ydwidget.ipol_deliveryIDs = <?=CUtil::PHPToJSObject($deliveryIDs)?>;
-                    ydwidget.ipol_deliveryPrice = {};
+                    ydwidget.kit_htmlIDs = <?=CUtil::PHPToJSObject($htmlIDs)?>;
+                    ydwidget.kit_deliveryIDs = <?=CUtil::PHPToJSObject($deliveryIDs)?>;
+                    ydwidget.kit_deliveryPrice = {};
 
-                    ydwidget.ipol_openWidgetTitles = {
-                        "courier": "<?=GetMessage('IPOLyadost_JS_select_courier')?>",
-                        "post": "<?=GetMessage('IPOLyadost_JS_select_post')?>",
-                        "pickup": "<?=GetMessage('IPOLyadost_JS_select_pickup')?>",
+                    ydwidget.kit_openWidgetTitles = {
+                        "courier": "<?=GetMessage('KITyadost_JS_select_courier')?>",
+                        "post": "<?=GetMessage('KITyadost_JS_select_post')?>",
+                        "pickup": "<?=GetMessage('KITyadost_JS_select_pickup')?>",
                     };
 
-                    if (yd$(ydwidget.ipol_orderForm).length > 0)
-                        ydwidget.ipol_oldTemplate = true;
+                    if (yd$(ydwidget.kit_orderForm).length > 0)
+                        ydwidget.kit_oldTemplate = true;
                     else
-                        ydwidget.ipol_orderForm = "#bx-soa-order-form";
+                        ydwidget.kit_orderForm = "#bx-soa-order-form";
 
 
-                    if (typeof ydwidget.ipol_currentCity == "undefined")
-                        ydwidget.ipol_currentCity = '<?=$arResult["CITY_NAME"]?>';
+                    if (typeof ydwidget.kit_currentCity == "undefined")
+                        ydwidget.kit_currentCity = '<?=$arResult["CITY_NAME"]?>';
 
-                    ydwidget.ipol_selectPickupBtn = {};
-                    ydwidget.ipol_deliveryDataSaved = {};
+                    ydwidget.kit_selectPickupBtn = {};
+                    ydwidget.kit_deliveryDataSaved = {};
 
                     // определяем выбрана ли сейчас delivery и заодно формируем кнопки выбрать ПВЗ для каждого профиля
-                    for (var key in ydwidget.ipol_htmlIDs)
+                    for (var key in ydwidget.kit_htmlIDs)
                     {
-                        var profileKey = ydwidget.ipol_getTariffAccordingKey(key);
+                        var profileKey = ydwidget.kit_getTariffAccordingKey(key);
 
-                        ydwidget.ipol_selectPickupBtn[key] = '<a href="javascript:void(0);" data-ydwidget-open data-ydwidget-profile = "' + key + '" onclick="ydwidget.ipol_openWidget(\'' + profileKey + '\');">' + ydwidget.ipol_openWidgetTitles[key] + '</a>';
+                        ydwidget.kit_selectPickupBtn[key] = '<a href="javascript:void(0);" data-ydwidget-open data-ydwidget-profile = "' + key + '" onclick="ydwidget.kit_openWidget(\'' + profileKey + '\');">' + ydwidget.kit_openWidgetTitles[key] + '</a>';
 
-                        var deliveryRadio = yd$("#" + ydwidget.ipol_htmlIDs[key]);
+                        var deliveryRadio = yd$("#" + ydwidget.kit_htmlIDs[key]);
                         if (typeof deliveryRadio != "undefined")
                             if (deliveryRadio.length > 0)
-                                if (ydwidget.ipol_oldTemplate)
+                                if (ydwidget.kit_oldTemplate)
                                 {
                                     if (deliveryRadio.attr("checked") == "checked")
-                                        ydwidget.ipol_currentdelivery = ydwidget.ipol_deliveryIDs[key];
+                                        ydwidget.kit_currentdelivery = ydwidget.kit_deliveryIDs[key];
                                 }
                                 else
                                 {
                                     if (deliveryRadio.prop("checked"))
-                                        ydwidget.ipol_currentdelivery = ydwidget.ipol_deliveryIDs[key];
+                                        ydwidget.kit_currentdelivery = ydwidget.kit_deliveryIDs[key];
                                 }
                     }
                     ;
 
                     // навешиваем обработчик на отправку формы
-                    ydwidget.ipol_onSubmitForm();
+                    ydwidget.kit_onSubmitForm();
 
                     // переопределяем функцию обновления формы, чтобы сохранять адрес перед отправкой и запретить оф заказа, если не указан для профиля вариант в виджете
-                    if (!ydwidget.ipol_oldTemplate)
+                    if (!ydwidget.kit_oldTemplate)
                     {
-                        BX.Sale.OrderAjaxComponent.ipol_oldSendRequest = BX.Sale.OrderAjaxComponent.sendRequest;
+                        BX.Sale.OrderAjaxComponent.kit_oldSendRequest = BX.Sale.OrderAjaxComponent.sendRequest;
 
                         BX.Sale.OrderAjaxComponent.sendRequest = function (action, actionData)
                         {
                             if (!ydwidget.cartWidget.isOpened)
-                                ydwidget.ipol_beforeSubmitAddress = ydwidget.ipol_getAddressInput();
+                                ydwidget.kit_beforeSubmitAddress = ydwidget.kit_getAddressInput();
 
-                            if (action == "saveOrderAjax" && !ydwidget.ipol_checkOrderCreate())
-                                ydwidget.ipol_denieOrderCreate();
+                            if (action == "saveOrderAjax" && !ydwidget.kit_checkOrderCreate())
+                                ydwidget.kit_denieOrderCreate();
                             else
-                                BX.Sale.OrderAjaxComponent.ipol_oldSendRequest(action, actionData);
+                                BX.Sale.OrderAjaxComponent.kit_oldSendRequest(action, actionData);
                         }
                     }
 
                     // навешиваем обработчики на открытие блока доставок
-                    if (!ydwidget.ipol_oldTemplate)
+                    if (!ydwidget.kit_oldTemplate)
                     {
                         yd$('#bx-soa-delivery .bx-soa-section-title-container').on('click', function ()
                         {
-                            ydwidget.ipol_initJS();
+                            ydwidget.kit_initJS();
                         });
                         yd$('#bx-soa-delivery .bx-soa-section-title-container a').on('click', function ()
                         {
-                            ydwidget.ipol_initJS();
+                            ydwidget.kit_initJS();
                         });
                     }
 
                     // запускаем скрипты обновления формы
-                    ydwidget.ipol_initJS();
+                    ydwidget.kit_initJS();
 
                     // ==== подписываемся на перезагрузку формы
                     if (typeof(BX) && BX.addCustomEvent)
-                        BX.addCustomEvent('onAjaxSuccess', ydwidget.ipol_initJS);
+                        BX.addCustomEvent('onAjaxSuccess', ydwidget.kit_initJS);
 
                     // Для старого JS-ядра
                     if (window.jsAjaxUtil) // Переопределение Ajax-завершающей функции для навешивания js-событий новым эл-там
@@ -182,16 +182,16 @@ if (empty($arResult["ERRORS"]))
                         jsAjaxUtil.CloseLocalWaitWindow = function (TID, cont)
                         {
                             jsAjaxUtil._CloseLocalWaitWindow(TID, cont);
-                            ydwidget.ipol_initJS();
+                            ydwidget.kit_initJS();
                         }
                     }
                 };
 
                 // открывает виджет с нужным профилем
-                ydwidget.ipol_openWidget = function (profile)
+                ydwidget.kit_openWidget = function (profile)
                 {
-                    ydwidget.ipol_saveAddressData(profile);
-                    ydwidget.ipol_onlyDeliveryTypes = [profile];
+                    ydwidget.kit_saveAddressData(profile);
+                    ydwidget.kit_onlyDeliveryTypes = [profile];
                     ydwidget.cartWidget.changeDeliveryTypes();
 					
 					setTimeout(function()
@@ -205,7 +205,7 @@ if (empty($arResult["ERRORS"]))
                             $toggleBlock.toggleClass('postActive');
                         });
                         
-                        if (ydwidget.ipol_chosenDeliveryType == "courier" || ydwidget.ipol_chosenDeliveryType == "post")
+                        if (ydwidget.kit_chosenDeliveryType == "courier" || ydwidget.kit_chosenDeliveryType == "post")
                             $toggleBlock.addClass("postCourier");
                         else
                             $toggleBlock.removeClass("postCourier");
@@ -215,29 +215,29 @@ if (empty($arResult["ERRORS"]))
                 }
 
                 // сохраняем адрес указанный, чтобы его вернуть, если выбрали иной способ доставки
-                ydwidget.ipol_saveAddressData = function (profile)
+                ydwidget.kit_saveAddressData = function (profile)
                 {
                     if (typeof profile == "undefined")
                         profile = false;
 
-                    var addressValue = ydwidget.ipol_getAddressInput();
+                    var addressValue = ydwidget.kit_getAddressInput();
 
-                    if (!ydwidget.ipol_savedAddress)
-                        ydwidget.ipol_savedAddress = addressValue;
+                    if (!ydwidget.kit_savedAddress)
+                        ydwidget.kit_savedAddress = addressValue;
 
                     // тут тонкий момент, либо в виджете открывают самовывоз, либо был не самовывоз в форме и она обновилась UPDATE_STATE, тогда сохраняем адрес
-                    if (typeof ydwidget.ipol_chosenDeliveryType != "undefined")
-                        if (ydwidget.ipol_chosenDeliveryType != "pickup" && profile == "pickup")
-                            ydwidget.ipol_savedAddress = addressValue;
-                        else if (profile == false && ydwidget.ipol_chosenDeliveryType != "pickup" && !ydwidget.cartWidget.isOpened)
+                    if (typeof ydwidget.kit_chosenDeliveryType != "undefined")
+                        if (ydwidget.kit_chosenDeliveryType != "pickup" && profile == "pickup")
+                            ydwidget.kit_savedAddress = addressValue;
+                        else if (profile == false && ydwidget.kit_chosenDeliveryType != "pickup" && !ydwidget.cartWidget.isOpened)
                         {
-                            if (ydwidget.ipol_oldTemplate)
-                                ydwidget.ipol_savedAddress = ydwidget.ipol_beforeSubmitAddress;
+                            if (ydwidget.kit_oldTemplate)
+                                ydwidget.kit_savedAddress = ydwidget.kit_beforeSubmitAddress;
                         }
                 }
 
                 // получение соответсвий по названиям тарифов
-                ydwidget.ipol_getTariffAccording = function ()
+                ydwidget.kit_getTariffAccording = function ()
                 {
                     return {
                         "TODOOR": "courier",
@@ -247,7 +247,7 @@ if (empty($arResult["ERRORS"]))
                 }
 
                 // получение соответсвий по названиям блока адреса
-                ydwidget.ipol_getAddressAccording = function ()
+                ydwidget.kit_getAddressAccording = function ()
                 {
                     return {
                         "index": "index",
@@ -259,9 +259,9 @@ if (empty($arResult["ERRORS"]))
                 }
 
                 // отдает по профилю битрикс название профиля для ЯД
-                ydwidget.ipol_getTariffAccordingKey = function (key)
+                ydwidget.kit_getTariffAccordingKey = function (key)
                 {
-                    var according = ydwidget.ipol_getTariffAccording();
+                    var according = ydwidget.kit_getTariffAccording();
 
                     for (var i in according)
                         if (according[i] == key)
@@ -271,17 +271,17 @@ if (empty($arResult["ERRORS"]))
                 }
 
                 // проверка выбран ли профиль ЯД
-                ydwidget.ipol_checkCurrentDelivery = function ()
+                ydwidget.kit_checkCurrentDelivery = function ()
                 {
-                    for (var key in ydwidget.ipol_htmlIDs)
-                        if (ydwidget.ipol_currentdelivery == ydwidget.ipol_deliveryIDs[key])
+                    for (var key in ydwidget.kit_htmlIDs)
+                        if (ydwidget.kit_currentdelivery == ydwidget.kit_deliveryIDs[key])
                             return key;
 
                     return false;
                 }
 
                 // получение значения поля на форме при аякс обновлении
-                ydwidget.ipol_getDataFromAjax = function (inputName, returnType)
+                ydwidget.kit_getDataFromAjax = function (inputName, returnType)
                 {
                     var input = false,
                         tmpInput = false;
@@ -304,84 +304,84 @@ if (empty($arResult["ERRORS"]))
                 }
 
                 // ставим подпись для открытия виджета и адрес выбранный
-                ydwidget.ipol_setTariffInfo = function ()
+                ydwidget.kit_setTariffInfo = function ()
                 {
                     var addrHTML = "";
 
-                    if (ydwidget.ipol_oldTemplate)
+                    if (ydwidget.kit_oldTemplate)
                     {
-                        for (var key in ydwidget.ipol_selectPickupTag)
+                        for (var key in ydwidget.kit_selectPickupTag)
                         {
-                            if (ydwidget.ipol_selectPickupTag[key])
+                            if (ydwidget.kit_selectPickupTag[key])
                             {
-                                if (typeof ydwidget.ipol_pvzAddress[key] != "undefined" && ydwidget.ipol_pvzAddress[key] != "undefined")
-                                    addrHTML += ydwidget.ipol_pvzAddress[key];
+                                if (typeof ydwidget.kit_pvzAddress[key] != "undefined" && ydwidget.kit_pvzAddress[key] != "undefined")
+                                    addrHTML += ydwidget.kit_pvzAddress[key];
 
-                                if (ydwidget.ipol_selectPickupTag[key])
-                                    if (!ydwidget.ipol_selectPickupTag[key].data("ydButtonSet"))
+                                if (ydwidget.kit_selectPickupTag[key])
+                                    if (!ydwidget.kit_selectPickupTag[key].data("ydButtonSet"))
                                     {
-                                        if (yd$("#ipol_pvz_address_block").length <= 0)
+                                        if (yd$("#kit_pvz_address_block").length <= 0)
                                         {
-                                            addrHTML = "<span id = 'ipol_pvz_address_block'>" + addrHTML + "</span>";
-                                            ydwidget.ipol_selectPickupTag[key].before(addrHTML);
+                                            addrHTML = "<span id = 'kit_pvz_address_block'>" + addrHTML + "</span>";
+                                            ydwidget.kit_selectPickupTag[key].before(addrHTML);
                                         }
                                         else
-                                            yd$("#ipol_pvz_address_block").html(addrHTML);
+                                            yd$("#kit_pvz_address_block").html(addrHTML);
 
-                                        ydwidget.ipol_selectPickupTag[key].append(ydwidget.ipol_selectPickupBtn[key]);
-                                        ydwidget.ipol_selectPickupTag[key].data("ydButtonSet", true);
+                                        ydwidget.kit_selectPickupTag[key].append(ydwidget.kit_selectPickupBtn[key]);
+                                        ydwidget.kit_selectPickupTag[key].data("ydButtonSet", true);
                                     }
                             }
                         }
                     }
                     else
                     {
-                        var key = ydwidget.ipol_checkCurrentDelivery();
+                        var key = ydwidget.kit_checkCurrentDelivery();
 
-                        if (typeof ydwidget.ipol_pvzAddress[key] != "undefined" && ydwidget.ipol_pvzAddress[key] != "undefined")
-                            addrHTML = ydwidget.ipol_pvzAddress[key];
+                        if (typeof ydwidget.kit_pvzAddress[key] != "undefined" && ydwidget.kit_pvzAddress[key] != "undefined")
+                            addrHTML = ydwidget.kit_pvzAddress[key];
 
-                        if (ydwidget.ipol_selectPickupTag[key])
+                        if (ydwidget.kit_selectPickupTag[key])
                         {
-                            if (yd$("#ipol_pvz_address_block").length <= 0)
+                            if (yd$("#kit_pvz_address_block").length <= 0)
                             {
-                                addrHTML = "<span id = 'ipol_pvz_address_block'>" + addrHTML + "</span>";
-                                ydwidget.ipol_selectPickupTag[key].before(addrHTML);
+                                addrHTML = "<span id = 'kit_pvz_address_block'>" + addrHTML + "</span>";
+                                ydwidget.kit_selectPickupTag[key].before(addrHTML);
                             }
                             else
-                                yd$("#ipol_pvz_address_block").html(addrHTML);
+                                yd$("#kit_pvz_address_block").html(addrHTML);
 
-                            ydwidget.ipol_selectPickupTag[key].html(ydwidget.ipol_selectPickupBtn[key]);
+                            ydwidget.kit_selectPickupTag[key].html(ydwidget.kit_selectPickupBtn[key]);
                         }
                     }
                 };
 
                 // подписка на отправку формы, не даем оф заказ с профилем яд и не указанным вариантом в виджете
-                ydwidget.ipol_onSubmitForm = function ()
+                ydwidget.kit_onSubmitForm = function ()
                 {
                     // не даем отправить форму, если выбрана ddelivery и не заполнены данные dataSave
-                    yd$(ydwidget.ipol_orderForm).on("submit", function (e)
+                    yd$(ydwidget.kit_orderForm).on("submit", function (e)
                     {
                         // сохраняем адрес перед отправкой формы
                         if (!ydwidget.cartWidget.isOpened)
-                            ydwidget.ipol_beforeSubmitAddress = ydwidget.ipol_getAddressInput();
+                            ydwidget.kit_beforeSubmitAddress = ydwidget.kit_getAddressInput();
 
-                        if (!ydwidget.ipol_checkOrderCreate())
-                            ydwidget.ipol_denieOrderCreate(e);
+                        if (!ydwidget.kit_checkOrderCreate())
+                            ydwidget.kit_denieOrderCreate(e);
 
                         return true;
                     });
                 }
 
                 // проверка на возможность создания заказа
-                ydwidget.ipol_checkOrderCreate = function ()
+                ydwidget.kit_checkOrderCreate = function ()
                 {
-                    if (ydwidget.ipol_checkCurrentDelivery())
+                    if (ydwidget.kit_checkCurrentDelivery())
                     {
                         var dataSave = yd$("#yd_deliveryData").val(),
                             confirmorder = yd$("#confirmorder").val();
 
-                        if (ydwidget.ipol_oldTemplate)
+                        if (ydwidget.kit_oldTemplate)
                         {
                             if ((typeof dataSave == "undefined" || dataSave == "false") && confirmorder == "Y")
                                 return false;
@@ -397,14 +397,14 @@ if (empty($arResult["ERRORS"]))
                 }
 
                 // отмена создания заказа
-                ydwidget.ipol_denieOrderCreate = function (e)
+                ydwidget.kit_denieOrderCreate = function (e)
                 {
                     // добавляем кнопку для открытия виджета на форму, иначе при неоткрытом блоке доставок, нажатие на оформить заказа ничего не делает
-                    ydwidget.ipol_addInvisibleButton();
+                    ydwidget.kit_addInvisibleButton();
 
-                    if (ydwidget.ipol_oldTemplate)
+                    if (ydwidget.kit_oldTemplate)
                     {
-                        yd$("[data-ydwidget-profile=" + ydwidget.ipol_checkCurrentDelivery() + "]").click();
+                        yd$("[data-ydwidget-profile=" + ydwidget.kit_checkCurrentDelivery() + "]").click();
 
                         yd$("#confirmorder").val("N");
                     }
@@ -417,162 +417,162 @@ if (empty($arResult["ERRORS"]))
                             BX.Sale.OrderAjaxComponent.endLoader()
                         }, 300);
 
-                        yd$("[data-ydwidget-profile=" + ydwidget.ipol_checkCurrentDelivery() + "]").click();
+                        yd$("[data-ydwidget-profile=" + ydwidget.kit_checkCurrentDelivery() + "]").click();
                     }
 
-                    ydwidget.ipol_delInvisibleButton();
+                    ydwidget.kit_delInvisibleButton();
                 }
 
                 // добавление невидимой кнопки для открытия виджета
-                ydwidget.ipol_addInvisibleButton = function ()
+                ydwidget.kit_addInvisibleButton = function ()
                 {
-                    var buttonObj = yd$("[data-ydwidget-profile=" + ydwidget.ipol_checkCurrentDelivery() + "]");
+                    var buttonObj = yd$("[data-ydwidget-profile=" + ydwidget.kit_checkCurrentDelivery() + "]");
                     if (buttonObj.length <= 0)
-                        yd$(ydwidget.ipol_orderForm).append("<div id = 'ydmlab_fake_widget_link' style='display:none'>" + ydwidget.ipol_selectPickupBtn[ydwidget.ipol_checkCurrentDelivery()] + "</div>");
+                        yd$(ydwidget.kit_orderForm).append("<div id = 'ydmlab_fake_widget_link' style='display:none'>" + ydwidget.kit_selectPickupBtn[ydwidget.kit_checkCurrentDelivery()] + "</div>");
                 }
 
                 // удаление невидимой кнопки для открытия виджета
-                ydwidget.ipol_delInvisibleButton = function ()
+                ydwidget.kit_delInvisibleButton = function ()
                 {
                     yd$("#ydmlab_fake_widget_link").remove();
                 }
 
                 // Инициализация JS - замена кнопки "Расчитать..." на выбор ПВЗ, проставление нужного ПВЗ и получение нужных параметров после обновления страницы по Ajax
-                ydwidget.ipol_initJS = function (ajaxAns)
+                ydwidget.kit_initJS = function (ajaxAns)
                 {
-                    var newTemplateAjax = (typeof(ajaxAns) != 'undefined' && ajaxAns !== null && typeof(ajaxAns.IPOLyadost) == 'object') ? true : false;
+                    var newTemplateAjax = (typeof(ajaxAns) != 'undefined' && ajaxAns !== null && typeof(ajaxAns.KITyadost) == 'object') ? true : false;
 
                     // выбранная доставка
-                    if (ydwidget.ipol_oldTemplate)
+                    if (ydwidget.kit_oldTemplate)
                     {
-                        if (tmpVal = ydwidget.ipol_getDataFromAjax("yd_ajaxDeliveryID", "value"))
-                            ydwidget.ipol_currentdelivery = tmpVal;
+                        if (tmpVal = ydwidget.kit_getDataFromAjax("yd_ajaxDeliveryID", "value"))
+                            ydwidget.kit_currentdelivery = tmpVal;
                     }
                     else if (newTemplateAjax)
-                        ydwidget.ipol_currentdelivery = ajaxAns.IPOLyadost.yd_ajaxDeliveryID;
+                        ydwidget.kit_currentdelivery = ajaxAns.KITyadost.yd_ajaxDeliveryID;
 
-                    var curCheckedProfile = ydwidget.ipol_checkCurrentDelivery();
+                    var curCheckedProfile = ydwidget.kit_checkCurrentDelivery();
 
                     // проверяем по ответу это не UPDATE_STATE, нет - обновляем сохраненный адрес
                     if (typeof ajaxAns == "undefined" || !(typeof ajaxAns == "object" && typeof ajaxAns["MESSAGE"] == "object" && ajaxAns["ERROR"] == ""))
-                        ydwidget.ipol_saveAddressData();
+                        ydwidget.kit_saveAddressData();
 
                     // если сменили профиль на Яндекс.Доставку и надо сразу открыть виджет
                     var openWidget = false;
                     if (
-                        ydwidget.ipol_showWidgetOnClick &&
+                        ydwidget.kit_showWidgetOnClick &&
                         curCheckedProfile &&
-                        typeof ydwidget.ipol_chosenDeliveryType != "undefined" &&
-                        ydwidget.ipol_chosenDeliveryType != curCheckedProfile
+                        typeof ydwidget.kit_chosenDeliveryType != "undefined" &&
+                        ydwidget.kit_chosenDeliveryType != curCheckedProfile
                     )
                         openWidget = true;
 
-                    ydwidget.ipol_chosenDeliveryType = curCheckedProfile;
+                    ydwidget.kit_chosenDeliveryType = curCheckedProfile;
 
                     // при смене профиля стираем данные о выбранной доставке из тега, либо выставляем его
                     if (
                         curCheckedProfile &&
-                        typeof ydwidget.ipol_deliveryDataSaved[curCheckedProfile] != "undefined"
+                        typeof ydwidget.kit_deliveryDataSaved[curCheckedProfile] != "undefined"
                     )
-                        ydwidget.ipol_putDataToForm(ydwidget.ipol_deliveryDataSaved[curCheckedProfile], "yd_deliveryData");
+                        ydwidget.kit_putDataToForm(ydwidget.kit_deliveryDataSaved[curCheckedProfile], "yd_deliveryData");
                     else
-                        ydwidget.ipol_putDataToForm(false, "yd_deliveryData");
+                        ydwidget.kit_putDataToForm(false, "yd_deliveryData");
 
                     // при смене профиля ставим на форму адрес пвз полный, если выбран самовывоз
-                    if (curCheckedProfile == "pickup" && ydwidget.ipol_pvzAddressFull)
-                        ydwidget.ipol_putDataToForm(ydwidget.ipol_pvzAddressFull, "yd_pvzAddressValue");
+                    if (curCheckedProfile == "pickup" && ydwidget.kit_pvzAddressFull)
+                        ydwidget.kit_putDataToForm(ydwidget.kit_pvzAddressFull, "yd_pvzAddressValue");
                     else
-                        ydwidget.ipol_putDataToForm(false, "yd_pvzAddressValue");
+                        ydwidget.kit_putDataToForm(false, "yd_pvzAddressValue");
 
 
                     // ставим на форму признак, что выбрана Яндекс доставка
-                    var tmpDelivSelect = ydwidget.ipol_getDataFromAjax("yd_is_select", "object");
+                    var tmpDelivSelect = ydwidget.kit_getDataFromAjax("yd_is_select", "object");
                     if (!tmpDelivSelect)
                     {
-                        yd$(ydwidget.ipol_orderForm).append("<input type = 'hidden' value = '' name = 'yd_is_select'>");
-                        tmpDelivSelect = ydwidget.ipol_getDataFromAjax("yd_is_select", "object");
+                        yd$(ydwidget.kit_orderForm).append("<input type = 'hidden' value = '' name = 'yd_is_select'>");
+                        tmpDelivSelect = ydwidget.kit_getDataFromAjax("yd_is_select", "object");
                     }
 
                     // впиливаем стоимость доставки
                     if (curCheckedProfile)
-                        ydwidget.ipol_putDataToForm(ydwidget.ipol_deliveryPrice, "yd_ajaxDeliveryPrice");
+                        ydwidget.kit_putDataToForm(ydwidget.kit_deliveryPrice, "yd_ajaxDeliveryPrice");
 
-                    if (ydwidget.ipol_checkCurrentDelivery())
-                        tmpDelivSelect.val("ipolYadost");
+                    if (ydwidget.kit_checkCurrentDelivery())
+                        tmpDelivSelect.val("kitYadost");
                     else
                         tmpDelivSelect.val("false");
 
                     // цепляем значения с формы при обновлении по ajax
                     var tmpVal = false;
                     // тип плательщика
-                    ydwidget.ipol_personType = "<?=$arResult["PERSON_TYPE"]?>";
-                    if (ydwidget.ipol_oldTemplate)
+                    ydwidget.kit_personType = "<?=$arResult["PERSON_TYPE"]?>";
+                    if (ydwidget.kit_oldTemplate)
                     {
-                        if (tmpVal = ydwidget.ipol_getDataFromAjax("yd_ajaxPersonType", "value"))
-                            ydwidget.ipol_personType = tmpVal;
+                        if (tmpVal = ydwidget.kit_getDataFromAjax("yd_ajaxPersonType", "value"))
+                            ydwidget.kit_personType = tmpVal;
                     }
                     else if (newTemplateAjax)
-                        ydwidget.ipol_personType = ajaxAns.IPOLyadost.yd_ajaxPersonType;
+                        ydwidget.kit_personType = ajaxAns.KITyadost.yd_ajaxPersonType;
 
                     // инпут адреса
-                    if (typeof ydwidget.ipol_addressInputs[ydwidget.ipol_personType]["address"] != "undefined")
-                        ydwidget.ipol_addrInp = ydwidget.ipol_getDataFromAjax("ORDER_PROP_" + ydwidget.ipol_addressInputs[ydwidget.ipol_personType]["address"], "object");
+                    if (typeof ydwidget.kit_addressInputs[ydwidget.kit_personType]["address"] != "undefined")
+                        ydwidget.kit_addrInp = ydwidget.kit_getDataFromAjax("ORDER_PROP_" + ydwidget.kit_addressInputs[ydwidget.kit_personType]["address"], "object");
 
                     // город
-                    if (ydwidget.ipol_oldTemplate)
+                    if (ydwidget.kit_oldTemplate)
                     {
-                        if (tmpVal = ydwidget.ipol_getDataFromAjax("yd_ajaxLocation", "value"))
-                            ydwidget.ipol_currentCity = tmpVal;
+                        if (tmpVal = ydwidget.kit_getDataFromAjax("yd_ajaxLocation", "value"))
+                            ydwidget.kit_currentCity = tmpVal;
                     }
                     else if (newTemplateAjax)
-                        ydwidget.ipol_currentCity = ajaxAns.IPOLyadost.yd_ajaxLocation;
+                        ydwidget.kit_currentCity = ajaxAns.KITyadost.yd_ajaxLocation;
 
                     // место, где будет кнопка "выбрать ПВЗ"
-                    ydwidget.ipol_selectPickupTag = {
-                        "pickup": yd$('#ipol_yadost_inject_pickup'),
-                        "post": yd$('#ipol_yadost_inject_post'),
-                        "courier": yd$('#ipol_yadost_inject_courier')
+                    ydwidget.kit_selectPickupTag = {
+                        "pickup": yd$('#kit_yadost_inject_pickup'),
+                        "post": yd$('#kit_yadost_inject_post'),
+                        "courier": yd$('#kit_yadost_inject_courier')
                     };
 
-                    var addressValue = ydwidget.ipol_getAddressInput();
+                    var addressValue = ydwidget.kit_getAddressInput();
 
-                    if (addressValue && ydwidget.ipol_pvzAddressFull != "") // Если у нас есть адрес выбранного ПВЗ....
+                    if (addressValue && ydwidget.kit_pvzAddressFull != "") // Если у нас есть адрес выбранного ПВЗ....
                     {
                         //...и он соответствует вдресу в инпуте адреса, то надо заблокировать инпут выбора адреса
-                        if (ydwidget.ipol_pvzAddressFull && ydwidget.ipol_chosenDeliveryType == "pickup")
+                        if (ydwidget.kit_pvzAddressFull && ydwidget.kit_chosenDeliveryType == "pickup")
                         {
-                            ydwidget.ipol_setAddressInput(ydwidget.ipol_pvzAddressFull);
-                            ydwidget.ipol_blockAddressInput(true);
+                            ydwidget.kit_setAddressInput(ydwidget.kit_pvzAddressFull);
+                            ydwidget.kit_blockAddressInput(true);
                         }
                         else
                         {
                             // выставляем адрес сохраненный до пвз, разблокируем поле
-                            ydwidget.ipol_blockAddressInput(false);
-                            if (ydwidget.ipol_savedAddress)
-                                ydwidget.ipol_setAddressInput(ydwidget.ipol_savedAddress);
+                            ydwidget.kit_blockAddressInput(false);
+                            if (ydwidget.kit_savedAddress)
+                                ydwidget.kit_setAddressInput(ydwidget.kit_savedAddress);
                         }
                     }
 
 
-                    if (!ydwidget.ipol_pvzAddress)
-                        ydwidget.ipol_pvzAddress = {}; // Если ПВЗ не выбран.
+                    if (!ydwidget.kit_pvzAddress)
+                        ydwidget.kit_pvzAddress = {}; // Если ПВЗ не выбран.
 
                     // Тут ставим кнопку "выбрать ПВЗ"
-                    ydwidget.ipol_setTariffInfo();
+                    ydwidget.kit_setTariffInfo();
 
                     // открываем виджет, если необходимо
                     if (openWidget)
                     {
-                        ydwidget.ipol_addInvisibleButton();
-                        yd$("[data-ydwidget-profile=" + ydwidget.ipol_checkCurrentDelivery() + "]").click();
-                        ydwidget.ipol_delInvisibleButton();
+                        ydwidget.kit_addInvisibleButton();
+                        yd$("[data-ydwidget-profile=" + ydwidget.kit_checkCurrentDelivery() + "]").click();
+                        ydwidget.kit_delInvisibleButton();
                     }
                 };
 
                 // вписывает на форму данные в тег
-                ydwidget.ipol_putDataToForm = function (data, tagID)
+                ydwidget.kit_putDataToForm = function (data, tagID)
                 {
-                    var tmpInput = ydwidget.ipol_getDataFromAjax(tagID, "object");
+                    var tmpInput = ydwidget.kit_getDataFromAjax(tagID, "object");
 
                     // удаляем тег, если данные пустые
                     if (!data && tmpInput)
@@ -584,21 +584,21 @@ if (empty($arResult["ERRORS"]))
                     if (tmpInput)
                         tmpInput.val(JSON.stringify(data));
                     else
-                        yd$(ydwidget.ipol_orderForm).append("<input type = 'hidden' value = '" + JSON.stringify(data) + "' name = '" + tagID + "' id = '" + tagID + "'>");
+                        yd$(ydwidget.kit_orderForm).append("<input type = 'hidden' value = '" + JSON.stringify(data) + "' name = '" + tagID + "' id = '" + tagID + "'>");
                 }
 
                 // в виджете выбрали вариант доставки, обрабатываем
-                ydwidget.ipol_onDeliveryChange = function (delivery, isAjax)
+                ydwidget.kit_onDeliveryChange = function (delivery, isAjax)
                 {
                     console.log({"delivery": delivery});
 
                     if (!delivery)
                     {
-                        ydwidget.ipol_pvzAddressFull = '';
-                        ydwidget.ipol_pvzId = '';
-                        ydwidget.ipol_pvzAddress = {},
+                        ydwidget.kit_pvzAddressFull = '';
+                        ydwidget.kit_pvzId = '';
+                        ydwidget.kit_pvzAddress = {},
                             yd$("#yd_deliveryData").remove();
-                        ydwidget.ipol_setTariffInfo();
+                        ydwidget.kit_setTariffInfo();
                         return;
                     }
 
@@ -608,56 +608,56 @@ if (empty($arResult["ERRORS"]))
                             if (delivery.address.comment != null)
                                 delivery.address.comment = delivery.address.comment.replace(/\\?("|')/g, '\\$1');
 
-                    var deliveryTypesSeq = ydwidget.ipol_getTariffAccording(),
+                    var deliveryTypesSeq = ydwidget.kit_getTariffAccording(),
                         deliveryKey = deliveryTypesSeq[delivery.type];
 
                     // запоминаем новую стоимость доставки
-                    ydwidget.ipol_deliveryPrice[deliveryKey] = {
+                    ydwidget.kit_deliveryPrice[deliveryKey] = {
                         "price": delivery.costWithRules,
                         "term": delivery.days,
                         "provider": delivery.delivery.name
                     };
 
                     // вставляем на форму в тег данные выбранного варианта доставки
-                    delivery.yadostCity = ydwidget.ipol_currentCity;
-                    ydwidget.ipol_deliveryDataSaved[deliveryKey] = delivery;
-                    ydwidget.ipol_putDataToForm(ydwidget.ipol_deliveryDataSaved[deliveryKey], "yd_deliveryData");
+                    delivery.yadostCity = ydwidget.kit_currentCity;
+                    ydwidget.kit_deliveryDataSaved[deliveryKey] = delivery;
+                    ydwidget.kit_putDataToForm(ydwidget.kit_deliveryDataSaved[deliveryKey], "yd_deliveryData");
 
                     // впиливаем стоимость доставки
-                    ydwidget.ipol_putDataToForm(ydwidget.ipol_deliveryPrice, "yd_ajaxDeliveryPrice");
+                    ydwidget.kit_putDataToForm(ydwidget.kit_deliveryPrice, "yd_ajaxDeliveryPrice");
 
                     // запомнили текущий профиль доставки
-                    ydwidget.ipol_chosenDeliveryType = deliveryKey;
+                    ydwidget.kit_chosenDeliveryType = deliveryKey;
 
                     // формируем адрес ПВЗ
-                    ydwidget.ipol_createAddress(delivery);
+                    ydwidget.kit_createAddress(delivery);
 
                     if (deliveryKey == "pickup")
                     {
                         // Сохраняем параметры выбранного ПВЗ, чтобы после Ajax-перезагрузки формы знать какой ПВЗ был выбран.
-                        ydwidget.ipol_pvzId = delivery.pickuppointId;
+                        ydwidget.kit_pvzId = delivery.pickuppointId;
 
-                        ydwidget.ipol_setAddressInput(ydwidget.ipol_pvzAddressFull);
+                        ydwidget.kit_setAddressInput(ydwidget.kit_pvzAddressFull);
 
                         if (typeof isAjax == 'undefined')// Блокируем поле адреса.
-                            ydwidget.ipol_blockAddressInput(true);
+                            ydwidget.kit_blockAddressInput(true);
                     }
                     else
                     {
                         if (typeof isAjax == 'undefined')// Разблокируем поле адреса.
-                            ydwidget.ipol_blockAddressInput(false);
+                            ydwidget.kit_blockAddressInput(false);
 
                         // выставляем адрес, который сохранили ранее, когда был выбран ПВЗ
-                        ydwidget.ipol_setAddressInput(ydwidget.ipol_savedAddress);
+                        ydwidget.kit_setAddressInput(ydwidget.kit_savedAddress);
 
                         if (deliveryKey == "post")
                         {
-                            var addressAccording = ydwidget.ipol_getAddressAccording(),
+                            var addressAccording = ydwidget.kit_getAddressAccording(),
                                 autoComplitAddr = ydwidget.cartWidget.getAddress();
                              console.log({"ydwidget.cartWidget.getAddress": autoComplitAddr});
 
                             if (typeof autoComplitAddr != "undefined" && autoComplitAddr != null)
-                                if (typeof ydwidget.ipol_addressInputs[ydwidget.ipol_personType]["address"] != "undefined")
+                                if (typeof ydwidget.kit_addressInputs[ydwidget.kit_personType]["address"] != "undefined")
                                 {
                                     var addr = autoComplitAddr["index"];
                                     addr += ", " + autoComplitAddr["city"];
@@ -667,12 +667,12 @@ if (empty($arResult["ERRORS"]))
                                     if (typeof autoComplitAddr["building"] != "undefined" && autoComplitAddr["building"] != null)
                                         addr += ", " + autoComplitAddr["building"];
 
-                                    ydwidget.ipol_setAddressInput(addr);
+                                    ydwidget.kit_setAddressInput(addr);
 
                                     // выставляем индекс
-                                    if (typeof ydwidget.ipol_addressInputs[ydwidget.ipol_personType]["index"] != "undefined")
+                                    if (typeof ydwidget.kit_addressInputs[ydwidget.kit_personType]["index"] != "undefined")
                                     {
-                                        var selector = "[name=ORDER_PROP_" + ydwidget.ipol_addressInputs[ydwidget.ipol_personType]["index"] + "]";
+                                        var selector = "[name=ORDER_PROP_" + ydwidget.kit_addressInputs[ydwidget.kit_personType]["index"] + "]";
                                         yd$(selector).val(autoComplitAddr["index"]);
                                         yd$(selector).html(autoComplitAddr["index"]);
                                     }
@@ -680,9 +680,9 @@ if (empty($arResult["ERRORS"]))
                                 else
                                     for (var i in autoComplitAddr)
                                     {
-                                        if (typeof ydwidget.ipol_addressInputs[ydwidget.ipol_personType][addressAccording[i]] != "undefined")
+                                        if (typeof ydwidget.kit_addressInputs[ydwidget.kit_personType][addressAccording[i]] != "undefined")
                                         {
-                                            var selector = "[name=ORDER_PROP_" + ydwidget.ipol_addressInputs[ydwidget.ipol_personType][addressAccording[i]] + "]";
+                                            var selector = "[name=ORDER_PROP_" + ydwidget.kit_addressInputs[ydwidget.kit_personType][addressAccording[i]] + "]";
                                             yd$(selector).val(autoComplitAddr[i]);
                                             yd$(selector).html(autoComplitAddr[i]);
                                         }
@@ -691,20 +691,20 @@ if (empty($arResult["ERRORS"]))
                     }
 
                     // выставляем улицу, дом, квартиру, офис, если указаны коды в настройках
-                    ydwidget.ipol_setAddressInputs(delivery.address, delivery.type);
+                    ydwidget.kit_setAddressInputs(delivery.address, delivery.type);
 
                     //Выводим подпись о выбранном ПВЗ рядом с кнопкой "Выбрать ПВЗ"
-                    ydwidget.ipol_setTariffInfo();
+                    ydwidget.kit_setTariffInfo();
 
                     // закрыли виджет
                     ydwidget.cartWidget.close();
 
                     // Перезагружаем форму (с применением новой стоимости доставки)
-                    if (ydwidget.ipol_oldTemplate)
+                    if (ydwidget.kit_oldTemplate)
                     {
                         if (typeof isAjax == 'undefined')
                         {
-                            var clickObj = yd$('#' + ydwidget.ipol_htmlIDs[ydwidget.ipol_chosenDeliveryType]);
+                            var clickObj = yd$('#' + ydwidget.kit_htmlIDs[ydwidget.kit_chosenDeliveryType]);
                             if (clickObj.prop("checked"))
                             {
                                 if (typeof submitForm == "function")
@@ -719,16 +719,16 @@ if (empty($arResult["ERRORS"]))
                 }
 
                 // выставляет поля улица, дом, квартира
-                ydwidget.ipol_setAddressInputs = function (addressObj, deliveryType)
+                ydwidget.kit_setAddressInputs = function (addressObj, deliveryType)
                 {
                     if (!addressObj ||  deliveryType == 'POST')
                         return false;
 
-                    var addressAccording = ydwidget.ipol_getAddressAccording();
+                    var addressAccording = ydwidget.kit_getAddressAccording();
 
-                    for (var i in ydwidget.ipol_addressInputs[ydwidget.ipol_personType])
+                    for (var i in ydwidget.kit_addressInputs[ydwidget.kit_personType])
                     {
-                        var inputID = ydwidget.ipol_addressInputs[ydwidget.ipol_personType][i],
+                        var inputID = ydwidget.kit_addressInputs[ydwidget.kit_personType][i],
                             adressObjectKey = addressAccording[i];
 
                         if (!!inputID)
@@ -743,102 +743,102 @@ if (empty($arResult["ERRORS"]))
                 }
 
                 // устанавливает инпут адреса
-                ydwidget.ipol_setAddressInput = function (value)
+                ydwidget.kit_setAddressInput = function (value)
                 {
-                    if (ydwidget.ipol_addrInp)
+                    if (ydwidget.kit_addrInp)
                     {
-                        if (ydwidget.ipol_oldTemplate)
+                        if (ydwidget.kit_oldTemplate)
                         {
-                            ydwidget.ipol_addrInp.val(value);
-                            ydwidget.ipol_addrInp.html(value);
+                            ydwidget.kit_addrInp.val(value);
+                            ydwidget.kit_addrInp.html(value);
                         }
                         else
                         {
-                            ydwidget.ipol_addrInp.html(value);
-                            ydwidget.ipol_addrInp.val(value);
+                            ydwidget.kit_addrInp.html(value);
+                            ydwidget.kit_addrInp.val(value);
                         }
                     }
                 }
 
                 // получает текущее значение в поле адреса
-                ydwidget.ipol_getAddressInput = function ()
+                ydwidget.kit_getAddressInput = function ()
                 {
                     var addressValue = false;
 
-                    if (ydwidget.ipol_addrInp)
-                        if (ydwidget.ipol_oldTemplate)
-                            addressValue = ydwidget.ipol_addrInp.val();
+                    if (ydwidget.kit_addrInp)
+                        if (ydwidget.kit_oldTemplate)
+                            addressValue = ydwidget.kit_addrInp.val();
                         else
-                            addressValue = ydwidget.ipol_addrInp.val();
+                            addressValue = ydwidget.kit_addrInp.val();
 
                     return addressValue;
                 }
 
                 // блокирует поле адреса
-                ydwidget.ipol_blockAddressInput = function (block)
+                ydwidget.kit_blockAddressInput = function (block)
                 {
                     if (typeof block == "undefined")
                         block = true;
 
                     // console.log({"block": block});
-                    if (ydwidget.ipol_addrInp)
+                    if (ydwidget.kit_addrInp)
                     {
                         if (block)
                         {
-                            ydwidget.ipol_addrInp
+                            ydwidget.kit_addrInp
                             // .css('background-color', '#eee')
                                 .addClass('yd_disabled')
-                                .bind("change", ydwidget.ipol_blockChangeAddr)
-                                .bind("keyup", ydwidget.ipol_blockChangeAddr);
+                                .bind("change", ydwidget.kit_blockChangeAddr)
+                                .bind("keyup", ydwidget.kit_blockChangeAddr);
 
-                            // ydwidget.ipol_pvzAddressBlocked = true;
+                            // ydwidget.kit_pvzAddressBlocked = true;
                         }
                         else
                         {
-                            ydwidget.ipol_addrInp
+                            ydwidget.kit_addrInp
                             // .css('background-color', '#eee')
                                 .removeClass('yd_disabled')
-                                .unbind("change", ydwidget.ipol_blockChangeAddr)
-                                .unbind("keyup", ydwidget.ipol_blockChangeAddr);
+                                .unbind("change", ydwidget.kit_blockChangeAddr)
+                                .unbind("keyup", ydwidget.kit_blockChangeAddr);
 
-                            // ydwidget.ipol_pvzAddressBlocked = false;
+                            // ydwidget.kit_pvzAddressBlocked = false;
                         }
                     }
                 }
 
                 // формируем адрес и подпись для профиля яд
-                ydwidget.ipol_createAddress = function (delivery)
+                ydwidget.kit_createAddress = function (delivery)
                 {
                     var address = '<span style="font-size:11px">';
 
-                    if (ydwidget.ipol_chosenDeliveryType == "pickup")
+                    if (ydwidget.kit_chosenDeliveryType == "pickup")
                     {
                         // адрес для самовывоза
-                        ydwidget.ipol_pvzAddressFull = '<?=GetMessage('IPOLyadost_JS_PICKUP')?>: ';
-                        ydwidget.ipol_pvzAddressFull += delivery.full_address + ' | ';
-                        ydwidget.ipol_pvzAddressFull += delivery.days + ' <?=GetMessage('IPOLyadost_JS_DAY')?> | ';
-                        ydwidget.ipol_pvzAddressFull += ' #' + delivery.pickuppointId;
+                        ydwidget.kit_pvzAddressFull = '<?=GetMessage('KITyadost_JS_PICKUP')?>: ';
+                        ydwidget.kit_pvzAddressFull += delivery.full_address + ' | ';
+                        ydwidget.kit_pvzAddressFull += delivery.days + ' <?=GetMessage('KITyadost_JS_DAY')?> | ';
+                        ydwidget.kit_pvzAddressFull += ' #' + delivery.pickuppointId;
 
                         address += delivery.address.street + '<br>';
                     }
 
                     address += '</span><br>';
 
-                    ydwidget.ipol_pvzAddress[ydwidget.ipol_chosenDeliveryType] = address;
+                    ydwidget.kit_pvzAddress[ydwidget.kit_chosenDeliveryType] = address;
                 }
 
                 // Ф-ция которая не дает поменять адрес доставки при выбранном ПВЗ
-                ydwidget.ipol_blockChangeAddr = function ()
+                ydwidget.kit_blockChangeAddr = function ()
                 {
-                    if (ydwidget.ipol_oldTemplate)
+                    if (ydwidget.kit_oldTemplate)
                     {
-                        yd$(this).html(ydwidget.ipol_pvzAddressFull);
-                        yd$(this).val(ydwidget.ipol_pvzAddressFull);
+                        yd$(this).html(ydwidget.kit_pvzAddressFull);
+                        yd$(this).val(ydwidget.kit_pvzAddressFull);
                     }
                     else
                     {
-                        yd$(this).val(ydwidget.ipol_pvzAddressFull);
-                        yd$(this).html(ydwidget.ipol_pvzAddressFull);
+                        yd$(this).val(ydwidget.kit_pvzAddressFull);
+                        yd$(this).html(ydwidget.kit_pvzAddressFull);
                     }
                 }
 
@@ -849,8 +849,8 @@ if (empty($arResult["ERRORS"]))
                     {
                         var city = '<?=$arResult["CITY_NAME"]?>';
 
-                        if (ydwidget.ipol_currentCity)
-                            city = ydwidget.ipol_currentCity;
+                        if (ydwidget.kit_currentCity)
+                            city = ydwidget.kit_currentCity;
 
                         if (city)
                             return {value: city};
@@ -901,27 +901,27 @@ if (empty($arResult["ERRORS"]))
                         //имя, фамилия, телефон, улица, дом, индекс
                         'recipient_first_name': function ()
                         {
-                            return yd$("[name=ORDER_PROP_" + ydwidget.ipol_addressInputs[ydwidget.ipol_personType]["fname"] + "]").val()
+                            return yd$("[name=ORDER_PROP_" + ydwidget.kit_addressInputs[ydwidget.kit_personType]["fname"] + "]").val()
                         },
                         'recipient_last_name': function ()
                         {
-                            return yd$("[name=ORDER_PROP_" + ydwidget.ipol_addressInputs[ydwidget.ipol_personType]["lname"] + "]").val()
+                            return yd$("[name=ORDER_PROP_" + ydwidget.kit_addressInputs[ydwidget.kit_personType]["lname"] + "]").val()
                         },
                         'recipient_phone': function ()
                         {
-                            return yd$("[name=ORDER_PROP_" + ydwidget.ipol_addressInputs[ydwidget.ipol_personType]["phone"] + "]").val()
+                            return yd$("[name=ORDER_PROP_" + ydwidget.kit_addressInputs[ydwidget.kit_personType]["phone"] + "]").val()
                         },
                         'deliverypoint_street': function ()
                         {
-                            return yd$("[name=ORDER_PROP_" + ydwidget.ipol_addressInputs[ydwidget.ipol_personType]["street"] + "]")
+                            return yd$("[name=ORDER_PROP_" + ydwidget.kit_addressInputs[ydwidget.kit_personType]["street"] + "]")
                         },
                         'deliverypoint_house': function ()
                         {
-                            return yd$("[name=ORDER_PROP_" + ydwidget.ipol_addressInputs[ydwidget.ipol_personType]["house"] + "]").val()
+                            return yd$("[name=ORDER_PROP_" + ydwidget.kit_addressInputs[ydwidget.kit_personType]["house"] + "]").val()
                         },
                         'deliverypoint_index': function ()
                         {
-                            return yd$("[name=ORDER_PROP_" + ydwidget.ipol_addressInputs[ydwidget.ipol_personType]["index"] + "]").val()
+                            return yd$("[name=ORDER_PROP_" + ydwidget.kit_addressInputs[ydwidget.kit_personType]["index"] + "]").val()
                         },
 
                         //объявленная ценность заказа
@@ -949,12 +949,12 @@ if (empty($arResult["ERRORS"]))
 
                     'onLoad': function ()
                     {
-                        ydwidget.ipol_onLoad();
+                        ydwidget.kit_onLoad();
                     },
 
                     'onDeliveryChange': function (delivery)
                     {
-                        ydwidget.ipol_onDeliveryChange(delivery);
+                        ydwidget.kit_onDeliveryChange(delivery);
                     },
 
                     // 'unSelectMsVariant': function () { yd$('#ms_delivery').prop('checked', false) },
@@ -963,7 +963,7 @@ if (empty($arResult["ERRORS"]))
                     //создавать заказ в cookie для его последующего создания в Яндекс.Доставке только если выбрана доставка Яндекса
                     'createOrderFlag': function ()
                     {
-                        return ydwidget.ipol_checkCurrentDelivery() ? true : false;
+                        return ydwidget.kit_checkCurrentDelivery() ? true : false;
                     },
 
                     //запустить сабмит формы, когда валидация успешно прошла и заказ создан в cookie,
@@ -975,7 +975,7 @@ if (empty($arResult["ERRORS"]))
 
                     'onlyDeliveryTypes': function ()
                     {
-                        return ydwidget.ipol_onlyDeliveryTypes;
+                        return ydwidget.kit_onlyDeliveryTypes;
                     }
                 });
 

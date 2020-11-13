@@ -28,4 +28,3 @@ $MESS['KITyadost_propfix_ERR_UPDATE'] = "Ошибка OPERATION свойства
 
 $MESS['KITyadost_propfix_ADDING'] = "добавления";
 $MESS['KITyadost_propfix_UPDATE'] = "изменения";
-?>

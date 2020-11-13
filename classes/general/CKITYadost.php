@@ -1,13 +1,13 @@
 <?
 /**
- * Copyright (c) 24/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
 cmodule::includeModule('sale');
 IncludeModuleLangFile(__FILE__);
 
-class CIPOLYadost{
-	static $MODULE_ID = "ipol.yadost";
+class CKITYadost{
+	static $MODULE_ID = "kit.yadost";
 	static $locationTo;
 	static $personType;
 	static $deliveryID;
@@ -16,24 +16,24 @@ class CIPOLYadost{
 		// получаем поставщиков услуг и делаем из них профили
 		$arProfiles = array(
 			"courier" => array(
-				"TITLE" => GetMessage("IPOLyadost_DELIV_NAME_COURIER"),
-				"DESCRIPTION" => GetMessage("IPOLyadost_DELIV_DESCR_COURIER"),
+				"TITLE" => GetMessage("KITyadost_DELIV_NAME_COURIER"),
+				"DESCRIPTION" => GetMessage("KITyadost_DELIV_DESCR_COURIER"),
 				"RESTRICTIONS_WEIGHT" => array(0,75000),
 				"RESTRICTIONS_SUM" => array(0),
 				"RESTRICTIONS_MAX_SIZE" => "0",
 				"RESTRICTIONS_DIMENSIONS_SUM" => "0"
 			),
 			"pickup" => array(
-				"TITLE" => GetMessage("IPOLyadost_DELIV_NAME_PICKUP"),
-				"DESCRIPTION" => GetMessage("IPOLyadost_DELIV_DESCR_PICKUP"),
+				"TITLE" => GetMessage("KITyadost_DELIV_NAME_PICKUP"),
+				"DESCRIPTION" => GetMessage("KITyadost_DELIV_DESCR_PICKUP"),
 				"RESTRICTIONS_WEIGHT" => array(0,75000),
 				"RESTRICTIONS_SUM" => array(0),
 				"RESTRICTIONS_MAX_SIZE" => "0",
 				"RESTRICTIONS_DIMENSIONS_SUM" => "0"
 			),
 			"post" => array(
-				"TITLE" => GetMessage("IPOLyadost_DELIV_NAME_POST"),
-				"DESCRIPTION" => GetMessage("IPOLyadost_DELIV_DESCR_POST"),
+				"TITLE" => GetMessage("KITyadost_DELIV_NAME_POST"),
+				"DESCRIPTION" => GetMessage("KITyadost_DELIV_DESCR_POST"),
 				"RESTRICTIONS_WEIGHT" => array(0,75000),
 				"RESTRICTIONS_SUM" => array(0),
 				"RESTRICTIONS_MAX_SIZE" => "0",
@@ -43,19 +43,19 @@ class CIPOLYadost{
 		
 		return array(
 			/* Basic description */
-			"SID" => "ipolYadost",
-			"NAME" => GetMessage("IPOLyadost_DELIV_NAME"),
-			"DESCRIPTION" => GetMessage('IPOLyadost_DELIV_DESCR'),
-			"DESCRIPTION_INNER" => GetMessage('IPOLyadost_DESCRIPTION_INNER'),
+			"SID" => "kitYadost",
+			"NAME" => GetMessage("KITyadost_DELIV_NAME"),
+			"DESCRIPTION" => GetMessage('KITyadost_DELIV_DESCR'),
+			"DESCRIPTION_INNER" => GetMessage('KITyadost_DESCRIPTION_INNER'),
 			"BASE_CURRENCY" => COption::GetOptionString("sale", "default_currency", "RUB"),
 			"HANDLER" => __FILE__,
 
 			/* Handler methods */
-			"DBGETSETTINGS" => array("CIPOLYadost", "GetSettings"),
-			"DBSETSETTINGS" => array("CIPOLYadost", "SetSettings"),
+			"DBGETSETTINGS" => array("CKITYadost", "GetSettings"),
+			"DBSETSETTINGS" => array("CKITYadost", "SetSettings"),
 
-			"COMPABILITY" => array("CIPOLYadost", "Compability"),
-			"CALCULATOR" => array("CIPOLYadost", "Calculate"),
+			"COMPABILITY" => array("CKITYadost", "Compability"),
+			"CALCULATOR" => array("CKITYadost", "Calculate"),
 
 			/* List of delivery profiles */
 			"PROFILES" => $arProfiles,
@@ -97,12 +97,12 @@ class CIPOLYadost{
 		if (self::$clearOrderData)
 		{
 			self::$cityTo = null;
-			CIPOLYadostDriver::clearOrderData();
+			CKITYadostDriver::clearOrderData();
 		}
 		
 		if (empty(self::$cityTo))
 		{
-			$tmpCity = CIPOLYadostHelper::getCityNameByID($arOrder["LOCATION_TO"]);
+			$tmpCity = CKITYadostHelper::getCityNameByID($arOrder["LOCATION_TO"]);
 			self::$cityTo = $tmpCity["NAME"];
 		}
 		
@@ -114,19 +114,19 @@ class CIPOLYadost{
 		if (isset($arOrder["ITEMS"]) && $arOrder["ITEMS"])
 			$orderItems = $arOrder["ITEMS"];
 		
-		CIPOLYadostDriver::getOrderBasket($basketFilter, $orderItems);
-		CIPOLYadostDriver::getModuleSetups();
+		CKITYadostDriver::getOrderBasket($basketFilter, $orderItems);
+		CKITYadostDriver::getModuleSetups();
 		
-		$arCityFrom = CIPOLYadostHelper::getCityFromNames();
-		$cityFrom = CIPOLYadostDriver::$options["cityFrom"];
+		$arCityFrom = CKITYadostHelper::getCityFromNames();
+		$cityFrom = CKITYadostDriver::$options["cityFrom"];
 		self::$cityFrom = $arCityFrom[$cityFrom];
 		
 		$obCache = new CPHPCache();
 		$cachename = 
-			"IPOLyadost|".
+			"KITyadost|".
 			self::$cityFrom."|".
 			self::$cityTo."|".
-			CIPOLYadostDriver::$options["to_yd_warehouse"];
+			CKITYadostDriver::$options["to_yd_warehouse"];
 			
 		$arNeedDims = array(
 			"WEIGHT",
@@ -136,15 +136,15 @@ class CIPOLYadost{
 			"PRICE"
 		);
 		foreach ($arNeedDims as $dim)
-			$cachename .= "|".CIPOLYadostDriver::$tmpOrderDimension[$dim];
+			$cachename .= "|".CKITYadostDriver::$tmpOrderDimension[$dim];
 		
 		// оценочная стоимость
 		if (self::$assessedCostPercent === null)
-			self::$assessedCostPercent = FloatVal(COption::GetOptionString(CIPOLYadostDriver::$MODULE_ID, 'assessedCostPercent', '100'));
+			self::$assessedCostPercent = FloatVal(COption::GetOptionString(CKITYadostDriver::$MODULE_ID, 'assessedCostPercent', '100'));
 		
 		$cachename .= "|". self::$assessedCostPercent;
 		
-		if($obCache->InitCache(defined("IPOLyadost_CACHE_TIME")?IPOLyadost_CACHE_TIME:86400,$cachename,"/IPOLyadost/") && !defined("IPOLyadost_NOCACHE"))
+		if($obCache->InitCache(defined("KITyadost_CACHE_TIME")?KITyadost_CACHE_TIME:86400,$cachename,"/KITyadost/") && !defined("KITyadost_NOCACHE"))
 		{
 			$res = $obCache->GetVars();
 		}
@@ -154,21 +154,21 @@ class CIPOLYadost{
 				"city_from" => self::$cityFrom,
 				"city_to" => self::$cityTo,
 				
-				"weight" => CIPOLYadostDriver::$tmpOrderDimension["WEIGHT"],
-				"height" => CIPOLYadostDriver::$tmpOrderDimension["HEIGHT"],
-				"width" => CIPOLYadostDriver::$tmpOrderDimension["WIDTH"],
-				"length" => CIPOLYadostDriver::$tmpOrderDimension["LENGTH"],
+				"weight" => CKITYadostDriver::$tmpOrderDimension["WEIGHT"],
+				"height" => CKITYadostDriver::$tmpOrderDimension["HEIGHT"],
+				"width" => CKITYadostDriver::$tmpOrderDimension["WIDTH"],
+				"length" => CKITYadostDriver::$tmpOrderDimension["LENGTH"],
 				
-				"total_cost" => CIPOLYadostDriver::$tmpOrderDimension["PRICE"],
-				"order_cost" => CIPOLYadostDriver::$tmpOrderDimension["PRICE"],
-				"assessed_value" => CIPOLYadostDriver::$tmpOrderDimension["PRICE"] * (self::$assessedCostPercent/100),
+				"total_cost" => CKITYadostDriver::$tmpOrderDimension["PRICE"],
+				"order_cost" => CKITYadostDriver::$tmpOrderDimension["PRICE"],
+				"assessed_value" => CKITYadostDriver::$tmpOrderDimension["PRICE"] * (self::$assessedCostPercent/100),
 				
-				"to_yd_warehouse" => CIPOLYadostDriver::$options["to_yd_warehouse"]=="Y"?1:0
+				"to_yd_warehouse" => CKITYadostDriver::$options["to_yd_warehouse"]=="Y"?1:0
 			);
 			
 			$method = "searchDeliveryList";
 			
-			$res = CIPOLYadostHelper::convertFromUTF(CIPOLYadostDriver::MakeRequest($method, $arSend));
+			$res = CKITYadostHelper::convertFromUTF(CKITYadostDriver::MakeRequest($method, $arSend));
 			
 			if ($res["status"] == "ok")
 			{
@@ -219,11 +219,11 @@ class CIPOLYadost{
 			
 			if ($orderID)
 			{
-				$orderInfo = CIPOLYadostSqlOrders::getList(array(
+				$orderInfo = CKITYadostSqlOrders::getList(array(
 					"filter" => array("ORDER_ID" => $orderID)
 				))->Fetch();
 				
-				$orderInfo = json_decode(CIPOLYadostHelper::convertToUTF($orderInfo["PARAMS"]), true);
+				$orderInfo = json_decode(CKITYadostHelper::convertToUTF($orderInfo["PARAMS"]), true);
 				
 				$profileType = $arProfilesConversion[$orderInfo["type"]];
 				$arProfiles[$profileType] = array(
@@ -245,16 +245,16 @@ class CIPOLYadost{
 	static $assessedCostPercent = null;
 	static public function calculateOrder($params)
 	{
-		if (!CIPOLYadostHelper::isAdmin("R"))
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin("R"))
+			CKITYadostHelper::throwException("Access denied");
 		
 		if (empty($params["ORDER_ID"]))
-			CIPOLYadostHelper::throwException("Order not found", $params);
+			CKITYadostHelper::throwException("Order not found", $params);
 		
 		$orderID = $params["ORDER_ID"];
 		
 		// получаем тип плательщика
-		$orderData = CIPOLYadostDriver::getOrder($orderID);
+		$orderData = CKITYadostDriver::getOrder($orderID);
 		
 		// вытаскиваем местоположение
 		$arLocationProp = CSaleOrderProps::GetList(
@@ -281,11 +281,11 @@ class CIPOLYadost{
 			// подставляем габариты с формы отправки заявки
 			if ($params["data"]["formData"])
 			{
-				CIPOLYadostDriver::getOrderBasket(array("ORDER_ID" => $orderID));
-				CIPOLYadostDriver::$tmpOrderDimension["WEIGHT"] = $params["data"]["formData"]["WEIGHT"];
-				CIPOLYadostDriver::$tmpOrderDimension["LENGTH"] = $params["data"]["formData"]["LENGTH"];
-				CIPOLYadostDriver::$tmpOrderDimension["WIDTH"] = $params["data"]["formData"]["WIDTH"];
-				CIPOLYadostDriver::$tmpOrderDimension["HEIGHT"] = $params["data"]["formData"]["HEIGHT"];
+				CKITYadostDriver::getOrderBasket(array("ORDER_ID" => $orderID));
+				CKITYadostDriver::$tmpOrderDimension["WEIGHT"] = $params["data"]["formData"]["WEIGHT"];
+				CKITYadostDriver::$tmpOrderDimension["LENGTH"] = $params["data"]["formData"]["LENGTH"];
+				CKITYadostDriver::$tmpOrderDimension["WIDTH"] = $params["data"]["formData"]["WIDTH"];
+				CKITYadostDriver::$tmpOrderDimension["HEIGHT"] = $params["data"]["formData"]["HEIGHT"];
 				
 				// не чистим данные до запроса на расчет доставки
 				self::$clearOrderData = false;
@@ -306,9 +306,9 @@ class CIPOLYadost{
 					{
 						// собираем для товаров заказа данные для открытия их по ссылке
 						if (!CModule::IncludeModule("iblock"))
-							CIPOLYadostHelper::throwException("Module iblock not found");
+							CKITYadostHelper::throwException("Module iblock not found");
 						
-						$arGoodsIDs = array_merge(CIPOLYadostDriver::$zeroGabsGoods, CIPOLYadostDriver::$zeroWeightGoods);
+						$arGoodsIDs = array_merge(CKITYadostDriver::$zeroGabsGoods, CKITYadostDriver::$zeroWeightGoods);
 						$zeroGabs = array();
 						$zeroWeight = array();
 						foreach ($arGoodsIDs as $elemID)
@@ -325,10 +325,10 @@ class CIPOLYadost{
 							);
 							// $tmpEl = $dbRes;
 							
-							if (CIPOLYadostDriver::$zeroGabsGoods[$elemID])
+							if (CKITYadostDriver::$zeroGabsGoods[$elemID])
 								$zeroGabs[$elemID] = $tmpEl;
 							
-							if (CIPOLYadostDriver::$zeroWeightGoods[$elemID])
+							if (CKITYadostDriver::$zeroWeightGoods[$elemID])
 								$zeroWeight[$elemID] = $tmpEl;
 						}
 						
@@ -344,18 +344,18 @@ class CIPOLYadost{
 							
 							"date_limits" => array(
 								"import" => array(
-									"ds" => CIPOLYadostDriver::convertDataToAdmin($res["date_limits"]["import"]["min"]),
-									"ff" => CIPOLYadostDriver::convertDataToAdmin($res["date_limits"]["import_sort"]["min"])
+									"ds" => CKITYadostDriver::convertDataToAdmin($res["date_limits"]["import"]["min"]),
+									"ff" => CKITYadostDriver::convertDataToAdmin($res["date_limits"]["import_sort"]["min"])
 								),
 								"withdraw" => array(
-									"ds" => CIPOLYadostDriver::convertDataToAdmin($res["date_limits"]["withdraw"]["min"]),
-									"ff" => CIPOLYadostDriver::convertDataToAdmin($res["date_limits"]["withdraw_sort"]["min"])
+									"ds" => CKITYadostDriver::convertDataToAdmin($res["date_limits"]["withdraw"]["min"]),
+									"ff" => CKITYadostDriver::convertDataToAdmin($res["date_limits"]["withdraw_sort"]["min"])
 								)
 							),
 							
 							"zeroGabs" => $zeroGabs,
 							"zeroWeight" => $zeroWeight,
-							"totalWeightMoreDefault" => CIPOLYadostDriver::$totalWeightMoreDefault,
+							"totalWeightMoreDefault" => CKITYadostDriver::$totalWeightMoreDefault,
 							"isZeroGabsWeight" => !(empty($zeroGabs) && empty($zeroWeight))
 						);
 					}
@@ -364,13 +364,13 @@ class CIPOLYadost{
 				if (empty($arResult))
 					return false;
 				else
-					return array_merge($arResult, array("debug" => CIPOLYadostDriver::$debug));
+					return array_merge($arResult, array("debug" => CKITYadostDriver::$debug));
 			}
 			else
-				CIPOLYadostHelper::throwException("No delivery calculated", array($params, $calculateResult));
+				CKITYadostHelper::throwException("No delivery calculated", array($params, $calculateResult));
 		}
 		else
-			CIPOLYadostHelper::throwException("Cant find LOCATION or PERSON_TYPE", array($params, $orderData, $arLocationProp, $locationValue, $calculateResult));
+			CKITYadostHelper::throwException("Cant find LOCATION or PERSON_TYPE", array($params, $orderData, $arLocationProp, $locationValue, $calculateResult));
 	
 		return true;
 	}
@@ -420,7 +420,7 @@ class CIPOLYadost{
 		if (!empty($requestProfilePrices))
 		{
 			if (!$tmpProfilePrices = json_decode($requestProfilePrices, true))
-				$tmpProfilePrices = json_decode(CIPOLYadostHelper::convertToUTF($requestProfilePrices), true);
+				$tmpProfilePrices = json_decode(CKITYadostHelper::convertToUTF($requestProfilePrices), true);
 			
 			$requestProfilePrices = $tmpProfilePrices;
 		}
@@ -432,7 +432,7 @@ class CIPOLYadost{
 		{
 			$deliveryPrice = $requestProfilePrices[$profile]["price"];
 			$term = $requestProfilePrices[$profile]["term"];
-			$deliveryProvider = CIPOLYadostHelper::convertFromUTF($requestProfilePrices[$profile]["provider"]) . "<br/>";
+			$deliveryProvider = CKITYadostHelper::convertFromUTF($requestProfilePrices[$profile]["provider"]) . "<br/>";
 		}
 		
         $arReturn = array(
@@ -440,7 +440,7 @@ class CIPOLYadost{
             "PERIOD_FROM" => $daysMin,
             "PERIOD_TO" => $daysMax,
             "VALUE" => $deliveryPrice,
-            "TRANSIT" => $term . getMessage("IPOLyadost_JS_DAY") . "<br/>" . $deliveryProvider . "<a id = 'ipol_yadost_inject_".$profile."'></a>"
+            "TRANSIT" => $term . getMessage("KITyadost_JS_DAY") . "<br/>" . $deliveryProvider . "<a id = 'kit_yadost_inject_".$profile."'></a>"
         );
 		
 		foreach(GetModuleEvents(self::$MODULE_ID, "onCalculate", true) as $arEvent)
@@ -452,7 +452,7 @@ class CIPOLYadost{
 	static $selectedDelivery = "";
 	static public function pickupLoader($arResult, $arUserResult)
 	{
-		if(!CIPOLYadostHelper::isActive())
+		if(!CKITYadostHelper::isActive())
 			return;
 		
 		self::$selectedDelivery = $arUserResult['DELIVERY_ID'];
@@ -462,11 +462,11 @@ class CIPOLYadost{
 	
 	static public function setLocationFromCookie(&$arResult, &$arUserResult, &$arParams)
 	{
-		$cityGeo = CIPOLYadostHelper::convertFromUTF($_COOKIE["city_to"]);// город из геовиджета
+		$cityGeo = CKITYadostHelper::convertFromUTF($_COOKIE["city_to"]);// город из геовиджета
 	
 		if (!empty($cityGeo))
 		{
-			$code = CIPOLYadostHelper::getCityCodeByName($cityGeo);
+			$code = CKITYadostHelper::getCityCodeByName($cityGeo);
 			
 			if ($code)
 			{
@@ -498,11 +498,11 @@ class CIPOLYadost{
 		self::$locationTo = $arUserResult["DELIVERY_LOCATION"];
 		self::$selectedDelivery = $arUserResult['DELIVERY_ID'];
 		
-		if(CIPOLYadostHelper::isActive() && $_REQUEST['is_ajax_post'] != 'Y' && $_REQUEST["AJAX_CALL"] != 'Y' && !$_REQUEST["ORDER_AJAX"])
+		if(CKITYadostHelper::isActive() && $_REQUEST['is_ajax_post'] != 'Y' && $_REQUEST["AJAX_CALL"] != 'Y' && !$_REQUEST["ORDER_AJAX"])
 		{
 			global $APPLICATION;
 			$APPLICATION->IncludeComponent(
-				"ipol:ipol.yadostPickup",
+				"kit:kit.yadostPickup",
 				"order",
 				array(
 					"WIDGET_CODE" => COption::GetOptionString(self::$MODULE_ID, "basketWidget"),
@@ -519,16 +519,16 @@ class CIPOLYadost{
 	}
 	
 	static public function onEpilog(){//отображение формы отправки заявки
-		CIPOLYadostHelper::checkLocationChange();
+		CKITYadostHelper::checkLocationChange();
 	
 		// проверяем надо ли отображать сообщения об изменениях заказа и отображаем их
-		if (defined('ADMIN_SECTION') && /*$GLOBALS["USER"]->IsAdmin()*/CIPOLYadostHelper::isAdmin("R"))
-			CIPOLYadostHelper::showMessageNotice();
+		if (defined('ADMIN_SECTION') && /*$GLOBALS["USER"]->IsAdmin()*/CKITYadostHelper::isAdmin("R"))
+			CKITYadostHelper::showMessageNotice();
 		
 		if(
 			!self::isOrderDetailPage() || 
 			!cmodule::includeModule('sale') ||
-			!CIPOLYadostHelper::isAdmin("R")
+			!CKITYadostHelper::isAdmin("R")
 		)
 			return false;
 		
@@ -566,10 +566,10 @@ class CIPOLYadost{
 		if ((defined("ADMIN_SECTION") && ADMIN_SECTION===true) || strpos($_SERVER['PHP_SELF'], "/bitrix/admin") ===
             true) return;
 		
-		if (CIPOLYadostHelper::isActive() && self::$personType && self::$selectedDelivery)
+		if (CKITYadostHelper::isActive() && self::$personType && self::$selectedDelivery)
 		{
 			$noJson = self::no_json($content);
-			$arCity = CIPOLYadostHelper::getCityNameByID(self::$locationTo);
+			$arCity = CKITYadostHelper::getCityNameByID(self::$locationTo);
 			
 			// Таким вот странным способом мы передаем наши данные из PHP в js в момент Ajax-запроса.
 			if(($_REQUEST['is_ajax_post'] == 'Y' || $_REQUEST["AJAX_CALL"] == 'Y') && self::$locationTo && ($_REQUEST["confirmorder"] != "Y") && $noJson) 
@@ -580,13 +580,13 @@ class CIPOLYadost{
 			}
 			elseif(($_REQUEST['action'] == 'refreshOrderAjax' || $_REQUEST['soa-action'] == 'refreshOrderAjax') && !$noJson)
 			{
-				$content = substr($content,0,strlen($content)-1).',"IPOLyadost":{"yd_ajaxPersonType":"'.self::$personType.'","yd_ajaxDeliveryID":"'.self::$selectedDelivery.'", "yd_ajaxLocation":"'.CIPOLYadostHelper::convertToUTF($arCity["REGION"] . " " . $arCity["NAME"]).'"}}';
+				$content = substr($content,0,strlen($content)-1).',"KITyadost":{"yd_ajaxPersonType":"'.self::$personType.'","yd_ajaxDeliveryID":"'.self::$selectedDelivery.'", "yd_ajaxLocation":"'.CKITYadostHelper::convertToUTF($arCity["REGION"] . " " . $arCity["NAME"]).'"}}';
 			}
 		}
 	}
 	
 	static public function no_json(&$wat){
-		return is_null(json_decode(CIPOLYadostHelper::convertToUTF($wat),true));
+		return is_null(json_decode(CKITYadostHelper::convertToUTF($wat),true));
 	}
 	
 	static public function getDeliveryTerm($min, $max)
@@ -608,7 +608,7 @@ class CIPOLYadost{
 	
 	static public function orderCreate($orderID, $orderFields)
 	{
-		if ($_REQUEST["yd_is_select"] == "ipolYadost")
+		if ($_REQUEST["yd_is_select"] == "kitYadost")
 		{
 			if (!cmodule::includemodule('sale'))
 				return true;
@@ -619,13 +619,13 @@ class CIPOLYadost{
 				"PARAMS" => $_REQUEST["yd_deliveryData"]
 			);
 			
-			CIPOLYadostSqlOrders::Add($Data);
+			CKITYadostSqlOrders::Add($Data);
 			
-			if (CIPOLYadostHelper::controlProps())
+			if (CKITYadostHelper::controlProps())
 			{
-				$orderPropValue = CIPOLYadostHelper::getOrderPropsCodeFormID();
+				$orderPropValue = CKITYadostHelper::getOrderPropsCodeFormID();
 				
-				$arOrderPropsCode = CIPOLYadostHelper::getOrderPropsCode();
+				$arOrderPropsCode = CKITYadostHelper::getOrderPropsCode();
 				
 				foreach ($arOrderPropsCode as $propCode)
 				{
@@ -638,7 +638,7 @@ class CIPOLYadost{
 							$arFields = array(
 								"ORDER_ID" => $orderID,
 								"ORDER_PROPS_ID" => $op['ID'],
-								"NAME" => GetMessage("IPOLyadost_prop_name_" . $propCode),
+								"NAME" => GetMessage("KITyadost_prop_name_" . $propCode),
 								"CODE" => $propCode,
 								"VALUE" => preg_replace("/\"/", "", $_REQUEST[$orderPropValue[$propCode]])
 							);

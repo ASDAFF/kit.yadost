@@ -49,7 +49,7 @@ $MESS ['KITyadost_INPUTS_delivery_type_import'] = "Самопривоз";
 $MESS ['KITyadost_INPUTS_delivery_type_withdraw'] = "Забор";
 
 $MESS["KITyadost_INPUTS_delivery_price_NAME"] = "Стоимость доставки";
-$MESS["KITyadost_INPUTS_delivery_terms_NAME"] = "Срок доставки (дней)";
+$MESS["KITyadost_INPUTS_delivery_terms_NAME"] = "Срок доставки";
 $MESS["KITyadost_INPUTS_change_delivery_price_NAME"] = "Обновлять стоимость доставки в заказе";
 
 $MESS["KITyadost_INPUTS_shipment_date_NAME"] = "Дата отгрузки";
@@ -118,7 +118,7 @@ $MESS ['KITyadost_WARNING_orderSendCancel'] = "Заказ был отменен,
 
 $MESS ['KITyadost_WARNING_confirmCancel'] = "Отправленный заказ в Яндекс.Доставку можно изменить только отменив текущий заказ в Яндекс.Доставке и создав новый. Отменить текущий заказ в Яндекс.Доставке?";
 $MESS ['KITyadost_WARNING_confirmSendCancel'] = "Заказ в текущем статусе изменить нельзя, пожалуйста обратитесь в службу поддержки Яндекс.Доставки";
-$MESS ['KITyadost_WARNING_confirmSendCancelNegativ'] = "Данные заказа в системе и в Яндекс.Доставке отличаются. Услуги доставки могут быть рассчитаны некорректно.";
+$MESS ['KITyadost_WARNING_confirmSendCancelNegative'] = "Данные заказа в системе и в Яндекс.Доставке отличаются. Услуги доставки могут быть рассчитаны некорректно.";
 
 $MESS ['KITyadost_WARNING_newModuleVersionDetected'] = "Доступна новая версия #MODULE_UPDATE_VERSION# модуля Яндекс.Доставка. Пожалуйста перейдите по <a target = '_blank' href = '/bitrix/admin/update_system_partner.php?tabControl_active_tab=tab2&addmodule=#MODULE_ID#'>ссылке</a> для установки.";
 
@@ -133,13 +133,10 @@ $MESS ['KITyadost_WARNING_zeroGabs'] = "Товары с нулевыми габ�
 $MESS ['KITyadost_WARNING_warningChangeDelivery'] = "Если необходимо выбрать другой вариант доставки, сохраните данные формы и обновите страницу.";
 
 // для генерации адреса ПВЗ
-$MESS["delivery_JS_selectPICKUP"] = "Выбрать вариант доставки";
-$MESS["delivery_JS_PICKUP"] = "Самовывоз";
-$MESS["delivery_JS_COURIER"] = "Курьер";
-$MESS["delivery_JS_DAY"] = " дн.";
-$MESS["delivery_JS_RUB"] = " руб.";
-$MESS["delivery_JS_TERM"] = "Срок";
-$MESS["delivery_JS_COST"] = "Стоимость";
-
-
-?>
+$MESS["KITyadost_JS_selectPICKUP"] = "Выбрать вариант доставки";
+$MESS["KITyadost_JS_PICKUP"] = "Самовывоз";
+$MESS["KITyadost_JS_COURIER"] = "Курьер";
+$MESS["KITyadost_JS_DAY"] = " дн.";
+$MESS["KITyadost_JS_RUB"] = " руб.";
+$MESS["KITyadost_JS_TERM"] = "Срок";
+$MESS["KITyadost_JS_COST"] = "Стоимость";

@@ -1,1 +1,1 @@
-drop table if exists ipol_yadost;
+drop table if exists kit_yadost;

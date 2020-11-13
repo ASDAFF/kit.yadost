@@ -1,17 +1,17 @@
 <?
 /**
- * Copyright (c) 25/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
-$module_id = 'ipol.yadost';
+$module_id = 'kit.yadost';
 CModule::AddAutoloadClasses(
     $module_id,
     array(
-        'CIPOLYadostDriver' => '/classes/general/CIPOLYadostDriver.php',
-        'CIPOLYadost' => '/classes/general/CIPOLYadost.php',
-        'CIPOLYadostHelper' => '/classes/general/CIPOLYadostHelper.php',
-        'CIPOLYadostProps' => '/classes/general/CIPOLYadostProps.php',
-        'CIPOLYadostSqlOrders' => '/classes/mysql/CIPOLYadostSqlOrders.php',
+        'CKITYadostDriver' => '/classes/general/CKITYadostDriver.php',
+        'CKITYadost' => '/classes/general/CKITYadost.php',
+        'CKITYadostHelper' => '/classes/general/CKITYadostHelper.php',
+        'CKITYadostProps' => '/classes/general/CKITYadostProps.php',
+        'CKITYadostSqlOrders' => '/classes/mysql/CKITYadostSqlOrders.php',
     )
 );
 

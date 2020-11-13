@@ -1,12 +1,12 @@
 <?
 /**
- * Copyright (c) 24/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
 // class sqldeliveryOrders
 class sqldeliveryOrdersTable
 {
-	// public function deliveryLog($wat,$sign){CIPOLYadostDriver::deliveryLog($wat,$sign);}
+	// public function deliveryLog($wat,$sign){CKITYadostDriver::deliveryLog($wat,$sign);}
 	private static $tableName = "yadost_yadost";
 	public static function Add($Data)
     {
@@ -134,7 +134,7 @@ class sqldeliveryOrdersTable
 	
 	private static function checkjson($value)
 	{
-		if (!json_decode(CIPOLYadostHelper::convertToUTF($value)))
+		if (!json_decode(CKITYadostHelper::convertToUTF($value)))
 			throw new Exception("Invalid json");
 		
 		$tmp = self::checkstring($value);

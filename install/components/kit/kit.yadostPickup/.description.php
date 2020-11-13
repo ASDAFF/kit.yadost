@@ -17,9 +17,8 @@ $arComponentDescription = array(
 			"NAME" => GetMessage("KITyadost_GROUP"),
 			"SORT" => 30,
 			"CHILD" => array(
-				"ID" => "kit_deliveryPickup",
+				"ID" => "kit_yadostPickup",
 			),
 		),
 	),
 );
-?>

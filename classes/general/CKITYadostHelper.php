@@ -1,11 +1,11 @@
 <?
 /**
- * Copyright (c) 24/10/2019 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
+ * Copyright (c) 13/11/2020 Created By/Edited By ASDAFF asdaff.asad@yandex.ru
  */
 
 IncludeModuleLangFile(__FILE__);
 
-class CIPOLYadostHelper
+class CKITYadostHelper
 {
 	static $exceptionData = array();
 	
@@ -27,18 +27,18 @@ class CIPOLYadostHelper
 	
 	public static function clearCache()
 	{
-		if (!CIPOLYadostHelper::isAdmin())
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin())
+			CKITYadostHelper::throwException("Access denied");
 		
 		$obCache = new CPHPCache();
-		$obCache->CleanDir('/IPOLyadost/');
+		$obCache->CleanDir('/KITyadost/');
 		
 		return true;
 	}
 	
 	public static function isAdmin($right = "W")
 	{
-		$userRight = CMain::GetUserRight(CIPOLYadostDriver::$MODULE_ID);
+		$userRight = CMain::GetUserRight(CKITYadostDriver::$MODULE_ID);
 		
 		$DEPTH = array(
 			'D' => 1,
@@ -53,12 +53,12 @@ class CIPOLYadostHelper
 	
 	public static function throwException($code, $data = null)
 	{
-		self::$exceptionData = array("code" => self::convertToUTF($code), "data" => $data, "debug" => CIPOLYadostDriver::$debug);
+		self::$exceptionData = array("code" => self::convertToUTF($code), "data" => $data, "debug" => CKITYadostDriver::$debug);
 		
 		$dataToCode = print_r($data, true);
-		$dataToCode .= print_r(array("debug" => CIPOLYadostDriver::$debug), true);
+		$dataToCode .= print_r(array("debug" => CKITYadostDriver::$debug), true);
 		
-		self::errorLog(CIPOLYadostDriver::$debug);
+		self::errorLog(CKITYadostDriver::$debug);
 		
 		throw new Exception($code . "\n" . $dataToCode);
 	}
@@ -72,11 +72,11 @@ class CIPOLYadostHelper
 		{
 			$dS = Bitrix\Sale\Delivery\Services\Table::getList(array(
 				'order' => array('SORT' => 'ASC', 'NAME' => 'ASC'),
-				'filter' => array('CODE' => 'ipolYadost')
+				'filter' => array('CODE' => 'kitYadost')
 			))->Fetch();
 		}
 		else
-			$dS = CSaleDeliveryHandler::GetBySID('ipolYadost')->Fetch();
+			$dS = CSaleDeliveryHandler::GetBySID('kitYadost')->Fetch();
 		
 		return $dS;
 	}
@@ -101,7 +101,7 @@ class CIPOLYadostHelper
 	static public function getOrderPropsCodeFormID()
 	{
 		return array(
-			"ipol_yadost_PVZ_ADDRESS" => "yd_pvzAddressValue"
+			"kit_yadost_PVZ_ADDRESS" => "yd_pvzAddressValue"
 		);
 	}
 	
@@ -165,7 +165,7 @@ class CIPOLYadostHelper
 			{
 				$arFields = array(
 					"PERSON_TYPE_ID" => $payer,
-					"NAME" => GetMessage('IPOLyadost_prop_name_' . $propCode),
+					"NAME" => GetMessage('KITyadost_prop_name_' . $propCode),
 					"TYPE" => "TEXT",
 					"REQUIED" => "N",
 					"DEFAULT_VALUE" => "",
@@ -177,7 +177,7 @@ class CIPOLYadostHelper
 					"PROPS_GROUP_ID" => $PropsGroup[$payer],
 					"SIZE1" => 10,
 					"SIZE2" => 1,
-					"DESCRIPTION" => GetMessage('IPOLyadost_prop_descr_' . $propCode),
+					"DESCRIPTION" => GetMessage('KITyadost_prop_descr_' . $propCode),
 					"IS_EMAIL" => "N",
 					"IS_PROFILE_NAME" => "N",
 					"IS_PAYER" => "N",
@@ -198,14 +198,14 @@ class CIPOLYadostHelper
 	{
 //		$str = str_replace( //H8 ANSI
 //			array(
-//				GetMessage('IPOLyadost_LANG_YO_S'),
-//				GetMessage('IPOLyadost_LANG_CH_S'),
-//				GetMessage('IPOLyadost_LANG_YA_S')
+//				GetMessage('KITyadost_LANG_YO_S'),
+//				GetMessage('KITyadost_LANG_CH_S'),
+//				GetMessage('KITyadost_LANG_YA_S')
 //			),
 //			array(
-//				GetMessage('IPOLyadost_LANG_YO_B'),
-//				GetMessage('IPOLyadost_LANG_CH_B'),
-//				GetMessage('IPOLyadost_LANG_YA_B')
+//				GetMessage('KITyadost_LANG_YO_B'),
+//				GetMessage('KITyadost_LANG_CH_B'),
+//				GetMessage('KITyadost_LANG_YA_B')
 //			),
 //			$str
 //		);
@@ -263,7 +263,7 @@ class CIPOLYadostHelper
 		$dbProps = CSaleOrderProps::GetList(
 			array(),
 			array(
-				"PERSON_TYPE_ID" => CIPOLYadostDriver::$tmpOrder["PERSON_TYPE_ID"],
+				"PERSON_TYPE_ID" => CKITYadostDriver::$tmpOrder["PERSON_TYPE_ID"],
 				"TYPE" => "LOCATION",
 				"ACTIVE" => "Y"
 			)
@@ -428,7 +428,7 @@ class CIPOLYadostHelper
 		
 		$arRetStatus = array();
 		foreach ($arStatus as $status)
-			$arRetStatus[$status] = GetMessage("IPOLyadost_YD_STATUS_" . $status);
+			$arRetStatus[$status] = GetMessage("KITyadost_YD_STATUS_" . $status);
 		
 		return $arRetStatus;
 	}
@@ -443,18 +443,18 @@ class CIPOLYadostHelper
 		$arResult = array();
 		
 		foreach ($arCities as $city)
-			$arResult[$city] = GetMessage("IPOLyadost_CityFrom_" . $city);
+			$arResult[$city] = GetMessage("KITyadost_CityFrom_" . $city);
 		
 		return $arResult;
 	}
 	
 	static public function getNoticeFileName()
 	{
-		self::$noticeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CIPOLYadostDriver::$MODULE_ID . "/private/notice.txt";
-		self::$changeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CIPOLYadostDriver::$MODULE_ID . "/private/change.txt";
+		self::$noticeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CKITYadostDriver::$MODULE_ID . "/private/notice.txt";
+		self::$changeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CKITYadostDriver::$MODULE_ID . "/private/change.txt";
 		
-		$oldNoticeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CIPOLYadostDriver::$MODULE_ID . "/notice.txt";
-		$oldChangeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CIPOLYadostDriver::$MODULE_ID . "/change.txt";
+		$oldNoticeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CKITYadostDriver::$MODULE_ID . "/notice.txt";
+		$oldChangeFileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CKITYadostDriver::$MODULE_ID . "/change.txt";
 		
 		if (file_exists($oldNoticeFileName))
 		{
@@ -474,8 +474,8 @@ class CIPOLYadostHelper
 	
 	static public function clearNoticeFile()
 	{
-		if (!CIPOLYadostHelper::isAdmin("R"))
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin("R"))
+			CKITYadostHelper::throwException("Access denied");
 		
 		self::getNoticeFileName();
 		
@@ -507,7 +507,7 @@ class CIPOLYadostHelper
 			foreach ($arNotice as $event => $values)
 			{
 				$noticeText .= "<div>";
-				$noticeText .= "<p>" . GetMessage("IPOLyadost_NOTICE_WINDOW_MSG_" . $event) . "</p>";
+				$noticeText .= "<p>" . GetMessage("KITyadost_NOTICE_WINDOW_MSG_" . $event) . "</p>";
 				$noticeText .= "<div class = \"adm-workarea\">";
 				
 				foreach ($values as $orderID)
@@ -566,7 +566,7 @@ class CIPOLYadostHelper
 					};
 
 					$.ajax({
-						url: "/bitrix/js/<?=CIPOLYadostDriver::$MODULE_ID?>/ajax.php",
+						url: "/bitrix/js/<?=CKITYadostDriver::$MODULE_ID?>/ajax.php",
 						data: ajaxData,
 						type: "POST",
 						dataType: "json",
@@ -593,7 +593,7 @@ class CIPOLYadostHelper
 					var winNotice = '<div id="yadostWinNotice">';
 					winNotice += '<table id="yadostWinNoticeHeader"><tr>';
 					winNotice += '<td style="width:50px">&nbsp</td>';
-					winNotice += '<td><?=GetMessage("IPOLyadost_NOTICE_WINDOW_HEADER");?></td>';
+					winNotice += '<td><?=GetMessage("KITyadost_NOTICE_WINDOW_HEADER");?></td>';
 					winNotice += '<td><a href="javascript:void(0)" onclick="yadostWinNoticeClose()">X</a></td>';
 					winNotice += '</tr></table>';
 					winNotice += '<p id = \"yadostWinNoticeContent\">' + '<?=$noticeText?>' + '</p>';
@@ -623,17 +623,17 @@ class CIPOLYadostHelper
 		if (self::$isOrderAdd || isset($arFields["LOCKED_BY"]))
 			return true;
 		
-		CIPOLYadostDriver::$tmpOrder = false;
-		self::$orderBeforeUpdate = CIPOLYadostDriver::getOrder($orderID);
+		CKITYadostDriver::$tmpOrder = false;
+		self::$orderBeforeUpdate = CKITYadostDriver::getOrder($orderID);
 		$needDeliveries = self::getDeliveryIDs();
 		$curDeliveryID = self::$orderBeforeUpdate["DELIVERY_ID"];
 		if (!in_array($curDeliveryID, $needDeliveries))
 			return true;
 		
-		$_SESSION["ipol_orderIDBeforeUpdate"] = $orderID;
-		$_SESSION["ipol_orderPropsBeforeUpdate"] = self::getOrderCheckedPropsValues($orderID);
-		$_SESSION["ipol_orderLocationBeforeUpdate"] = self::getOrderLocationValue($orderID, self::$orderBeforeUpdate["PERSON_TYPE_ID"]);
-		$_SESSION["ipol_orderCanceled"] = self::$orderBeforeUpdate["CANCELED"];
+		$_SESSION["kit_orderIDBeforeUpdate"] = $orderID;
+		$_SESSION["kit_orderPropsBeforeUpdate"] = self::getOrderCheckedPropsValues($orderID);
+		$_SESSION["kit_orderLocationBeforeUpdate"] = self::getOrderLocationValue($orderID, self::$orderBeforeUpdate["PERSON_TYPE_ID"]);
+		$_SESSION["kit_orderCanceled"] = self::$orderBeforeUpdate["CANCELED"];
 		
 		return true;
 	}
@@ -641,8 +641,8 @@ class CIPOLYadostHelper
 	static public function getOrderCheckedPropsValues($orderID)
 	{
 		// свойства заказа, которые необходимо проверить
-		CIPOLYadostDriver::$tmpOrderProps = false;
-		$orderProps = CIPOLYadostDriver::getOrderProps($orderID);
+		CKITYadostDriver::$tmpOrderProps = false;
+		$orderProps = CKITYadostDriver::getOrderProps($orderID);
 		$propsToCheck = self::getUpdatedEventProps();
 		
 		$saveProps = array();
@@ -673,13 +673,13 @@ class CIPOLYadostHelper
 			);
 		}
 		
-		CIPOLYadostDriver::getOrderConfirm($orderID);
+		CKITYadostDriver::getOrderConfirm($orderID);
 		if (
 			isset($arFields["CANCELED"]) &&
 			$arFields["CANCELED"] != self::$orderBeforeUpdate["CANCELED"] &&
 			self::$orderBeforeUpdate["CANCELED"] == "N" &&
 			in_array($curDeliveryID, $needDeliveries) &&
-			!empty(CIPOLYadostDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"])
+			!empty(CKITYadostDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"])
 		)
 			$arChange[] = array(
 				"event" => "CANCEL_ORDER",
@@ -695,27 +695,27 @@ class CIPOLYadostHelper
 	
 	static public function checkLocationChange()
 	{
-		if (!$_SESSION["ipol_orderIDBeforeUpdate"])
+		if (!$_SESSION["kit_orderIDBeforeUpdate"])
 		{
-			unset($_SESSION["ipol_orderIDBeforeUpdate"]);
-			unset($_SESSION["ipol_orderLocationBeforeUpdate"]);
-			unset($_SESSION["ipol_orderPropsBeforeUpdate"]);
+			unset($_SESSION["kit_orderIDBeforeUpdate"]);
+			unset($_SESSION["kit_orderLocationBeforeUpdate"]);
+			unset($_SESSION["kit_orderPropsBeforeUpdate"]);
 			
 			return false;
 		}
 		
-		$orderID = $_SESSION["ipol_orderIDBeforeUpdate"];
-		unset($_SESSION["ipol_orderIDBeforeUpdate"]);
+		$orderID = $_SESSION["kit_orderIDBeforeUpdate"];
+		unset($_SESSION["kit_orderIDBeforeUpdate"]);
 		
-		$orderLocationBeforeUpdate = $_SESSION["ipol_orderLocationBeforeUpdate"];
-		unset($_SESSION["ipol_orderLocationBeforeUpdate"]);
+		$orderLocationBeforeUpdate = $_SESSION["kit_orderLocationBeforeUpdate"];
+		unset($_SESSION["kit_orderLocationBeforeUpdate"]);
 		
-		$orderPropsBeforeUpdate = $_SESSION["ipol_orderPropsBeforeUpdate"];
-		unset($_SESSION["ipol_orderPropsBeforeUpdate"]);
+		$orderPropsBeforeUpdate = $_SESSION["kit_orderPropsBeforeUpdate"];
+		unset($_SESSION["kit_orderPropsBeforeUpdate"]);
 		
-		CIPOLYadostDriver::$tmpOrder = false;
-		CIPOLYadostDriver::getOrder($orderID);
-		$curLocation = self::getOrderLocationValue($orderID, CIPOLYadostDriver::$tmpOrder["PERSON_TYPE_ID"]);
+		CKITYadostDriver::$tmpOrder = false;
+		CKITYadostDriver::getOrder($orderID);
+		$curLocation = self::getOrderLocationValue($orderID, CKITYadostDriver::$tmpOrder["PERSON_TYPE_ID"]);
 		
 		$locationChange = false;
 		if ($orderLocationBeforeUpdate != $curLocation)
@@ -744,8 +744,8 @@ class CIPOLYadostHelper
 	{
 		self::$isOrderAdd = true;
 		
-		unset($_SESSION["ipol_orderLocationBeforeUpdate"]);
-		unset($_SESSION["ipol_orderIDBeforeUpdate"]);
+		unset($_SESSION["kit_orderLocationBeforeUpdate"]);
+		unset($_SESSION["kit_orderIDBeforeUpdate"]);
 		
 		return true;
 	}
@@ -758,8 +758,8 @@ class CIPOLYadostHelper
 			return true;
 		
 		// собираем корзину заказа до изменений
-		CIPOLYadostDriver::$tmpOrderBasket = false;
-		self::$orderBasketBeforeUpdate = CIPOLYadostDriver::getOrderBasket(array("ORDER_ID" => $arFields["ORDER_ID"]));
+		CKITYadostDriver::$tmpOrderBasket = false;
+		self::$orderBasketBeforeUpdate = CKITYadostDriver::getOrderBasket(array("ORDER_ID" => $arFields["ORDER_ID"]));
 		
 		return true;
 	}
@@ -773,16 +773,16 @@ class CIPOLYadostHelper
 		
 		$orderID = $arFields["ORDER_ID"];
 		$needDeliveries = self::getDeliveryIDs();
-		$arOrder = CIPOLYadostDriver::getOrder($orderID);
+		$arOrder = CKITYadostDriver::getOrder($orderID);
 		
 		if (in_array($arOrder["DELIVERY_ID"], $needDeliveries))
 		{
 			// собираем текущую корзину заказа
-			CIPOLYadostDriver::$tmpOrderBasket = false;
-			CIPOLYadostDriver::getOrderBasket(array("ORDER_ID" => $orderID));
+			CKITYadostDriver::$tmpOrderBasket = false;
+			CKITYadostDriver::getOrderBasket(array("ORDER_ID" => $orderID));
 			
 			// анализируем изменения
-			$changeOrder = self::compareBasket(self::$orderBasketBeforeUpdate, CIPOLYadostDriver::$tmpOrderBasket);
+			$changeOrder = self::compareBasket(self::$orderBasketBeforeUpdate, CKITYadostDriver::$tmpOrderBasket);
 			
 			if ($changeOrder)
 			{
@@ -964,12 +964,12 @@ class CIPOLYadostHelper
 		$changed = $entity->getFields()->getChangedValues();
 		$deliveryID = $entity->getField("DELIVERY_ID");
 		
-		CIPOLYadostDriver::getOrderConfirm($orderID);
+		CKITYadostDriver::getOrderConfirm($orderID);
 		if (
 			$orderID &&
 			in_array($deliveryID, $needDeliveries) &&
 			$changed["CANCELED"] == "Y" &&
-			!empty(CIPOLYadostDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"])
+			!empty(CKITYadostDriver::$tmpOrderConfirm["savedParams"]["delivery_ID"])
 		)
 		{
 			$arChange = array(
@@ -1025,13 +1025,13 @@ class CIPOLYadostHelper
 	
 	static public function getCheckedUpdatedOrderProps()
 	{
-		CIPOLYadostDriver::getModuleSetups();
+		CKITYadostDriver::getModuleSetups();
 		
 		$needProps = self::getUpdatedEventProps();
 		
 		$arResult = array();
 		foreach ($needProps as $prop)
-			$arResult[$prop] = CIPOLYadostDriver::$options["ADDRESS"][$prop];
+			$arResult[$prop] = CKITYadostDriver::$options["ADDRESS"][$prop];
 		
 		return $arResult;
 	}
@@ -1045,9 +1045,9 @@ class CIPOLYadostHelper
 			"build"
 		);
 		
-		CIPOLYadostDriver::getModuleSetups();
+		CKITYadostDriver::getModuleSetups();
 		foreach ($needProps as $key => $prop)
-			if (empty(CIPOLYadostDriver::$options["ADDRESS"][$prop]))
+			if (empty(CKITYadostDriver::$options["ADDRESS"][$prop]))
 				unset($needProps[$key]);
 		
 		return $needProps;
@@ -1123,8 +1123,8 @@ class CIPOLYadostHelper
 	
 	static public function deleteOrderFromChange($params)
 	{
-		if (!CIPOLYadostHelper::isAdmin("R"))
-			CIPOLYadostHelper::throwException("Access denied");
+		if (!CKITYadostHelper::isAdmin("R"))
+			CKITYadostHelper::throwException("Access denied");
 		
 		self::getNoticeFileName();
 		
@@ -1168,20 +1168,20 @@ class CIPOLYadostHelper
 	static public function checkLogParams($inputRequest)
 	{
 		if ($inputRequest["deliveryDebugToLog"] == "SWITCH_ON")
-			$_SESSION["IPOLyadost_print_logfile"] = true;
+			$_SESSION["KITyadost_print_logfile"] = true;
 		if ($inputRequest["deliveryDebugToLog"] == "SWITCH_OFF")
-			unset($_SESSION["IPOLyadost_print_logfile"]);
+			unset($_SESSION["KITyadost_print_logfile"]);
 		
 		return;
 	}
 	
 	static public function errorLog($val)
 	{
-		$fileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CIPOLYadostDriver::$MODULE_ID . "/errLog.txt";
+		$fileName = $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . CKITYadostDriver::$MODULE_ID . "/errLog.txt";
 		
 		self::checkLogParams($_REQUEST);
 		
-		if ($_SESSION["IPOLyadost_print_logfile"])
+		if ($_SESSION["KITyadost_print_logfile"])
 		{
 			$file = fopen($fileName, "w");
 			fwrite($file, "\n\n" . date("H:i:s d-m-Y") . "\n");
@@ -1195,13 +1195,13 @@ class CIPOLYadostHelper
 		$sendStat = false;
 		
 		if (is_array($arModules))
-			if (in_array(CIPOLYadostDriver::$MODULE_ID, $arModules))
+			if (in_array(CKITYadostDriver::$MODULE_ID, $arModules))
 				$sendStat = true;
-			elseif (CIPOLYadostDriver::$MODULE_ID == $arModules)
+			elseif (CKITYadostDriver::$MODULE_ID == $arModules)
 				$sendStat = true;
 		
 		if ($sendStat)
-			CIPOLYadostDriver::sendStatistic(array("type" => "update"));
+			CKITYadostDriver::sendStatistic(array("type" => "update"));
 	}
 	
 	/**
@@ -1214,8 +1214,8 @@ class CIPOLYadostHelper
 		if (!is_null(self::$chosenSender))
 			return self::$chosenSender;
 		
-		CIPOLYadostDriver::getRequestConfig();
-		$chosenSender = CIPOLYadostDriver::$requestConfig["sender_id"][COption::GetOptionString(CIPOLYadostDriver::$MODULE_ID, 'defaultSender', '0')];
+		CKITYadostDriver::getRequestConfig();
+		$chosenSender = CKITYadostDriver::$requestConfig["sender_id"][COption::GetOptionString(CKITYadostDriver::$MODULE_ID, 'defaultSender', '0')];
 		
 		self::$chosenSender = (int)$chosenSender;
 		
@@ -1233,7 +1233,7 @@ class CIPOLYadostHelper
 		
 		if ($chosenSender)
 		{
-			$senderInfo = CIPOLYadostDriver::getSenderInfo($chosenSender);
+			$senderInfo = CKITYadostDriver::getSenderInfo($chosenSender);
 			
 			if ($senderInfo["clientInfo"]["status"] == "ok")
 				return $senderInfo["clientInfo"]["data"]["vat_settings"];
@@ -1249,7 +1249,7 @@ class CIPOLYadostHelper
 	 */
 	public static function getVatIDDefault()
 	{
-		$requisiteInfo = CIPOLYadostDriver::getRequisiteInfo();
+		$requisiteInfo = CKITYadostDriver::getRequisiteInfo();
 		
 		if ($requisiteInfo["requisiteInfo"]["status"] == "ok")
 		{
@@ -1298,9 +1298,9 @@ class CIPOLYadostHelper
 		if (!CModule::includeModule("sale"))
 			return false;
 		
-		if (CIPOLYadostHelper::controlProps())
+		if (CKITYadostHelper::controlProps())
 		{
-			$propCode = "ipol_yadost_PVZ_ADDRESS";
+			$propCode = "kit_yadost_PVZ_ADDRESS";
 			
 			$arOrder = CSaleOrder::getList(
 				array(),
@@ -1321,7 +1321,7 @@ class CIPOLYadostHelper
 					$arFields = array(
 						"ORDER_ID" => $orderID,
 						"ORDER_PROPS_ID" => $op['ID'],
-						"NAME" => GetMessage("IPOLyadost_prop_name_" . $propCode),
+						"NAME" => GetMessage("KITyadost_prop_name_" . $propCode),
 						"CODE" => $propCode,
 						"VALUE" => preg_replace("/\"/", "", $propValue)
 					);
@@ -1373,7 +1373,7 @@ class CIPOLYadostHelper
 	
 	static public function selectSite()
 	{
-		$site = \Bitrix\Main\Config\Option::get(CIPOLYadostDriver::$MODULE_ID, "site_selection");
+		$site = \Bitrix\Main\Config\Option::get(CKITYadostDriver::$MODULE_ID, "site_selection");
 		
 		return $site;
 	}

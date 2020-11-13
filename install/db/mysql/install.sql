@@ -1,4 +1,4 @@
-create table if not exists ipol_yadost
+create table if not exists kit_yadost
 (
 	ID int(11) NOT NULL auto_increment,
 	PARAMS text,
@@ -9,5 +9,5 @@ create table if not exists ipol_yadost
 	MESSAGE text,
 	UPTIME varchar(10),
 	PRIMARY KEY(ID),
-	INDEX ix_ipol_yadost_oi (ORDER_ID)
+	INDEX ix_kit_yadost_oi (ORDER_ID)
 );
